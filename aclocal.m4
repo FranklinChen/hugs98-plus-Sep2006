@@ -40,18 +40,18 @@ dnl POSIX systems prefer "diff -C 1"; SunOS4 prefers "diff -c1".
 dnl
 AC_DEFUN([AC_PROG_DIFF],
 [AC_PATH_PROG(DIFF,diff)
-AC_CACHE_CHECK(whether to use "diff -c1" or "diff -C 1", _cv_CONTEXT_DIFF,
+AC_CACHE_CHECK(whether to use "diff -c1" or "diff -C 1", CONTEXT_DIFF,
 if AC_TRY_COMMAND(diff -C 1 config.log config.log); then
-  _cv_CONTEXT_DIFF="$DIFF -C 1"
+  CONTEXT_DIFF="$DIFF -C 1"
 else
   if AC_TRY_COMMAND(diff -c1 config.log config.log); then
-    _cv_CONTEXT_DIFF="$DIFF -c1"
+    CONTEXT_DIFF="$DIFF -c1"
   else
-    _cv_CONTEXT_DIFF="$DIFF"
+    CONTEXT_DIFF="$DIFF"
   fi
 fi
 )
-AC_SUBST(_cv_CONTEXT_DIFF)
+AC_SUBST(CONTEXT_DIFF)
 ])
 
 dnl check for gcc's "labels as values" feature

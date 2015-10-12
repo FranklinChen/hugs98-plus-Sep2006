@@ -92,6 +92,7 @@ $(BUILD_DIR)/programs/cpphs/Main.hs: $(BOOTLIB) $(INCLUDES)
 	cd $(CPPHS_SRC); $(HUGS_SETUP) build --verbose
 	$(RM) -r $(BUILD_DIR)/packages/cpphs/autogen
 	mkdir -p $(BUILD_DIR)/programs
+	rm -rf $(BUILD_DIR)/programs/cpphs
 	mv $(BUILD_DIR)/packages/cpphs/programs/cpphs $(BUILD_DIR)/programs
 	rmdir $(BUILD_DIR)/packages/cpphs/programs
 
