@@ -364,8 +364,7 @@ freezeDiffArray a = do
   return (DiffArray var)
 
 {-# RULES
-"freeze/DiffArray" freeze = freezeDiffArray
-    #-}
+"freeze/DiffArray" freeze = freezeDiffArray #-}
 
 -- unsafeFreezeDiffArray is really unsafe. Better don't use the old
 -- array at all after freezing. The contents of the source array will
@@ -379,8 +378,7 @@ unsafeFreezeDiffArray a = do
     return (DiffArray var)
 
 {-# RULES
-"unsafeFreeze/DiffArray" unsafeFreeze = unsafeFreezeDiffArray
-    #-}
+"unsafeFreeze/DiffArray" unsafeFreeze = unsafeFreezeDiffArray #-}
 
 thawDiffArray :: (MArray a e IO, Ix ix)
               => IOToDiffArray a ix e
@@ -399,8 +397,7 @@ thawDiffArray a = do
             return a''
 
 {-# RULES
-"thaw/DiffArray" thaw = thawDiffArray
-    #-}
+"thaw/DiffArray" thaw = thawDiffArray #-}
 
 -- unsafeThawDiffArray is really unsafe. Better don't use the old
 -- array at all after thawing. The contents of the resulting array
@@ -419,5 +416,4 @@ unsafeThawDiffArray a = do
             return a''
 
 {-# RULES
-"unsafeThaw/DiffArray" unsafeThaw = unsafeThawDiffArray
-    #-}
+"unsafeThaw/DiffArray" unsafeThaw = unsafeThawDiffArray #-}

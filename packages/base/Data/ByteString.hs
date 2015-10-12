@@ -447,8 +447,7 @@ unpackList (PS fp off len) = withPtr fp $ \p -> do
     loop (p `plusPtr` off) (len-1) []
 
 {-# RULES
-    "FPS unpack-list"  [1]  forall p  . unpackFoldr p (:) [] = unpackList p
- #-}
+    "FPS unpack-list"  [1]  forall p  . unpackFoldr p (:) [] = unpackList p #-}
 
 #endif
 
@@ -484,9 +483,7 @@ lengthU = foldl' (const . (+1)) (0::Int)
 -- v2 fusion
 "FPS length/loop" forall loop s .
   length  (loopArr (loopWrapper loop s)) =
-  lengthU (loopArr (loopWrapper loop s))
-
-  #-}
+  lengthU (loopArr (loopWrapper loop s)) #-}
 
 ------------------------------------------------------------------------
 
@@ -794,9 +791,7 @@ minimumU = foldl1' min
 
 "FPS maximum/loop" forall loop s .
   maximum  (loopArr (loopWrapper loop s)) =
-  maximumU (loopArr (loopWrapper loop s))
-
-  #-}
+  maximumU (loopArr (loopWrapper loop s)) #-}
 
 ------------------------------------------------------------------------
 
@@ -974,14 +969,12 @@ break p ps = case findIndexOrEnd p ps of n -> (unsafeTake n ps, unsafeDrop n ps)
 
 {-# RULES
 "FPS specialise break (x==)" forall x.
-    break ((==) x) = breakByte x
-  #-}
+    break ((==) x) = breakByte x #-}
 
 #if __GLASGOW_HASKELL__ >= 605
 {-# RULES
 "FPS specialise break (==x)" forall x.
-    break (==x) = breakByte x
-  #-}
+    break (==x) = breakByte x #-}
 #endif
 
 -- | 'breakByte' breaks its ByteString argument at the first occurence
@@ -1028,14 +1021,12 @@ spanByte c ps@(PS x s l) = inlinePerformIO $ withForeignPtr x $ \p ->
 
 {-# RULES
 "FPS specialise span (x==)" forall x.
-    span ((==) x) = spanByte x
-  #-}
+    span ((==) x) = spanByte x #-}
 
 #if __GLASGOW_HASKELL__ >= 605
 {-# RULES
 "FPS specialise span (==x)" forall x.
-    span (==x) = spanByte x
-  #-}
+    span (==x) = spanByte x #-}
 #endif
 
 -- | 'spanEnd' behaves like 'span' but from the end of the 'ByteString'.
@@ -1200,8 +1191,7 @@ join s = concat . (List.intersperse s)
 
 {-# RULES
 "FPS specialise join c -> joinByte" forall c s1 s2 .
-    join (singleton c) (s1 : s2 : []) = joinWithByte c s1 s2
-  #-}
+    join (singleton c) (s1 : s2 : []) = joinWithByte c s1 s2 #-}
 
 --
 -- | /O(n)/ joinWithByte. An efficient way to join to two ByteStrings
@@ -1402,14 +1392,12 @@ filterByte w ps = replicate (count w ps) w
 
 {-# RULES
   "FPS specialise filter (== x)" forall x.
-      filter ((==) x) = filterByte x
-  #-}
+      filter ((==) x) = filterByte x #-}
 
 #if __GLASGOW_HASKELL__ >= 605
 {-# RULES
   "FPS specialise filter (== x)" forall x.
-     filter (== x) = filterByte x
-  #-}
+     filter (== x) = filterByte x #-}
 #endif
 
 --
@@ -1426,14 +1414,12 @@ filterNotByte w = filter (/= w)
 
 {-# RULES
 "FPS specialise filter (x /=)" forall x.
-    filter ((/=) x) = filterNotByte x
-  #-}
+    filter ((/=) x) = filterNotByte x #-}
 
 #if __GLASGOW_HASKELL__ >= 605
 {-# RULES
 "FPS specialise filter (/= x)" forall x.
-    filter (/= x) = filterNotByte x
-  #-}
+    filter (/= x) = filterNotByte x #-}
 #endif
 
 -- | /O(n)/ The 'find' function takes a predicate and a ByteString,
@@ -1584,9 +1570,7 @@ zipWith' f (PS fp s l) (PS fq t m) = inlinePerformIO $
 {-# RULES
 
 "FPS specialise zipWith" forall (f :: Word8 -> Word8 -> Word8) p q .
-    zipWith f p q = unpack (zipWith' f p q)
-
-  #-}
+    zipWith f p q = unpack (zipWith' f p q) #-}
 
 -- | /O(n)/ 'unzip' transforms a list of pairs of bytes into a pair of
 -- ByteStrings. Note that this performs two 'pack' operations.

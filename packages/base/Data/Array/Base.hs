@@ -180,8 +180,7 @@ listArrayST (l,u) es = do
 
 {-# RULES
 "listArray/Array" listArray =
-    \lu es -> runST (listArrayST lu es >>= ArrST.unsafeFreezeSTArray)
-    #-}
+    \lu es -> runST (listArrayST lu es >>= ArrST.unsafeFreezeSTArray) #-}
 
 {-# INLINE listUArrayST #-}
 listUArrayST :: (MArray (STUArray s) e (ST s), Ix i)
@@ -252,8 +251,7 @@ type ListUArray e = forall i . Ix i => (i,i) -> [e] -> UArray i e
 "listArray/UArray/Word32"    listArray
    = (\lu es -> runST (listUArrayST lu es >>= unsafeFreezeSTUArray)) :: ListUArray Word32
 "listArray/UArray/Word64"    listArray
-   = (\lu es -> runST (listUArrayST lu es >>= unsafeFreezeSTUArray)) :: ListUArray Word64
-    #-}
+   = (\lu es -> runST (listUArrayST lu es >>= unsafeFreezeSTUArray)) :: ListUArray Word64 #-}
 #endif
 
 {-# INLINE (!) #-}
@@ -1525,8 +1523,7 @@ freezeSTUArray (STUArray l u marr#) = ST $ \s1# ->
 
 {-# RULES
 "freeze/STArray"  freeze = ArrST.freezeSTArray
-"freeze/STUArray" freeze = freezeSTUArray
-    #-}
+"freeze/STUArray" freeze = freezeSTUArray #-}
 #endif /* __GLASGOW_HASKELL__ */
 
 -- In-place conversion of mutable arrays to immutable ones places
@@ -1567,8 +1564,7 @@ unsafeFreeze = freeze
 
 {-# RULES
 "unsafeFreeze/STArray"  unsafeFreeze = ArrST.unsafeFreezeSTArray
-"unsafeFreeze/STUArray" unsafeFreeze = unsafeFreezeSTUArray
-    #-}
+"unsafeFreeze/STUArray" unsafeFreeze = unsafeFreezeSTUArray #-}
 
 -----------------------------------------------------------------------------
 -- Thawing
@@ -1597,8 +1593,7 @@ foreign import ccall unsafe "memcpy"
 
 {-# RULES
 "thaw/STArray"  thaw = ArrST.thawSTArray
-"thaw/STUArray" thaw = thawSTUArray
-    #-}
+"thaw/STUArray" thaw = thawSTUArray #-}
 #endif /* __GLASGOW_HASKELL__ */
 
 #ifdef __HUGS__
@@ -1658,8 +1653,7 @@ unsafeThawSTUArray (UArray l u marr#) =
 
 {-# RULES
 "unsafeThaw/STArray"    unsafeThaw = ArrST.unsafeThawSTArray
-"unsafeThaw/STUArray"   unsafeThaw = unsafeThawSTUArray
-    #-}
+"unsafeThaw/STUArray"   unsafeThaw = unsafeThawSTUArray #-}
 #endif /* __GLASGOW_HASKELL__ */
 
 -- | Casts an 'STUArray' with one element type into one with a

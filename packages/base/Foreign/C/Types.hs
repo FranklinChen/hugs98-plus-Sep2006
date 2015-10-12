@@ -141,8 +141,7 @@ INTEGRAL_TYPE(CULLong,tyConCULLong,"CULLong",HTYPE_UNSIGNED_LONG_LONG)
 "fromIntegral/CLong->a"   fromIntegral = \(CLong   x) -> fromIntegral x
 "fromIntegral/CULong->a"  fromIntegral = \(CULong  x) -> fromIntegral x
 "fromIntegral/CLLong->a"  fromIntegral = \(CLLong  x) -> fromIntegral x
-"fromIntegral/CULLong->a" fromIntegral = \(CULLong x) -> fromIntegral x
- #-}
+"fromIntegral/CULLong->a" fromIntegral = \(CULLong x) -> fromIntegral x #-}
 
 -- | Haskell type representing the C @float@ type.
 FLOATING_TYPE(CFloat,tyConCFloat,"CFloat",HTYPE_FLOAT)
@@ -159,8 +158,7 @@ FLOATING_TYPE(CLDouble,tyConCLDouble,"CLDouble",HTYPE_DOUBLE)
 
 "realToFrac/CFloat->a"    realToFrac = \(CFloat   x) -> realToFrac x
 "realToFrac/CDouble->a"   realToFrac = \(CDouble  x) -> realToFrac x
-"realToFrac/CLDouble->a"  realToFrac = \(CLDouble x) -> realToFrac x
- #-}
+"realToFrac/CLDouble->a"  realToFrac = \(CLDouble x) -> realToFrac x #-}
 
 -- | Haskell type representing the C @ptrdiff_t@ type.
 INTEGRAL_TYPE(CPtrdiff,tyConCPtrdiff,"CPtrdiff",HTYPE_PTRDIFF_T)
@@ -180,8 +178,7 @@ INTEGRAL_TYPE(CSigAtomic,tyConCSigAtomic,"CSigAtomic",HTYPE_SIG_ATOMIC_T)
 "fromIntegral/CPtrdiff->a"   fromIntegral = \(CPtrdiff   x) -> fromIntegral x
 "fromIntegral/CSize->a"      fromIntegral = \(CSize      x) -> fromIntegral x
 "fromIntegral/CWchar->a"     fromIntegral = \(CWchar     x) -> fromIntegral x
-"fromIntegral/CSigAtomic->a" fromIntegral = \(CSigAtomic x) -> fromIntegral x
- #-}
+"fromIntegral/CSigAtomic->a" fromIntegral = \(CSigAtomic x) -> fromIntegral x #-}
 
 -- | Haskell type representing the C @clock_t@ type.
 ARITHMETIC_TYPE(CClock,tyConCClock,"CClock",HTYPE_CLOCK_T)
@@ -205,8 +202,7 @@ INTEGRAL_TYPE(CUIntMax,tyConCUIntMax,"CUIntMax",HTYPE_UINTMAX_T)
 "fromIntegral/a->CIntPtr"  fromIntegral = \x -> CIntPtr  (fromIntegral x)
 "fromIntegral/a->CUIntPtr" fromIntegral = \x -> CUIntPtr (fromIntegral x)
 "fromIntegral/a->CIntMax"  fromIntegral = \x -> CIntMax  (fromIntegral x)
-"fromIntegral/a->CUIntMax" fromIntegral = \x -> CUIntMax (fromIntegral x)
- #-}
+"fromIntegral/a->CUIntMax" fromIntegral = \x -> CUIntMax (fromIntegral x) #-}
 
 -- C99 types which are still missing include:
 -- wint_t, wctrans_t, wctype_t

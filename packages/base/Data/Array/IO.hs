@@ -63,8 +63,7 @@ freezeIOUArray (IOUArray marr) = stToIO (freezeSTUArray marr)
 
 {-# RULES
 "freeze/IOArray"  freeze = freezeIOArray
-"freeze/IOUArray" freeze = freezeIOUArray
-    #-}
+"freeze/IOUArray" freeze = freezeIOUArray #-}
 
 {-# INLINE unsafeFreezeIOArray #-}
 unsafeFreezeIOArray :: Ix ix => IOArray ix e -> IO (Array ix e)
@@ -76,8 +75,7 @@ unsafeFreezeIOUArray (IOUArray marr) = stToIO (unsafeFreezeSTUArray marr)
 
 {-# RULES
 "unsafeFreeze/IOArray"  unsafeFreeze = unsafeFreezeIOArray
-"unsafeFreeze/IOUArray" unsafeFreeze = unsafeFreezeIOUArray
-    #-}
+"unsafeFreeze/IOUArray" unsafeFreeze = unsafeFreezeIOUArray #-}
 
 -----------------------------------------------------------------------------
 -- Thawing
@@ -94,8 +92,7 @@ thawIOUArray arr = stToIO $ do
 
 {-# RULES
 "thaw/IOArray"  thaw = thawIOArray
-"thaw/IOUArray" thaw = thawIOUArray
-    #-}
+"thaw/IOUArray" thaw = thawIOUArray #-}
 
 {-# INLINE unsafeThawIOArray #-}
 unsafeThawIOArray :: Ix ix => Array ix e -> IO (IOArray ix e)
@@ -111,8 +108,7 @@ unsafeThawIOUArray arr = stToIO $ do
 
 {-# RULES
 "unsafeThaw/IOArray"  unsafeThaw = unsafeThawIOArray
-"unsafeThaw/IOUArray" unsafeThaw = unsafeThawIOUArray
-    #-}
+"unsafeThaw/IOUArray" unsafeThaw = unsafeThawIOUArray #-}
 
 -- ---------------------------------------------------------------------------
 -- hGetArray

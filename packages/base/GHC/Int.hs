@@ -134,8 +134,7 @@ instance Bits Int8 where
 {-# RULES
 "fromIntegral/Int8->Int8" fromIntegral = id :: Int8 -> Int8
 "fromIntegral/a->Int8"    fromIntegral = \x -> case fromIntegral x of I# x# -> I8# (narrow8Int# x#)
-"fromIntegral/Int8->a"    fromIntegral = \(I8# x#) -> fromIntegral (I# x#)
-  #-}
+"fromIntegral/Int8->a"    fromIntegral = \(I8# x#) -> fromIntegral (I# x#) #-}
 
 ------------------------------------------------------------------------
 -- type Int16
@@ -241,8 +240,7 @@ instance Bits Int16 where
 "fromIntegral/Int8->Int16"   fromIntegral = \(I8# x#) -> I16# x#
 "fromIntegral/Int16->Int16"  fromIntegral = id :: Int16 -> Int16
 "fromIntegral/a->Int16"      fromIntegral = \x -> case fromIntegral x of I# x# -> I16# (narrow16Int# x#)
-"fromIntegral/Int16->a"      fromIntegral = \(I16# x#) -> fromIntegral (I# x#)
-  #-}
+"fromIntegral/Int16->a"      fromIntegral = \(I16# x#) -> fromIntegral (I# x#) #-}
 
 ------------------------------------------------------------------------
 -- type Int32
@@ -391,8 +389,7 @@ foreign import "stg_shiftRL32"     unsafe shiftRL32#     :: Word32# -> Int# -> W
 "fromIntegral/Int32->Int"    fromIntegral = \(I32# x#) -> I#   (int32ToInt# x#)
 "fromIntegral/Int32->Word"   fromIntegral = \(I32# x#) -> W#   (int2Word# (int32ToInt# x#))
 "fromIntegral/Int32->Word32" fromIntegral = \(I32# x#) -> W32# (int32ToWord32# x#)
-"fromIntegral/Int32->Int32"  fromIntegral = id :: Int32 -> Int32
-  #-}
+"fromIntegral/Int32->Int32"  fromIntegral = id :: Int32 -> Int32 #-}
 
 #else 
 
@@ -493,8 +490,7 @@ instance Bits Int32 where
 "fromIntegral/Int16->Int32"  fromIntegral = \(I16# x#) -> I32# x#
 "fromIntegral/Int32->Int32"  fromIntegral = id :: Int32 -> Int32
 "fromIntegral/a->Int32"      fromIntegral = \x -> case fromIntegral x of I# x# -> I32# (narrow32Int# x#)
-"fromIntegral/Int32->a"      fromIntegral = \(I32# x#) -> fromIntegral (I# x#)
-  #-}
+"fromIntegral/Int32->a"      fromIntegral = \(I32# x#) -> fromIntegral (I# x#) #-}
 
 #endif 
 
@@ -677,8 +673,7 @@ foreign import ccall unsafe "stg_integerToInt64"  integerToInt64#  :: Int# -> By
 "fromIntegral/Int64->Int"    fromIntegral = \(I64# x#) -> I#   (int64ToInt# x#)
 "fromIntegral/Int64->Word"   fromIntegral = \(I64# x#) -> W#   (int2Word# (int64ToInt# x#))
 "fromIntegral/Int64->Word64" fromIntegral = \(I64# x#) -> W64# (int64ToWord64# x#)
-"fromIntegral/Int64->Int64"  fromIntegral = id :: Int64 -> Int64
-  #-}
+"fromIntegral/Int64->Int64"  fromIntegral = id :: Int64 -> Int64 #-}
 
 #else 
 
@@ -763,8 +758,7 @@ instance Bits Int64 where
 
 {-# RULES
 "fromIntegral/a->Int64" fromIntegral = \x -> case fromIntegral x of I# x# -> I64# x#
-"fromIntegral/Int64->a" fromIntegral = \(I64# x#) -> fromIntegral (I# x#)
-  #-}
+"fromIntegral/Int64->a" fromIntegral = \(I64# x#) -> fromIntegral (I# x#) #-}
 
 #endif
 

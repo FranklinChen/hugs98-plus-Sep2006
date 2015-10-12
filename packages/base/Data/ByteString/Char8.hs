@@ -312,8 +312,7 @@ pack str = B.unsafeCreate (P.length str) $ \(Ptr p) -> stToIO (go p str)
 
 {-# RULES
     "FPS pack/packAddress" forall s .
-       pack (unpackCString# s) = B.packAddress s
- #-}
+       pack (unpackCString# s) = B.packAddress s #-}
 
 #endif
 
@@ -779,8 +778,7 @@ unsafeHead  = w2c . B.unsafeHead
 
 {-# RULES
     "FPS specialise break -> breakSpace"
-        break isSpace = breakSpace
-  #-}
+        break isSpace = breakSpace #-}
 
 -- | 'breakSpace' returns the pair of ByteStrings when the argument is
 -- broken at the first whitespace byte. I.e.
@@ -806,8 +804,7 @@ firstspace ptr n m
 
 {-# RULES
     "FPS specialise dropWhile isSpace -> dropSpace"
-        dropWhile isSpace = dropSpace
-  #-}
+        dropWhile isSpace = dropSpace #-}
 
 -- | 'dropSpace' efficiently returns the 'ByteString' argument with
 -- white space Chars removed from the front. It is more efficient than

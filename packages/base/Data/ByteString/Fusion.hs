@@ -236,9 +236,7 @@ loopU f start (PS z s i) = unsafePerformIO $ withForeignPtr z $ \a -> do
 
 "FPS loop/loop fusion!" forall em1 em2 start1 start2 arr.
   loopU em2 start2 (loopArr (loopU em1 start1 arr)) =
-    loopSndAcc (loopU (em1 `fuseEFL` em2) (start1 :*: start2) arr)
-
-  #-}
+    loopSndAcc (loopU (em1 `fuseEFL` em2) (start1 :*: start2) arr) #-}
 
 --
 -- Functional list/array fusion for lazy ByteStrings.
@@ -263,9 +261,7 @@ loopL f = loop
 
 "FPS lazy loop/loop fusion!" forall em1 em2 start1 start2 arr.
   loopL em2 start2 (loopArr (loopL em1 start1 arr)) =
-    loopSndAcc (loopL (em1 `fuseEFL` em2) (start1 :*: start2) arr)
-
-  #-}
+    loopSndAcc (loopL (em1 `fuseEFL` em2) (start1 :*: start2) arr) #-}
 
 
 {-
@@ -536,9 +532,7 @@ sequenceLoops loop1 loop2 src dest len0 = do
 
 "FPS down/noAcc loop fusion" forall f1 f2 acc1 acc2.
   sequenceLoops (doDownLoop f1 acc1) (doNoAccLoop f2 acc2) =
-    doDownLoop (f1 `fuseAccNoAccEFL` f2) (acc1 :*: acc2)
-
-  #-}
+    doDownLoop (f1 `fuseAccNoAccEFL` f2) (acc1 :*: acc2) #-}
 
 {-
 

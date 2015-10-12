@@ -479,8 +479,7 @@ maximum xs              =  foldl1 max xs
 
 {-# RULES 
   "maximumInt"     maximum = (strictMaximum :: [Int]     -> Int);
-  "maximumInteger" maximum = (strictMaximum :: [Integer] -> Integer)
- #-}
+  "maximumInteger" maximum = (strictMaximum :: [Integer] -> Integer) #-}
 
 -- We can't make the overloaded version of maximum strict without
 -- changing its semantics (max might not be strict), but we can for
@@ -499,8 +498,7 @@ minimum xs              =  foldl1 min xs
 
 {-# RULES
   "minimumInt"     minimum = (strictMinimum :: [Int]     -> Int);
-  "minimumInteger" minimum = (strictMinimum :: [Integer] -> Integer)
- #-}
+  "minimumInteger" minimum = (strictMinimum :: [Integer] -> Integer) #-}
 
 strictMinimum		:: (Ord a) => [a] -> a
 strictMinimum []        =  errorEmptyList "minimum"

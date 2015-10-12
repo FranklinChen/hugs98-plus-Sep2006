@@ -172,8 +172,7 @@ instance Bits Word where
 {-# RULES
 "fromIntegral/Int->Word"  fromIntegral = \(I# x#) -> W# (int2Word# x#)
 "fromIntegral/Word->Int"  fromIntegral = \(W# x#) -> I# (word2Int# x#)
-"fromIntegral/Word->Word" fromIntegral = id :: Word -> Word
-  #-}
+"fromIntegral/Word->Word" fromIntegral = id :: Word -> Word #-}
 
 ------------------------------------------------------------------------
 -- type Word8
@@ -271,8 +270,7 @@ instance Bits Word8 where
 "fromIntegral/Word8->Word8"   fromIntegral = id :: Word8 -> Word8
 "fromIntegral/Word8->Integer" fromIntegral = toInteger :: Word8 -> Integer
 "fromIntegral/a->Word8"       fromIntegral = \x -> case fromIntegral x of W# x# -> W8# (narrow8Word# x#)
-"fromIntegral/Word8->a"       fromIntegral = \(W8# x#) -> fromIntegral (W# x#)
-  #-}
+"fromIntegral/Word8->a"       fromIntegral = \(W8# x#) -> fromIntegral (W# x#) #-}
 
 ------------------------------------------------------------------------
 -- type Word16
@@ -371,8 +369,7 @@ instance Bits Word16 where
 "fromIntegral/Word16->Word16"  fromIntegral = id :: Word16 -> Word16
 "fromIntegral/Word16->Integer" fromIntegral = toInteger :: Word16 -> Integer
 "fromIntegral/a->Word16"       fromIntegral = \x -> case fromIntegral x of W# x# -> W16# (narrow16Word# x#)
-"fromIntegral/Word16->a"       fromIntegral = \(W16# x#) -> fromIntegral (W# x#)
-  #-}
+"fromIntegral/Word16->a"       fromIntegral = \(W16# x#) -> fromIntegral (W# x#) #-}
 
 ------------------------------------------------------------------------
 -- type Word32
@@ -492,8 +489,7 @@ foreign import unsafe "stg_shiftRL32"     shiftRL32#     :: Word32# -> Int# -> W
 "fromIntegral/Word->Word32"   fromIntegral = \(W#   x#) -> W32# (wordToWord32# x#)
 "fromIntegral/Word32->Int"    fromIntegral = \(W32# x#) -> I#   (word2Int# (word32ToWord# x#))
 "fromIntegral/Word32->Word"   fromIntegral = \(W32# x#) -> W#   (word32ToWord# x#)
-"fromIntegral/Word32->Word32" fromIntegral = id :: Word32 -> Word32
-  #-}
+"fromIntegral/Word32->Word32" fromIntegral = id :: Word32 -> Word32 #-}
 
 #else 
 
@@ -598,8 +594,7 @@ instance Bits Word32 where
 "fromIntegral/Word32->Word32"  fromIntegral = id :: Word32 -> Word32
 "fromIntegral/Word32->Integer" fromIntegral = toInteger :: Word32 -> Integer
 "fromIntegral/a->Word32"       fromIntegral = \x -> case fromIntegral x of W# x# -> W32# (narrow32Word# x#)
-"fromIntegral/Word32->a"       fromIntegral = \(W32# x#) -> fromIntegral (W# x#)
-  #-}
+"fromIntegral/Word32->a"       fromIntegral = \(W32# x#) -> fromIntegral (W# x#) #-}
 
 #endif
 
@@ -765,8 +760,7 @@ foreign import ccall unsafe "stg_integerToWord64" integerToWord64# :: Int# -> By
 "fromIntegral/Word->Word64"   fromIntegral = \(W#   x#) -> W64# (wordToWord64# x#)
 "fromIntegral/Word64->Int"    fromIntegral = \(W64# x#) -> I#   (word2Int# (word64ToWord# x#))
 "fromIntegral/Word64->Word"   fromIntegral = \(W64# x#) -> W#   (word64ToWord# x#)
-"fromIntegral/Word64->Word64" fromIntegral = id :: Word64 -> Word64
-  #-}
+"fromIntegral/Word64->Word64" fromIntegral = id :: Word64 -> Word64 #-}
 
 #else
 
@@ -851,8 +845,7 @@ instance Bits Word64 where
 
 {-# RULES
 "fromIntegral/a->Word64" fromIntegral = \x -> case fromIntegral x of W# x# -> W64# x#
-"fromIntegral/Word64->a" fromIntegral = \(W64# x#) -> fromIntegral (W# x#)
-  #-}
+"fromIntegral/Word64->a" fromIntegral = \(W64# x#) -> fromIntegral (W# x#) #-}
 
 #endif
 

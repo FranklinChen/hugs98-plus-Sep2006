@@ -110,8 +110,7 @@ class Arrow a where
 "compose/first"	forall f g .
 		first f >>> first g = first (f >>> g)
 "compose/second" forall f g .
-		second f >>> second g = second (f >>> g)
- #-}
+		second f >>> second g = second (f >>> g) #-}
 
 -- Ordinary functions are arrows.
 
@@ -222,8 +221,7 @@ class Arrow a => ArrowChoice a where
 "compose/left"	forall f g .
 		left f >>> left g = left (f >>> g)
 "compose/right"	forall f g .
-		right f >>> right g = right (f >>> g)
- #-}
+		right f >>> right g = right (f >>> g) #-}
 
 instance ArrowChoice (->) where
 	left f = f +++ id
