@@ -527,7 +527,7 @@ if test $HaveLibTermcap = YES ; then
     LIBS="-l$LibTermcap $LIBS"
 fi
 
-AC_CHECK_LIB(readline, readline, HaveLibReadline=YES; LibReadline=readline,
+AC_CHECK_LIB(edit, readline, HaveLibReadline=YES; LibReadline=edit,
   AC_CHECK_LIB(editline, readline, HaveLibReadline=YES; LibReadline=editline,
     HaveLibReadline=NO))
 if test $HaveLibTermcap = YES && test $HaveLibReadline = YES &&
