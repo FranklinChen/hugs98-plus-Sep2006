@@ -89,6 +89,10 @@ extern int   acceptDoProc(void* param);
 #endif
 #endif
 
+#ifdef SO_PEERCRED
+#include <sys/ucred.h>
+#endif
+
 extern int
 sendFd(int sock, int outfd);
 
