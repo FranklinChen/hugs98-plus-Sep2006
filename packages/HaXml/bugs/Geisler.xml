@@ -1,0 +1,6 @@
+<Foo>
+  <Bar>First Bar</Bar>
+  <Bar>Second Bar &amp; some entity reference</Bar>
+  <!-- this is a comment -->
+  <Bar>Third Bar after the comment</Bar>
+</Foo>

@@ -1,0 +1,6 @@
+<!-- XmlBase01.xml: simple base URI test:  document URI throughout -->
+<doc xmlns:eg="http://id.example.org/namespace">
+  <eg:inner eg:a2="a2">
+    <eg:deeper eg:a3="a3" />
+  </eg:inner>
+</doc>

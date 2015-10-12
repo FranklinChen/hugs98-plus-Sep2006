@@ -1,0 +1,6 @@
+<?xml version='1.0' ?>
+<!DOCTYPE test  [
+<!ELEMENT test (#PCDATA)>
+<!ENTITY tricky "error-prone">
+]>
+<test tricky="A error-prone attribute"/>

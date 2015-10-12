@@ -1,0 +1,572 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resrc1.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "resource.h"
+#include "afxres.h"
+#include "winmenu.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Neutral resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEU)
+#ifdef _WIN32
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// RT_MANIFEST
+//
+
+1                       RT_MANIFEST             "resource\\winhugs.manifest"
+#endif    // Neutral resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.K.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENG)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_UK
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+CLASSBMP                BITMAP                  "resource\\classbmp.bmp"
+CLASSESDLGBMP           BITMAP                  "resource\\classesd.bmp"
+DATACONSBMP             BITMAP                  "resource\\datacons.bmp"
+INSTANCEBMP             BITMAP                  "resource\\instance.bmp"
+BMP_ABOUT               BITMAP                  "resource\\logo.bmp"
+MEMBERBMP               BITMAP                  "resource\\memberbm.bmp"
+NAMEBMP                 BITMAP                  "resource\\namebmp.bmp"
+NAMESDLGBMP             BITMAP                  "resource\\namesdlg.bmp"
+NEWTYPEBMP              BITMAP                  "resource\\newtypeb.bmp"
+PRIMBMP                 BITMAP                  "resource\\primbmp.bmp"
+SELECTORBMP             BITMAP                  "resource\\selector.bmp"
+TYCONSDLGBMP            BITMAP                  "resource\\tyconsdl.bmp"
+TYPECONSBMP             BITMAP                  "resource\\typecons.bmp"
+TYPESINBMP              BITMAP                  "resource\\typesinb.bmp"
+SCRIPTMANDLGBMP         BITMAP                  "resource\\smand.bmp"
+BMP_TOOLBAR             BITMAP                  "resource\\toolbar.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+HUGSMENU MENU 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&Open...\tCtrl+O",            ID_OPEN
+        MENUITEM "&Module Manager...",          ID_SCRIPTMAN
+        MENUITEM "Options",                     ID_SETOPTIONS
+        MENUITEM SEPARATOR
+        MENUITEM "&Exit",                       ID_EXIT
+        MENUITEM SEPARATOR
+        MENUITEM "Recently Used Files",         ID_MRU, GRAYED
+    END
+    POPUP "&Edit"
+    BEGIN
+        MENUITEM "Cu&t\tCtrl+X",                ID_CUT
+        MENUITEM "&Copy\tCtrl+C",               ID_COPY
+        MENUITEM "&Paste\tCtrl+V",              ID_PASTE
+        MENUITEM SEPARATOR
+        MENUITEM "Delete\tDel",                 ID_DELETE
+        MENUITEM "Select All\tCtrl+A",          ID_SELECTALL
+        MENUITEM "Clear Screen",                ID_CLEARSCREEN
+        MENUITEM SEPARATOR
+        MENUITEM "Previous line\t&Up arrow",    ID_GOPREVIOUS
+        MENUITEM "Next line\t&Down arrow",      ID_GONEXT
+    END
+    POPUP "&Actions"
+    BEGIN
+        MENUITEM "&Run\tF5",                    ID_RUN
+        MENUITEM "&Stop",                       ID_STOP
+        MENUITEM SEPARATOR
+        MENUITEM "Re&load",                     ID_COMPILE
+        MENUITEM "&Clear Modules",              ID_CLEARALL
+        MENUITEM SEPARATOR
+        MENUITEM "Open Text Editor",            ID_GOEDIT
+    END
+    POPUP "&Browse"
+    BEGIN
+        MENUITEM "&Classes...",                 ID_BROWSECLASSES
+        MENUITEM "&Names...",                   ID_BROWSENAMES
+        MENUITEM "&Type constructors...",       ID_BROWSETYCONS
+        MENUITEM SEPARATOR
+        MENUITEM "&Hierarchy",                  ID_BROWSEHIERARCHY
+    END
+    POPUP "\a&Help"
+    BEGIN
+        MENUITEM "&Contents\tF1 ",              ID_HELPCONTENTS
+        MENUITEM "Hugs C&ommands",              ID_HELPCOMMANDS
+        MENUITEM "Hierarchical &Libraries",     ID_LIBRARIES
+        MENUITEM SEPARATOR
+        MENUITEM "&Hugs Website",               ID_WWWHUGS
+        MENUITEM "Haskell &Website",            ID_WWWHASKELL
+        MENUITEM SEPARATOR
+        MENUITEM "&About WinHugs...",           ID_ABOUT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+ABOUTDLGBOX DIALOGEX 35, 24, 318, 113
+STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | DS_FIXEDSYS | DS_CENTER | 
+    WS_POPUP | WS_CAPTION
+CAPTION "About Hugs for Windows"
+FONT 8, "MS Shell Dlg", 400, 0, 0x0
+BEGIN
+    PUSHBUTTON      "OK",IDOK,252,90,53,16
+    CONTROL         "",rtfAbout,"RichEdit20A",ES_MULTILINE | ES_AUTOHSCROLL | 
+                    ES_READONLY | WS_TABSTOP,103,17,201,67,WS_EX_TRANSPARENT
+END
+
+BROWSECLASSESDLGBOX DIALOG  65535, 18, 344, 220
+STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | DS_FIXEDSYS | WS_POPUP | 
+    WS_CAPTION | WS_SYSMENU
+CAPTION "Browse Classes"
+FONT 8, "Ms Sans Serif"
+BEGIN
+    LISTBOX         LB_CLASS,11,13,84,146,LBS_SORT | LBS_OWNERDRAWFIXED | 
+                    WS_VSCROLL | WS_HSCROLL | WS_TABSTOP
+    LISTBOX         LB_INSTANCES,11,180,266,29,LBS_SORT | LBS_OWNERDRAWFIXED | 
+                    WS_VSCROLL | WS_TABSTOP
+    LISTBOX         LB_MEMBERS,119,13,158,113,LBS_SORT | LBS_OWNERDRAWFIXED | 
+                    WS_VSCROLL | WS_HSCROLL | WS_TABSTOP
+    LISTBOX         LB_CONTEXT,121,144,157,15,WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "C&lose",IDOK,291,4,47,14
+    PUSHBUTTON      "&Hierarchy",ID_HIERARCHY,291,23,47,14
+    PUSHBUTTON      "Edit &class",ID_EDITCLASS,291,42,47,14
+    PUSHBUTTON      "Edit &instance",ID_EDITINSTANCE,291,62,47,14
+    LTEXT           "",ID_PLACEBITMAP,287,172,49,1
+    GROUPBOX        " Members: ",-1,111,1,173,129
+    GROUPBOX        " Superclasses: ",-1,111,134,173,30
+    GROUPBOX        " Instances: ",-1,4,167,280,47
+    GROUPBOX        " Classes: ",-1,4,1,100,163
+END
+
+BROWSENAMESDLGBOX DIALOG  24, 39, 288, 160
+STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | DS_FIXEDSYS | WS_POPUP | 
+    WS_CAPTION | WS_SYSMENU
+CAPTION "Browse Names"
+FONT 8, "Ms Sans Serif"
+BEGIN
+    LISTBOX         LB_NAMES,11,14,214,45,LBS_OWNERDRAWFIXED | 
+                    LBS_HASSTRINGS | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "&Search:",-1,11,67,27,8
+    EDITTEXT        IDC_SEARCHNAME,39,65,186,12
+    LISTBOX         LB_NAMESTYPE,11,103,214,14,WS_VSCROLL | WS_TABSTOP
+    LISTBOX         LB_NAMESNOTES,11,139,214,12,WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "C&lose",IDOK,238,14,45,14
+    PUSHBUTTON      "Edit &name",ID_EDITNAME,238,35,45,14
+    GROUPBOX        " Names: ",-1,4,2,228,87
+    GROUPBOX        " Type: ",-1,4,92,228,28
+    GROUPBOX        " Notes: ",-1,4,127,228,28
+    LTEXT           "",ID_PLACEBITMAP,235,112,41,1
+END
+
+BROWSETYCONSDLGBOX DIALOG  16, 16, 312, 226
+STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | DS_FIXEDSYS | WS_POPUP | 
+    WS_CAPTION | WS_SYSMENU
+CAPTION "Browse Type Constructors"
+FONT 8, "Ms Sans Serif"
+BEGIN
+    LISTBOX         LB_TYCONS,12,17,210,55,LBS_OWNERDRAWFIXED | 
+                    LBS_HASSTRINGS | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Search:",-1,12,80,28,8
+    EDITTEXT        IDC_SEARCHTYCON,39,78,183,12
+    LISTBOX         LB_DEF,12,113,212,12,WS_VSCROLL | WS_TABSTOP
+    LISTBOX         LB_CONS,12,142,210,34,LBS_OWNERDRAWFIXED | 
+                    LBS_HASSTRINGS | WS_VSCROLL | WS_TABSTOP
+    LISTBOX         LB_TYCONSINST,12,189,210,28,LBS_OWNERDRAWFIXED | 
+                    WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "C&lose",IDOK,248,15,58,14
+    PUSHBUTTON      "Edit &type",ID_EDITTYCON,248,34,58,14
+    PUSHBUTTON      "Edit &instance",ID_EDITTYCONSINST,248,53,58,14
+    LTEXT           "",ID_PLACEBITMAP,234,170,73,1
+    GROUPBOX        " Types: ",-1,5,4,226,92
+    GROUPBOX        " Type: ",-1,5,101,226,27
+    GROUPBOX        " Constructors and selectors: ",-1,5,132,226,42
+    GROUPBOX        " Instances: ",-1,5,177,226,45
+END
+
+SCRIPTMANDLGBOX DIALOGEX 84, 17, 301, 192
+STYLE DS_SETFONT | DS_MODALFRAME | DS_3DLOOK | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Module Manager"
+FONT 8, "Arial", 0, 0, 0x0
+BEGIN
+    GROUPBOX        "Module files: ",-1,5,5,220,184
+    LISTBOX         LB_SCRIPTS,11,20,203,167,WS_VSCROLL | WS_HSCROLL | 
+                    WS_TABSTOP
+    PUSHBUTTON      "&Add",ID_ADDSCRIPT,236,11,53,14
+    PUSHBUTTON      "&Remove",ID_DELSCRIPT,236,31,53,14
+    PUSHBUTTON      "&Clear",ID_CLEARSCRIPTS,236,51,53,14
+    PUSHBUTTON      "&Edit",ID_EDITSCRIPT,236,71,53,14
+    PUSHBUTTON      "C&ancel",IDCANCEL,236,151,53,14
+    DEFPUSHBUTTON   "&OK",IDOK,236,171,53,14
+    LTEXT           "",ID_PLACEBITMAP,238,95,73,1
+END
+
+DLG_MAIN DIALOGEX 0, 0, 443, 258
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | 
+    WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+EXSTYLE WS_EX_ACCEPTFILES | WS_EX_APPWINDOW
+CAPTION "WinHugs"
+MENU HUGSMENU
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "",ID_RTF,"RichEdit20A",ES_MULTILINE | ES_AUTOVSCROLL | 
+                    ES_NUMBER | WS_VSCROLL,48,34,70,72,WS_EX_CLIENTEDGE
+END
+
+DLG_OPTCOMPILE DIALOGEX 0, 0, 291, 150
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Compile Time"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    GROUPBOX        "Haskell Extensions [Requires restart]",IDC_STATIC,7,68,
+                    277,74
+    LTEXT           "Path:",IDC_STATIC,12,21,42,13
+    EDITTEXT        txtPath,58,17,219,12,ES_AUTOHSCROLL
+    CONTROL         "Overlapping instances",chkOverlap,"Button",
+                    BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,23,104,230,12
+    CONTROL         "Unsafe overlapping instances",chkOverlapUnsafe,"Button",
+                    BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,32,115,230,12
+    CONTROL         "Here documents",chkHereDocs,"Button",BS_AUTOCHECKBOX | 
+                    WS_DISABLED | WS_TABSTOP,23,125,230,12
+    CONTROL         "Show list of scripts being loaded",chkListLoading,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,12,34,261,11
+    CONTROL         "Automatically reload modified files",chkAutoReload,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,12,45,265,10
+    GROUPBOX        "Loading Files",IDC_STATIC,7,7,277,53
+    CONTROL         "Haskell 98 Compatability",optCompatible,"Button",
+                    BS_AUTORADIOBUTTON,12,80,252,10
+    CONTROL         "Allow Hugs/Ghc Extensions",optExtensions,"Button",
+                    BS_AUTORADIOBUTTON,11,92,252,10
+END
+
+DLG_OPTRUNTIME DIALOGEX 0, 0, 304, 113
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "Runtime"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    EDITTEXT        txtHeapSize,54,18,60,12
+    CONTROL         "",spnHeapSize,"msctls_updown32",UDS_SETBUDDYINT | 
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS,115,17,11,
+                    14
+    LTEXT           "Heap size:",IDC_STATIC,16,20,36,8
+    LTEXT           "Mb",IDC_STATIC,131,21,10,8
+    GROUPBOX        "Debugging Options",IDC_STATIC,7,51,290,54
+    CONTROL         "Print statistics (heap cells, reductions) after each computation",
+                    chkPrintStats,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,
+                    63,214,10
+    CONTROL         "Print garbage collection messages",chkPrintGC,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,15,75,124,10
+    CONTROL         "Print type after evaluation",chkPrintType,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,15,88,101,10
+    CONTROL         "Use Show instance for results",chkUserShow,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,15,33,268,10
+    GROUPBOX        "Runtime Options",IDC_STATIC,7,7,290,40
+    LTEXT           "(Requires WinHugs restart to take effect)",IDC_STATIC,
+                    148,20,134,8
+END
+
+DLG_OPTHUGS DIALOGEX 0, 0, 304, 131
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+    WS_SYSMENU
+CAPTION "WinHugs"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    GROUPBOX        "Output area / Font",IDC_STATIC,7,7,290,71
+    LTEXT           "Font face:",IDC_STATIC,13,20,34,8
+    LTEXT           "Font size:",IDC_STATIC,14,39,32,8
+    CONTROL         "Bold",chkFontBold,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
+                    147,36,29,10
+    CONTROL         "Italic",chkFontItalic,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,193,36,31,10
+    EDITTEXT        txtFontSize,59,34,60,12
+    CONTROL         "",spnFontSize,"msctls_updown32",UDS_SETBUDDYINT | 
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,121,33,11,14
+    GROUPBOX        "Editor",IDC_STATIC,7,82,290,42
+    LTEXT           "Use:",IDC_STATIC,15,92,29,10
+    EDITTEXT        txtEditor,59,106,225,12,ES_AUTOHSCROLL | WS_DISABLED
+    COMBOBOX        lstFontFace,59,17,225,58,CBS_DROPDOWN | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    CONTROL         "",rtfPreview,"RichEdit20A",ES_CENTER | ES_AUTOHSCROLL | 
+                    ES_READONLY | WS_TABSTOP,13,50,271,22,WS_EX_STATICEDGE
+    COMBOBOX        lstEditor,59,89,225,65,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+HUGSACCELERATORS ACCELERATORS 
+BEGIN
+    VK_F9,          ID_COMPILE,             VIRTKEY, NOINVERT
+    VK_F1,          ID_HELPINDEX,           VIRTKEY, NOINVERT
+    VK_F5,          ID_RUN,                 VIRTKEY, NOINVERT
+    "O",            ID_OPEN,                VIRTKEY, CONTROL, NOINVERT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Cursor
+//
+
+MOVECLASSCURSOR         CURSOR                  "resource\\move.cur"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+HUGS                    ICON                    "resource\\hugs1.ico"
+HUGSDOC                 ICON                    "resource\\hugsdoc.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    BROWSECLASSESDLGBOX, DIALOG
+    BEGIN
+        BOTTOMMARGIN, 217
+    END
+
+    DLG_OPTCOMPILE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 284
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 124
+    END
+
+    DLG_OPTRUNTIME, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 297
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 106
+    END
+
+    DLG_OPTHUGS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 297
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 124
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resrc1.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""resource.h""\r\n"
+    "#include ""afxres.h""\r\n"
+    "#include ""winmenu.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    ID_NEW                  "Edit a new script file"
+    ID_OPEN                 "Load modules from specified file"
+    ID_SCRIPTMAN            "Enter Module Manager"
+    ID_SAVE                 "Load selected file"
+    ID_EXIT                 "Exit Hugs interpreter"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_COPY                 "Copy selected text to clipboard"
+    ID_PASTE                "Paste text from clipboard"
+    ID_GOEDIT               "Run text editor"
+    ID_CUT                  "Cut selected text"
+    ID_GOPREVIOUS           "Edit previous input line"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_GONEXT               "Edit next input line"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_RUN                  "Evaluate  ""main""  expression"
+    ID_STOP                 "Stop program execution"
+    ID_EVAL                 "Evaluate selected expression"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_TYPE                 "Show type of selected expression"
+    ID_COMPILE              "Reload files"
+    ID_MAKE                 "Reload files for current project"
+    ID_CLEARALL             "Clear all files except prelude"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_SETOPTIONS           "Set Hugs interpreter options"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_BROWSECLASSES        "Browse defined classes, instances and members"
+    ID_BROWSENAMES          "Browse defined names"
+    ID_BROWSETYCONS         "Browse defined type constructors"
+    ID_BROWSEHIERARCHY      "Show classes hierarchy"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_HELPINDEX            "Display help contents"
+    ID_ABOUT                "Display version info"
+    ID_HELPCOMMANDS         "Summary of Hugs commands"
+END
+
+STRINGTABLE 
+BEGIN
+    61440                   "Changes the size of the window"
+END
+
+STRINGTABLE 
+BEGIN
+    61456                   "Moves the window to another position"
+END
+
+STRINGTABLE 
+BEGIN
+    61472                   "Reduces the window to an icon"
+END
+
+STRINGTABLE 
+BEGIN
+    61488                   "Enlarges the window to it maximum size"
+END
+
+STRINGTABLE 
+BEGIN
+    61504                   "Switches to next window"
+END
+
+STRINGTABLE 
+BEGIN
+    61536                   "Closes the window"
+END
+
+STRINGTABLE 
+BEGIN
+    61728                   "Restores the window to its previous size"
+END
+
+STRINGTABLE 
+BEGIN
+    61744                   "Opens task list"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_MRU                  "Load recently loaded file"
+    151                     "Load recently loaded file"
+    152                     "Load recently loaded file"
+    153                     "Load recently loaded file"
+    154                     "Load recently loaded file"
+    155                     "Load recently loaded file"
+    156                     "Load recently loaded file"
+    157                     "Load recently loaded file"
+    158                     "Load recently loaded file"
+    159                     "Load recently loaded file"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_DELETE               "Delete the currently selected text"
+    ID_CLEARSCREEN          "Clear the screen"
+    ID_SELECTALL            "Select all the text"
+    ID_LIBRARIES            "Information on the Hierarchical Libraries"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_WWWHUGS              "Visit the Hugs website, www.haskell.org/hugs"
+    ID_WWWHASKELL           "Visit the Haskell website, www.haskell.org"
+    ID_HELPCONTENTS         "Show the help contents"
+END
+
+#endif    // English (U.K.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

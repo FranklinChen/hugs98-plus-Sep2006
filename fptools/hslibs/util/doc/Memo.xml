@@ -1,0 +1,61 @@
+<sect1 id="memo-library">
+<title><literal>Memo</literal>: Fast memo functions
+<indexterm><primary>Memo</primary></indexterm>
+</title>
+
+<para>
+The <literal>Memo</literal> library provides fast polymorphic memo functions using hash
+tables.  The interface is:
+</para>
+
+<para>
+
+<programlisting>
+memo :: (a -&#62; b) -&#62; a -&#62; b
+</programlisting>
+
+</para>
+
+<para>
+So, for example, <function>memo f</function> is a version of <function>f</function> that caches the results
+of previous calls.
+</para>
+
+<para>
+The searching is very fast, being based on pointer equality.  One
+consequence of this is that the caching will only be effective if
+<emphasis>exactly the same argument is passed again to the memoised
+function</emphasis>.  This means not just a copy of a previous argument, but the
+same instance.  It's not useful to memoise integer functions using
+this interface, because integers are generally copied a lot and two
+instances of '27' are unlikely to refer to the same object.
+</para>
+
+<para>
+This memoisation library works well when the keys are large (or even
+infinite).
+</para>
+
+<para>
+The memo table implementation uses weak pointers and stable names (see
+the GHC/Hugs library document) to avoid space leaks and allow hashing
+for arbitrary Haskell objects.  NOTE: while individual memo table
+entries will be garbage collected if the associated key becomes
+garbage, the memo table itself will not be collected if the function
+becomes garbage.  We plan to fix this in a future version.
+</para>
+
+<para>
+There's another version of <function>memo</function> if you want to explicitly give a
+size for the hash table (the default size is 1001 buckets):
+</para>
+
+<para>
+
+<programlisting>
+memoSized :: Int -&#62; (a -&#62; b) -&#62; a -&#62; b
+</programlisting>
+
+</para>
+
+</sect1>

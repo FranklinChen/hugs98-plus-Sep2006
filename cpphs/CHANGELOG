@@ -1,0 +1,108 @@
+Version 1.2
+-----------
+  * Re-arranged the source files into hierarchical libraries.
+  * Exposed the library interface as an installable Cabal package, with
+    Haddock documentation.
+  * Added the --unlit option, for removing literate-style comments.
+
+Version 1.1
+-----------
+  * Fix the .cabal way of building cpphs.
+  * Update the --version reported (forgotten in 1.0, which still reports 0.9)
+  * No longer throws an error when given an empty file as input.
+
+Version 1.0
+-----------
+  * Add a compatibility script cpphs.compat, allowing cpphs to act as
+    a drop-in replacement for cpp, e.g.
+        ghc -cpp -pgmP cpphs.compat
+  * Place quotes around replacements for special macros __FILE__, __DATE__,
+    and __TIME__.
+  * If no files are specified, read from stdin.
+  * Ignore #! lines (e.g. in scripts)
+  * Parse -D commandline options once only, and consistently with cpp,
+    i.e. -Dfoo means foo=1
+  * Fix compatibility with preprocessors like hsc2hs, which use
+    non-cpp directives like #def.  They are now passed through to the
+    output with a warning to stderr.
+
+Version 0.9
+-----------
+  * Bugfix for ghc-6.4 -O: flush the output buffer.
+
+Version 0.8
+-----------
+  * Added the --text option, to signify the input should not
+    be lexed as Haskell.  This causes macros to be defined or expanded
+    regardless of their location within comments, string delimiters, etc.
+  * Shuffle a few files around to make it easier to say 'hmake cpphs'.
+    There is also now a runhugs script to invoke cpphs nicely.
+
+Version 0.7
+-----------
+  * Enable the __FILE__, __LINE__, __DATE__, and __TIME__ specials, which
+    can be useful for creating DIY error messages.
+
+Version 0.6
+-----------
+  * Recognise and ignore the #pragma cpp directive.
+  * Fix beginning-of-file bug, where in --noline mode, a # cpp directive
+    at the top of the file appeared in the output.
+  * Fix chained parenthesised boolean exprs in #if, e.g.
+        #if ( foo ) && ( bar )
+  * Fix precedence in chained unparenthesised boolean exprs in #if, e.g.
+        #if foo && bar || baz && frob
+  * For better compatibility with cpp, and because otherwise
+    there are certain constructs that cannot be expressed, we no
+    longer permit whitespace in a <tt>#define</tt> between the
+    symbolname and an opening parenthesis, e.g.
+        #define f (f' id)
+    Previously, this was interpreted as a parametrised macro,
+    with arguments in the parens, and no expansion.  Now, the space
+    indicates that this is a textual replacement, and the parenthesised
+    expression is in fact the replacement.
+
+Version 0.5
+-----------
+  * Added a --version flag to report the version number.
+  * Renamed --stringise to --hashes, and use it to turn on ## catenation
+    as well.
+  * Bugfix for #if 1, previously taken as false.
+  * Bugfix for --nolines: it no longer adds extra spurious newlines.
+  * File inclusion now looks in the directory of the calling file.
+  * Failure to find an include file is now merely a warning to stderr
+    rather than an error.
+  * Added a --layout flag.  Previously, line continuations in a macro
+    definition were always preserved in the output, permitting use
+    of the Haskell layout rule even inside a macro.  The default is now
+    to remove line continuations for conformance with cpp, but the option
+    of using --layout is still possible.
+
+Version 0.4
+-----------
+  * New flag -Ofile to redirect output
+  * Bugfix for precedence in   #if !False && False
+  * Bugfix for whitespace between # and if
+  * Bugfix for #define F "blah"; #include F
+
+Version 0.3
+-----------
+  * Bugfix for recursive macro expansion.
+  * New flag --strip to remove C comments even outside cpp directives.
+  * New flag --stringise to recognise the # stringise operator in macros.
+
+Version 0.2
+-----------
+  * New flag --noline to eliminate #line directives from output.
+  * Add symbol-replacement and macro-expansion.
+  * New flag --nomacro to turn off symbol/macro-expansion.
+
+2004-Apr-21
+-----------
+  * Now accept multi-line # commands via the \ line continuation operator.
+    The original file line numbering is preserved in the output by
+    some tricky acrobatics.
+
+Version 0.1
+-----------
+  * Initial release.

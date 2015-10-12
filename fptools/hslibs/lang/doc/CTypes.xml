@@ -1,0 +1,7 @@
+<sect1 id="sec-CTypes">
+<title><literal>CTypes</literal><indexterm><primary>CTypes</primary></indexterm>
+</title>
+
+  <para>This module has moved to <ulink url="../libraries/base/Foreign.C.Types.html"><literal>Foreign.C.Types</literal></ulink> in the
+  hierarchical libraries.</para>
+</sect1>

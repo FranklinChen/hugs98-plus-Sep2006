@@ -1,0 +1,30 @@
+/* -----------------------------------------------------------------------------
+ *
+ * Module      :  C support for Sound.OpenAL
+ * Copyright   :  (c) Sven Panne 2003-2005
+ * License     :  BSD-style (see the file libraries/OpenAL/LICENSE)
+ * 
+ * Maintainer  :  sven.panne@aedion.de
+ * Stability   :  provisional
+ * Portability :  portable
+ *
+ * -------------------------------------------------------------------------- */
+
+#ifndef HSOPENAL_H
+#define HSOPENAL_H
+
+/* Define to 1 if you have the <AL/alc.h> header file. */
+#undef HAVE_AL_ALC_H
+
+/* Define to 1 if you have the <OpenAL/alc.h> header file. */
+#undef HAVE_OPENAL_ALC_H
+
+#if defined(HAVE_AL_ALC_H)
+#include <AL/al.h>
+#include <AL/alc.h>
+#elif defined(HAVE_OPENAL_ALC_H)
+#include <OpenAL/al.h>
+#include <OpenAL/alc.h>
+#endif
+
+#endif

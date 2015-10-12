@@ -1,0 +1,32 @@
+Hugs for EPOC
+-------------
+
+Port by Glenn Strong (Glenn.Strong@cs.tcd.ie)
+Integrated by Reuben Thomas (rrt@sc3d.org)
+
+
+Hugs for EPOC should be built with the Symbian SDK. This directory contains
+all the necessary files; after unpacking the source, copy config.h,
+options.h and hugs.mmp into src/ and then, after copying the hugs98
+directory into C:\epoc_code, an incantation of the form
+
+makmake hugs.mmp {marm,winc}
+
+should make a makefile which you can then use with
+
+nmake -f hugs.{marm,winc}
+
+If you're using MS VC++ 6.0 introductory edition, you should uncomment the
+section at the end of hugs.mmp which contains a hack to make things work.
+
+To get a slightly smaller ARM build, edit the hugs.marm file and change the
+-O flag in CFLAGS to -O2. By default, Hugs for EPOC is built without the
+Hugs extensions; change HASKELL_98_ONLY to 0 in options.h to stop that.
+
+The remainder of the files are for building a SIS installation file
+(demos_readme, eshell_readme, hugs.pkg, readme; you also need the file
+License from the root of the hugs tree for this).
+
+Good luck, and please pester Reuben or Glenn with questions about building,
+and, in the first instance, for bugs (which are likely to be ours rather
+than Hugs's).

@@ -1,0 +1,409 @@
+/* include/HsOpenALConfig.h.in.  Generated from configure.ac by autoheader.  */
+
+/* Define to 1 if `alcCloseDevice' returns void. */
+#undef ALCCLOSEDEVICE_VOID
+
+/* Define to 1 if `alcDestroyContext' returns void. */
+#undef ALCDESTROYCONTEXT_VOID
+
+/* Define to 1 if `alcMakeContextCurrent' returns void. */
+#undef ALCMAKECONTEXTCURRENT_VOID
+
+/* Define to 1 if `alcProcessContext' returns void. */
+#undef ALCPROCESSCONTEXT_VOID
+
+/* Framework flags for AL, as a list of string literals. */
+#undef AL_FRAMEWORKS
+
+/* Library flags for AL, as a list of string literals. */
+#undef AL_LIBS
+
+/* The value of ALC_ALL_ATTRIBUTES. */
+#undef CONST_ALC_ALL_ATTRIBUTES
+
+/* The value of ALC_ATTRIBUTES_SIZE. */
+#undef CONST_ALC_ATTRIBUTES_SIZE
+
+/* The value of ALC_CAPTURE_DEFAULT_DEVICE_SPECIFIER. */
+#undef CONST_ALC_CAPTURE_DEFAULT_DEVICE_SPECIFIER
+
+/* The value of ALC_CAPTURE_DEVICE_SPECIFIER. */
+#undef CONST_ALC_CAPTURE_DEVICE_SPECIFIER
+
+/* The value of ALC_CAPTURE_SAMPLES. */
+#undef CONST_ALC_CAPTURE_SAMPLES
+
+/* The value of ALC_DEFAULT_DEVICE_SPECIFIER. */
+#undef CONST_ALC_DEFAULT_DEVICE_SPECIFIER
+
+/* The value of ALC_DEVICE_SPECIFIER. */
+#undef CONST_ALC_DEVICE_SPECIFIER
+
+/* The value of ALC_EXTENSIONS. */
+#undef CONST_ALC_EXTENSIONS
+
+/* The value of ALC_FALSE. */
+#undef CONST_ALC_FALSE
+
+/* The value of ALC_FREQUENCY. */
+#undef CONST_ALC_FREQUENCY
+
+/* The value of ALC_INVALID_CONTEXT. */
+#undef CONST_ALC_INVALID_CONTEXT
+
+/* The value of ALC_INVALID_DEVICE. */
+#undef CONST_ALC_INVALID_DEVICE
+
+/* The value of ALC_INVALID_ENUM. */
+#undef CONST_ALC_INVALID_ENUM
+
+/* The value of ALC_INVALID_OPERATION. */
+#undef CONST_ALC_INVALID_OPERATION
+
+/* The value of ALC_INVALID_VALUE. */
+#undef CONST_ALC_INVALID_VALUE
+
+/* The value of ALC_MAJOR_VERSION. */
+#undef CONST_ALC_MAJOR_VERSION
+
+/* The value of ALC_MINOR_VERSION. */
+#undef CONST_ALC_MINOR_VERSION
+
+/* The value of ALC_MONO_SOURCES. */
+#undef CONST_ALC_MONO_SOURCES
+
+/* The value of ALC_NO_ERROR. */
+#undef CONST_ALC_NO_ERROR
+
+/* The value of ALC_OUT_OF_MEMORY. */
+#undef CONST_ALC_OUT_OF_MEMORY
+
+/* The value of ALC_REFRESH. */
+#undef CONST_ALC_REFRESH
+
+/* The value of ALC_STEREO_SOURCES. */
+#undef CONST_ALC_STEREO_SOURCES
+
+/* The value of ALC_SYNC. */
+#undef CONST_ALC_SYNC
+
+/* The value of ALC_TRUE. */
+#undef CONST_ALC_TRUE
+
+/* The value of AL_BITS. */
+#undef CONST_AL_BITS
+
+/* The value of AL_BUFFER. */
+#undef CONST_AL_BUFFER
+
+/* The value of AL_BUFFERS_PROCESSED. */
+#undef CONST_AL_BUFFERS_PROCESSED
+
+/* The value of AL_BUFFERS_QUEUED. */
+#undef CONST_AL_BUFFERS_QUEUED
+
+/* The value of AL_BYTE_OFFSET. */
+#undef CONST_AL_BYTE_OFFSET
+
+/* The value of AL_CHANNELS. */
+#undef CONST_AL_CHANNELS
+
+/* The value of AL_CONE_INNER_ANGLE. */
+#undef CONST_AL_CONE_INNER_ANGLE
+
+/* The value of AL_CONE_OUTER_ANGLE. */
+#undef CONST_AL_CONE_OUTER_ANGLE
+
+/* The value of AL_CONE_OUTER_GAIN. */
+#undef CONST_AL_CONE_OUTER_GAIN
+
+/* The value of AL_DIRECTION. */
+#undef CONST_AL_DIRECTION
+
+/* The value of AL_DISTANCE_MODEL. */
+#undef CONST_AL_DISTANCE_MODEL
+
+/* The value of AL_DOPPLER_FACTOR. */
+#undef CONST_AL_DOPPLER_FACTOR
+
+/* The value of AL_EXPONENT_DISTANCE. */
+#undef CONST_AL_EXPONENT_DISTANCE
+
+/* The value of AL_EXPONENT_DISTANCE_CLAMPED. */
+#undef CONST_AL_EXPONENT_DISTANCE_CLAMPED
+
+/* The value of AL_EXTENSIONS. */
+#undef CONST_AL_EXTENSIONS
+
+/* The value of AL_FALSE. */
+#undef CONST_AL_FALSE
+
+/* The value of AL_FORMAT_MONO16. */
+#undef CONST_AL_FORMAT_MONO16
+
+/* The value of AL_FORMAT_MONO8. */
+#undef CONST_AL_FORMAT_MONO8
+
+/* The value of AL_FORMAT_STEREO16. */
+#undef CONST_AL_FORMAT_STEREO16
+
+/* The value of AL_FORMAT_STEREO8. */
+#undef CONST_AL_FORMAT_STEREO8
+
+/* The value of AL_FREQUENCY. */
+#undef CONST_AL_FREQUENCY
+
+/* The value of AL_GAIN. */
+#undef CONST_AL_GAIN
+
+/* The value of AL_INITIAL. */
+#undef CONST_AL_INITIAL
+
+/* The value of AL_INVALID_ENUM. */
+#undef CONST_AL_INVALID_ENUM
+
+/* The value of AL_INVALID_NAME. */
+#undef CONST_AL_INVALID_NAME
+
+/* The value of AL_INVALID_OPERATION. */
+#undef CONST_AL_INVALID_OPERATION
+
+/* The value of AL_INVALID_VALUE. */
+#undef CONST_AL_INVALID_VALUE
+
+/* The value of AL_INVERSE_DISTANCE. */
+#undef CONST_AL_INVERSE_DISTANCE
+
+/* The value of AL_INVERSE_DISTANCE_CLAMPED. */
+#undef CONST_AL_INVERSE_DISTANCE_CLAMPED
+
+/* The value of AL_LINEAR_DISTANCE. */
+#undef CONST_AL_LINEAR_DISTANCE
+
+/* The value of AL_LINEAR_DISTANCE_CLAMPED. */
+#undef CONST_AL_LINEAR_DISTANCE_CLAMPED
+
+/* The value of AL_LOOPING. */
+#undef CONST_AL_LOOPING
+
+/* The value of AL_MAX_DISTANCE. */
+#undef CONST_AL_MAX_DISTANCE
+
+/* The value of AL_MAX_GAIN. */
+#undef CONST_AL_MAX_GAIN
+
+/* The value of AL_MIN_GAIN. */
+#undef CONST_AL_MIN_GAIN
+
+/* The value of AL_NONE. */
+#undef CONST_AL_NONE
+
+/* The value of AL_NO_ERROR. */
+#undef CONST_AL_NO_ERROR
+
+/* The value of AL_ORIENTATION. */
+#undef CONST_AL_ORIENTATION
+
+/* The value of AL_OUT_OF_MEMORY. */
+#undef CONST_AL_OUT_OF_MEMORY
+
+/* The value of AL_PAUSED. */
+#undef CONST_AL_PAUSED
+
+/* The value of AL_PITCH. */
+#undef CONST_AL_PITCH
+
+/* The value of AL_PLAYING. */
+#undef CONST_AL_PLAYING
+
+/* The value of AL_POSITION. */
+#undef CONST_AL_POSITION
+
+/* The value of AL_REFERENCE_DISTANCE. */
+#undef CONST_AL_REFERENCE_DISTANCE
+
+/* The value of AL_RENDERER. */
+#undef CONST_AL_RENDERER
+
+/* The value of AL_ROLLOFF_FACTOR. */
+#undef CONST_AL_ROLLOFF_FACTOR
+
+/* The value of AL_SAMPLE_OFFSET. */
+#undef CONST_AL_SAMPLE_OFFSET
+
+/* The value of AL_SEC_OFFSET. */
+#undef CONST_AL_SEC_OFFSET
+
+/* The value of AL_SIZE. */
+#undef CONST_AL_SIZE
+
+/* The value of AL_SOURCE_RELATIVE. */
+#undef CONST_AL_SOURCE_RELATIVE
+
+/* The value of AL_SOURCE_STATE. */
+#undef CONST_AL_SOURCE_STATE
+
+/* The value of AL_SOURCE_TYPE. */
+#undef CONST_AL_SOURCE_TYPE
+
+/* The value of AL_SPEED_OF_SOUND. */
+#undef CONST_AL_SPEED_OF_SOUND
+
+/* The value of AL_STATIC. */
+#undef CONST_AL_STATIC
+
+/* The value of AL_STOPPED. */
+#undef CONST_AL_STOPPED
+
+/* The value of AL_STREAMING. */
+#undef CONST_AL_STREAMING
+
+/* The value of AL_TRUE. */
+#undef CONST_AL_TRUE
+
+/* The value of AL_UNDETERMINED. */
+#undef CONST_AL_UNDETERMINED
+
+/* The value of AL_VELOCITY. */
+#undef CONST_AL_VELOCITY
+
+/* The value of AL_VENDOR. */
+#undef CONST_AL_VENDOR
+
+/* The value of AL_VERSION. */
+#undef CONST_AL_VERSION
+
+/* Define to 1 if you have the <AL/alc.h> header file. */
+#undef HAVE_AL_ALC_H
+
+/* Define to 1 if you have the <AL/alext.h> header file. */
+#undef HAVE_AL_ALEXT_H
+
+/* Define to 1 if you have the <AL/al.h> header file. */
+#undef HAVE_AL_AL_H
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H
+
+/* Define to 1 if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
+
+/* Define to 1 if you have the <OpenAL/alc.h> header file. */
+#undef HAVE_OPENAL_ALC_H
+
+/* Define to 1 if you have the <OpenAL/alext.h> header file. */
+#undef HAVE_OPENAL_ALEXT_H
+
+/* Define to 1 if you have the <OpenAL/al.h> header file. */
+#undef HAVE_OPENAL_AL_H
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H
+
+/* Define to 1 if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#undef HAVE_STRING_H
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
+
+/* Define to Haskell type for ALboolean */
+#undef HTYPE_ALBOOLEAN
+
+/* Define to Haskell type for ALbyte */
+#undef HTYPE_ALBYTE
+
+/* Define to Haskell type for ALCboolean */
+#undef HTYPE_ALCBOOLEAN
+
+/* Define to Haskell type for ALCbyte */
+#undef HTYPE_ALCBYTE
+
+/* Define to Haskell type for ALCchar */
+#undef HTYPE_ALCCHAR
+
+/* Define to Haskell type for ALCdouble */
+#undef HTYPE_ALCDOUBLE
+
+/* Define to Haskell type for ALCenum */
+#undef HTYPE_ALCENUM
+
+/* Define to Haskell type for ALCfloat */
+#undef HTYPE_ALCFLOAT
+
+/* Define to Haskell type for ALchar */
+#undef HTYPE_ALCHAR
+
+/* Define to Haskell type for ALCint */
+#undef HTYPE_ALCINT
+
+/* Define to Haskell type for ALCshort */
+#undef HTYPE_ALCSHORT
+
+/* Define to Haskell type for ALCsizei */
+#undef HTYPE_ALCSIZEI
+
+/* Define to Haskell type for ALCubyte */
+#undef HTYPE_ALCUBYTE
+
+/* Define to Haskell type for ALCuint */
+#undef HTYPE_ALCUINT
+
+/* Define to Haskell type for ALCushort */
+#undef HTYPE_ALCUSHORT
+
+/* Define to Haskell type for ALdouble */
+#undef HTYPE_ALDOUBLE
+
+/* Define to Haskell type for ALenum */
+#undef HTYPE_ALENUM
+
+/* Define to Haskell type for ALfloat */
+#undef HTYPE_ALFLOAT
+
+/* Define to Haskell type for ALint */
+#undef HTYPE_ALINT
+
+/* Define to Haskell type for ALshort */
+#undef HTYPE_ALSHORT
+
+/* Define to Haskell type for ALsizei */
+#undef HTYPE_ALSIZEI
+
+/* Define to Haskell type for ALubyte */
+#undef HTYPE_ALUBYTE
+
+/* Define to Haskell type for ALuint */
+#undef HTYPE_ALUINT
+
+/* Define to Haskell type for ALushort */
+#undef HTYPE_ALUSHORT
+
+/* Define to the address where bug reports for this package should be sent. */
+#undef PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#undef PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#undef PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#undef PACKAGE_TARNAME
+
+/* Define to the version of this package. */
+#undef PACKAGE_VERSION
+
+/* Define to 1 if you have the ANSI C header files. */
+#undef STDC_HEADERS

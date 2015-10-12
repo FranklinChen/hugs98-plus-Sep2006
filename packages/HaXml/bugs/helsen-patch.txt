@@ -1,0 +1,20 @@
+285,288c285,298
+<          -- complete the parse straightaway.
+<          ( do (tok TokAnyClose +++ tok TokEndClose)
+<               trace (e++"[+]") (return ())
+<               return ([], Elem e avs []))
+---
+>            -- complete the parse straightaway.
+>            (( do tok TokEndClose
+>                  trace (e++"[+]") (return ())
+>                  return ([], Elem e avs [])) +++
+>             ( do tok TokAnyClose  
+>                  trace (e++"[+") (return ())
+> 	         n <- bracket (tok TokEndOpen) name (tok TokAnyClose)
+>                  trace "]" (return ())
+>                  if e == (map toUpper n :: Name) 
+> 	           then return ([], Elem e avs [])      
+>                    else return (error "no nesting in empty tag")) +++
+> 	       do tok TokAnyClose
+> 	          trace (e++"[+]") (return ())
+>                   return ([], Elem e avs []))

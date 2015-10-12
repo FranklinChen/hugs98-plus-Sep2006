@@ -1,0 +1,130 @@
+Building Hugs on Win32 platforms
+================================
+
+Tips and Suggestions
+--------------------
+
+* Use MinGW/MSYS
+
+* If you wish to build the main .exe's using Visual Studio (which you
+  should if you have it available), then keep two separate trees - one
+  to compile the libraries, and a separate one to build the programs.
+  This is because gcc generated hugs.exe etc. are needed to build the
+  libraries and they trample each other.
+
+
+Building from a source snapshot
+-------------------------------
+
+As the _build_ environment is Unix-slanted, you first need to have
+the following toolchains installed on your Windows platform:
+
+  * Install the MinGW compiler toolkit (from http://www.mingw.org/).
+
+  * You will also need a set of Unix tools, one of
+
+    (a) MSYS and msysDTK from the MinGW site (the lighter weight
+	alternative).  Do not try to install MSYS into the same
+	folder as MinGW, but do install msysDTK into the same
+	folder as MSYS.
+
+    (b) Cygwin (from http://www.cygwin.com/).  In this case,
+	ensure that the mingw/bin directory appears before the
+	cygwin directories in your PATH.  (That gets you the MinGW
+	compiler instead of the Cygwin one, so the binaries you
+	build won't require extra libraries to run.)
+
+    You'll be using the shell from one of these to run the commands
+    below.
+
+It may also be possible to use Cygwin by itself, though that will
+produce Cygwin-dependent binaries.
+
+0) Get a tarball from http://cvs.haskell.org/Hugs/downloads/snapshots/
+   and unpack it using tar.
+
+1) cd into the toplevel hugs98 directory.
+
+2) Build the interpreter and libraries with
+
+     foo$ make
+
+   If you're building under Cygwin, you'll need to say
+
+     foo$ make EXTRA_CONFIGURE_OPTS='--build=i386-pc-mingw32 --host=i386-pc-mingw32'
+
+   Other configure options you might add are listed in unix.txt.
+
+3) Test the bits:
+
+     foo$ export HUGSDIR=/path/to/hugs98/hugsdir
+     foo$ src/hugs
+
+Building from CVS
+-----------------
+
+This is more flexible, but in addition to the environment above,
+you will need an Internet connection, CVS, darcs and
+
+    * the Happy parser generator (from http://www.haskell.org/happy/)
+      -- you can also get by without it by getting the file
+      packages/haskell-src/Language/Haskell/Parser.hs from
+      a source snapshot.)
+
+    * the Bison parser generator (from the MinGW website).  Extract
+      it into your msys-1.0 directory using "tar zxf" (NOT WinZip),
+      so that bison.exe ends up in your MSYS "bin" folder.  Again you
+      can also get by without this by getting the file src/parser.c
+      from a source snapshot.)
+
+0) Check out the Hugs sources following instructions
+   at http://cvs.haskell.org/
+
+1) if 'happy' is not available via your PATH setting,
+   you need to tell the build system where it is:
+
+     foo$ export happy=/path/to/happy
+
+2) Proceed from step 1 of the above procedure for building from snapshots.
+   When you start from CVS, the make command will also check out the
+   library packages and other utilities, and do extra preprocessing
+   that is prebaked in snapshots.
+
+Using Microsoft Visual C++
+--------------------------
+
+Building the libraries needs a Unix-like environment, as described
+above, but once you've done that you can build the interpreter and
+WinHugs using MSVC.
+
+Open the project files located in msc (for the plain interpreter)
+and winhugs (for the GUI interface).  Clicking on compile should build
+the projects.
+
+Driving Microsoft Visual C++ from the Command Line (out-of-date)
+--------------------------------------------------
+
+(We used to invoke VC++ via nmake or make, but we haven't done this
+for some time.)
+
+* Building the Hugs interpreter using MSVC
+
+- To compile the interpreter using an MS VC++ compiler, you need
+  to copy msc/{config,options,platform}.h into the src/ directory:
+
+    foo$ cd /path/to/hugs98/src/
+    foo$ cp msc/config.h msc/options.h msc/platform.h .
+    foo$ nmake -f msc/Makefile
+
+  (Using 'make' would also work.)
+
+* Building WinHugs using MSVC
+
+- Same deal as when compiling Hugs using MSVC, but this time
+  use the winhugs/ subdirectory:
+
+    foo$ cd /path/to/hugs98/src/
+    foo$ cp winhugs/config.h winhugs/options.h winhugs/platform.h .
+    foo$ nmake -f winhugs/Makefile
+
+  (Using 'make' would also work.)

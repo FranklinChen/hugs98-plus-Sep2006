@@ -1,0 +1,35 @@
+#include "HsALUTConfig.h"
+
+name:		PACKAGE
+version:	VERSION
+license:	BSD3
+maintainer:	MAINTAINER
+exposed:	True
+
+exposed-modules:
+	Sound.ALUT,
+	Sound.ALUT.Initialization,
+	Sound.ALUT.Loaders,
+	Sound.ALUT.Sleep,
+	Sound.ALUT.Version
+
+hidden-modules:
+	Sound.ALUT.Config,
+	Sound.ALUT.Constants,
+	Sound.ALUT.Errors
+
+import-dirs:	IMPORT_DIR
+library-dirs:	LIB_DIR
+hs-libraries:   "HSALUT"
+extra-libraries:
+include-dirs: 	INCLUDE_DIR
+includes:	"HsALUT.h"
+depends:	base, OpenGL, OpenAL
+hugs-options:
+cc-options:	ALUT_CFLAGS
+ld-options:	ALUT_LIBS
+framework-dirs:
+frameworks: ALUT_FRAMEWORKS
+
+haddock-interfaces:	HADDOCK_IFACE
+haddock-html:		HTML_DIR

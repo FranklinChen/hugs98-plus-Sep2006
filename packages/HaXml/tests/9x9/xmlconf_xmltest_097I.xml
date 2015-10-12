@@ -1,0 +1,8 @@
+<!DOCTYPE doc [
+<!ELEMENT doc (#PCDATA)>
+<!ENTITY % e SYSTEM "xmlconf_xmltest_097.ent">
+<!ATTLIST doc a1 CDATA "v1">
+%e;
+<!ATTLIST doc a3 CDATA "v3">
+]>
+<doc>Check that replacement text above strips XML decl in attribute a2</doc>

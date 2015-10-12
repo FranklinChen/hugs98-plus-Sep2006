@@ -1,0 +1,55 @@
+name:		HGL
+version:	3.1
+license:	BSD3
+license-file:	LICENSE
+author: 	Alastair Reid
+maintainer:	<libraries@haskell.org>
+category:	Graphics
+build-depends:	base, X11
+synopsis:	A simple graphics library based on X11 or Win32
+description:
+	A simple graphics library, designed to give the programmer access
+	to most interesting parts of the Win32 Graphics Device Interface
+	and X11 library without exposing the programmer to the pain and
+	anguish usually associated with using these interfaces.
+	.
+	The library also includes a module Graphics.SOE providing the
+	interface used in "The Haskell School of Expression", by Paul
+	Hudak, cf <http://www.haskell.org/soe/>.
+extra-source-files:
+	configure.ac configure
+	config.mk.in HGL.buildinfo.in include/HsHGLConfig.h.in
+	Graphics/HGL/Win32/Bitmap.hs Graphics/HGL/Win32/Draw.hs
+	Graphics/HGL/Win32/Types.hs Graphics/HGL/Win32/WND.hs
+	Graphics/HGL/X11/Display.hs Graphics/HGL/X11/DC.hs
+	Graphics/HGL/X11/Timer.hs Graphics/HGL/X11/Types.hs
+	Graphics/HGL/X11/Window.hs
+extra-tmp-files:
+	config.log config.status autom4te.cache
+	config.mk HGL.buildinfo include/HsHGLConfig.h
+exposed-modules:
+	Graphics.HGL.Core,
+	Graphics.HGL.Draw,
+	Graphics.HGL.Units,
+	Graphics.HGL.Key,
+	Graphics.HGL.Run,
+	Graphics.HGL.Draw.Brush,
+	Graphics.HGL.Draw.Font,
+	Graphics.HGL.Draw.Monad,
+	Graphics.HGL.Draw.Pen,
+	Graphics.HGL.Draw.Picture,
+	Graphics.HGL.Draw.Region,
+	Graphics.HGL.Draw.Text,
+	Graphics.HGL.Utils,
+	Graphics.HGL.Window,
+	Graphics.HGL,
+	Graphics.SOE
+other-modules:
+	Graphics.HGL.Internals.Event,
+	Graphics.HGL.Internals.Events,
+	Graphics.HGL.Internals.Draw,
+	Graphics.HGL.Internals.Types,
+	Graphics.HGL.Internals.Flag,
+	Graphics.HGL.Internals.Utilities
+extensions:	CPP
+include-dirs:	include

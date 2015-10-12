@@ -1,0 +1,14 @@
+<sect1 id="sec-StorableArray">
+  <title><literal>StorableArray</literal></title>
+  <indexterm><primary>StorableArray</primary><secondary>module</secondary></indexterm>
+
+  <para>This module has moved to <ulink url="../libraries/base/Data.Array.Storable.html"><literal>Data.Array.Storable</literal></ulink> in the
+  hierarchical libraries.</para>
+</sect1>
+
+<!-- Emacs stuff:
+     ;;; Local Variables: ***
+     ;;; mode:.xml ***
+     ;;;.xml-parent-document: ("../../doc/hslibs.xml" "book" "chapter" "sect1") ***
+     ;;; End: ***
+ -->

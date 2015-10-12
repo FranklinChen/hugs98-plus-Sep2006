@@ -1,0 +1,35 @@
+<?xml version='1.0'?>
+<!--OWL Language, version 08/2003-->
+
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" 
+         xmlns:owl="http://www.w3.org/2002/07/owl#"
+         xmlns="http://ontology.ihmc.us/KAoSOntologies.owl#">
+    
+    <owl:Ontology rdf:about="">
+        <owl:versionInfo>
+            $ http://ontology.ihmc.us/KAoSOntologies.owl $
+        </owl:versionInfo>
+        <rdfs:comment>
+            An ontology created by Andrzej Uszok (auszok@ai.uwf.edu).
+            This ontology includes a list of references (through the owl:imports statement) to
+
+            core KAoS ontologies.
+        </rdfs:comment>
+        <owl:imports rdf:resource="http://ontology.ihmc.us/Entity.owl"/>
+        <owl:imports rdf:resource="http://ontology.ihmc.us/Place.owl"/>
+        <owl:imports rdf:resource="http://ontology.ihmc.us/Group.owl"/>
+        <owl:imports rdf:resource="http://ontology.ihmc.us/Place.owl"/>
+        <owl:imports rdf:resource="http://ontology.ihmc.us/Group.owl"/>
+        <owl:imports rdf:resource="http://ontology.ihmc.us/Actor.owl"/>
+        <owl:imports rdf:resource="http://ontology.ihmc.us/Action.owl"/>
+        <owl:imports rdf:resource="http://ontology.ihmc.us/ActionStatus.owl"/>
+        <owl:imports rdf:resource="http://ontology.ihmc.us/Message.owl"/>
+        <owl:imports rdf:resource="http://ontology.ihmc.us/Attribute.owl"/>
+        <owl:imports rdf:resource="http://ontology.ihmc.us/DomainManagementAction.owl"/>
+        <owl:imports rdf:resource="http://ontology.ihmc.us/PolicyAction.owl"/>
+        <owl:imports rdf:resource="http://ontology.ihmc.us/AttributeAction.owl"/>
+        <owl:imports rdf:resource="http://ontology.ihmc.us/Policy.owl"/>
+    </owl:Ontology>
+
+</rdf:RDF>

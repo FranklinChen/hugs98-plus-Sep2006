@@ -1,0 +1,336 @@
+Source: hugs98
+Section: interpreters
+Priority: optional
+Maintainer: Isaac Jones <ijones@debian.org>
+Standards-Version: 3.6.1
+Build-Depends: debhelper (>= 4), autoconf, autotools-dev, bison,
+ libncurses5-dev, libreadline5-dev,
+ libxt-dev, xlibmesa-gl-dev, xlibmesa-glu-dev, freeglut3-dev, libopenal-dev
+
+Package: hugs
+Architecture: any
+Depends: libhugs-base, libhugs-haskell98, ${shlibs:Depends}
+Conflicts: hugs98
+Provides: hugs98
+Replaces: hugs98
+Suggests: haskell-mode, haskell-doc, hugs-cabal, cpphs
+Section: interpreters
+Priority: optional
+Description: A Haskell 98 interpreter
+ Hugs is an interpreter for the non-strict, purely functional programming
+ language Haskell.  This version of Hugs, Hugs 98, supports nearly all of
+ the Haskell 98 specification, as well as a number of extensions.
+ .
+ The Haskell language is described by documents in the haskell-doc
+ package.  Other libraries are documented in the ghc6-doc package.
+
+Package: libhugs-alut-bundled
+Architecture: any
+Depends: hugs, libhugs-base, libhugs-opengl, libhugs-openal, ${shlibs:Depends}
+Section: devel
+Priority: optional
+Provides: libhugs-alut
+Conflicts: libhugs-alut
+Description: A binding for the OpenAL Utility Toolkit
+ A Haskell binding for the OpenAL Utility Toolkit, which makes
+ managing of OpenAL contexts, loading sounds in various formats
+ and creating waveforms very easy. For more information about the
+ C library on which this binding is based, please see:
+ <http://www.openal.org/openal_webstf/specs/alut.html>.
+ .
+ This is the version bundled with the interpreter.
+
+Package: libhugs-cabal-bundled
+Architecture: any
+Depends: hugs, libhugs-base, ${shlibs:Depends}
+Section: devel
+Priority: optional
+Provides: libhugs-cabal
+Conflicts: libhugs-cabal
+Description: A framework for packaging Haskell software
+ The Haskell Common Architecture for Building Applications and
+ Libraries: a framework defining a common interface for authors to more
+ easily build their Haskell applications in a portable way.
+ .
+ The Haskell Cabal is meant to be a part of a larger infrastructure
+ for distributing, organizing, and cataloging Haskell libraries
+ and tools.
+ .
+ This is the version bundled with the interpreter.
+
+Package: libhugs-glut-bundled
+Architecture: any
+Depends: hugs, libhugs-base, libhugs-opengl, ${shlibs:Depends}
+Section: devel
+Priority: optional
+Provides: libhugs-glut
+Conflicts: libhugs-glut
+Description: A binding for the OpenGL Utility Toolkit
+ A Haskell binding for the OpenGL Utility Toolkit, a window
+ system independent toolkit for writing OpenGL programs. For more
+ information about the C library on which this binding is based,
+ please see: <http://www.opengl.org/resources/libraries/glut/>.
+ .
+ This is the version bundled with the interpreter.
+
+Package: libhugs-hgl-bundled
+Architecture: any
+Depends: hugs, libhugs-base, libhugs-x11, ${shlibs:Depends}
+Section: devel
+Priority: optional
+Provides: libhugs-hgl
+Conflicts: libhugs-hgl
+Description: A simple graphics library based on X11 or Win32
+ A simple graphics library, designed to give the programmer access
+ to most interesting parts of the Win32 Graphics Device Interface
+ and X11 library without exposing the programmer to the pain and
+ anguish usually associated with using these interfaces.
+ .
+ The library also includes a module Graphics.SOE providing the
+ interface used in "The Haskell School of Expression", by Paul
+ Hudak, cf <http://www.haskell.org/soe/>.
+ .
+ This is the version bundled with the interpreter.
+
+Package: libhugs-hunit-bundled
+Architecture: any
+Depends: hugs, libhugs-base, ${shlibs:Depends}
+Section: devel
+Priority: optional
+Provides: libhugs-hunit
+Conflicts: libhugs-hunit
+Description: A unit testing framework for Haskell
+ HUnit is a unit testing framework for Haskell, inspired by the
+ JUnit tool for Java, see: <http://www.junit.org>.
+ .
+ This is the version bundled with the interpreter.
+
+Package: libhugs-haxml-bundled
+Architecture: any
+Depends: hugs, libhugs-base, libhugs-haskell98, ${shlibs:Depends}
+Section: devel
+Priority: optional
+Provides: libhugs-haxml
+Conflicts: libhugs-haxml
+Description: Utilities for manipulating XML documents
+ Haskell utilities for parsing, filtering, transforming and
+ generating XML documents.
+ .
+ This is the version bundled with the interpreter.
+
+Package: libhugs-openal-bundled
+Architecture: any
+Depends: hugs, libhugs-base, libhugs-opengl, ${shlibs:Depends}
+Section: devel
+Priority: optional
+Provides: libhugs-openal
+Conflicts: libhugs-openal
+Description: A binding to the OpenAL cross-platform 3D audio API
+ A Haskell binding for the OpenAL cross-platform 3D audio API,
+ appropriate for use with gaming applications and many other
+ types of audio applications.  For more information about OpenAL,
+ please see: <http://www.openal.org/>.
+ .
+ This is the version bundled with the interpreter.
+
+Package: libhugs-opengl-bundled
+Architecture: any
+Depends: hugs, libhugs-base, ${shlibs:Depends}
+Section: devel
+Priority: optional
+Provides: libhugs-opengl
+Conflicts: libhugs-opengl
+Description: A binding for the OpenGL graphics system
+ A Haskell binding for the OpenGL graphics system (GL, version
+ 1.5) and its accompanying utility library (GLU, version 1.3).
+ OpenGL is the industry's most widely used and supported 2D and 3D
+ graphics application programming interface (API), incorporating
+ a broad set of rendering, texture mapping, special effects, and
+ other powerful visualization functions.  For more information
+ about OpenGL, please see: <http://www.opengl.org/>.
+ .
+ This is the version bundled with the interpreter.
+
+Package: libhugs-quickcheck-bundled
+Architecture: any
+Depends: hugs, libhugs-base, ${shlibs:Depends}
+Section: devel
+Priority: optional
+Provides: libhugs-quickcheck
+Conflicts: libhugs-quickcheck
+Description: Automatic testing of Haskell programs
+ A library for testing Haskell programs automatically.
+ The programmer provides a specification of the program, in
+ the form of properties which functions should satisfy, and
+ QuickCheck then tests that the properties hold in a large number
+ of randomly generated cases.  Specifications are expressed in
+ Haskell, using combinators defined in the QuickCheck library.
+ QuickCheck provides combinators to define properties, observe
+ the distribution of test data, and define test
+ data generators.
+ .
+ This is the version bundled with the interpreter.
+
+Package: libhugs-x11-bundled
+Architecture: any
+Depends: hugs, libhugs-base, ${shlibs:Depends}
+Section: devel
+Priority: optional
+Provides: libhugs-x11
+Conflicts: libhugs-x11
+Description: A binding to the X11 graphics library
+ A Haskell binding to the X11 graphics library.
+ .
+ The binding is a direct translation of the C binding; for
+ documentation of these calls, refer to "The Xlib Programming
+ Manual", available online at <http://tronche.com/gui/x/xlib/>.
+ .
+ This is the version bundled with the interpreter.
+
+Package: libhugs-base-bundled
+Architecture: any
+Depends: hugs, ${shlibs:Depends}
+Section: devel
+Priority: optional
+Provides: libhugs-base
+Conflicts: libhugs-base
+Description: Basic libraries
+ This package contains the Prelude and its support libraries,
+ and a large collection of useful libraries ranging from data
+ structures to parsing combinators and debugging utilities.
+ .
+ This is the version bundled with the interpreter.
+
+Package: libhugs-fgl-bundled
+Architecture: any
+Depends: hugs, libhugs-base, libhugs-mtl, ${shlibs:Depends}
+Section: devel
+Priority: optional
+Provides: libhugs-fgl
+Conflicts: libhugs-fgl
+Description: Martin Erwig's Functional Graph Library
+ .
+ This is the version bundled with the interpreter.
+
+Package: libhugs-haskell-src-bundled
+Architecture: any
+Depends: hugs, libhugs-base, libhugs-haskell98, ${shlibs:Depends}
+Section: devel
+Priority: optional
+Provides: libhugs-haskell-src
+Conflicts: libhugs-haskell-src
+Description: Manipulating Haskell source code
+ Facilities for manipulating Haskell source code:
+ an abstract syntax, lexer, parser and pretty-printer.
+ .
+ This is the version bundled with the interpreter.
+
+Package: libhugs-haskell98-bundled
+Architecture: any
+Depends: hugs, libhugs-base, ${shlibs:Depends}
+Section: devel
+Priority: optional
+Provides: libhugs-haskell98
+Conflicts: libhugs-haskell98
+Description: Compatibility with Haskell 98
+ This package provides compatibility with the modules of Haskell
+ 98 and the FFI addendum, by means of wrappers around modules from
+ the base package (which in many cases have additional features).
+ However Prelude, Numeric and Foreign are provided directly by
+ the base package.
+ .
+ This is the version bundled with the interpreter.
+
+Package: libhugs-mtl-bundled
+Architecture: any
+Depends: hugs, libhugs-base, ${shlibs:Depends}
+Section: devel
+Priority: optional
+Provides: libhugs-mtl
+Conflicts: libhugs-mtl
+Description: Monad transformer library
+ A monad transformer library, inspired by the paper "Functional
+ Programming with Overloading and Higher-Order Polymorphism",
+ by Mark P Jones (<http://www.cse.ogi.edu/~mpj/>), Advanced School
+ of Functional Programming, 1995.
+ .
+ This is the version bundled with the interpreter.
+
+Package: libhugs-network-bundled
+Architecture: any
+Depends: hugs, libhugs-base, libhugs-parsec, ${shlibs:Depends}
+Section: devel
+Priority: optional
+Provides: libhugs-network
+Conflicts: libhugs-network
+Description: Networking-related facilities
+ .
+ This is the version bundled with the interpreter.
+
+Package: libhugs-parsec-bundled
+Architecture: any
+Depends: hugs, libhugs-base, ${shlibs:Depends}
+Section: devel
+Priority: optional
+Provides: libhugs-parsec
+Conflicts: libhugs-parsec
+Description: Monadic parser combinators
+ Parsec is designed from scratch as an industrial-strength parser
+ library.  It is simple, safe, well documented (on the package
+ homepage), has extensive libraries and good error messages,
+ and is also fast.
+ .
+ This is the version bundled with the interpreter.
+
+Package: libhugs-stm-bundled
+Architecture: any
+Depends: hugs, libhugs-base, ${shlibs:Depends}
+Section: devel
+Priority: optional
+Provides: libhugs-stm
+Conflicts: libhugs-stm
+Description: Software Transactional Memory
+ A modular composable concurrency abstraction.
+ .
+ This is the version bundled with the interpreter.
+
+Package: libhugs-time-bundled
+Architecture: any
+Depends: hugs, libhugs-base, ${shlibs:Depends}
+Section: devel
+Priority: optional
+Provides: libhugs-time
+Conflicts: libhugs-time
+Description: time library
+ .
+ This is the version bundled with the interpreter.
+
+Package: libhugs-unix-bundled
+Architecture: any
+Depends: hugs, libhugs-base, ${shlibs:Depends}
+Section: devel
+Priority: optional
+Provides: libhugs-unix
+Conflicts: libhugs-unix
+Description: POSIX functionality
+ This package gives you access to the set of operating system
+ services standardised by POSIX 1003.1b (or the IEEE Portable
+ Operating System Interface for Computing Environments -
+ IEEE Std. 1003.1).
+ .
+ The package is not supported under Windows (except under Cygwin).
+ .
+ This is the version bundled with the interpreter.
+
+Package: libhugs-xhtml-bundled
+Architecture: any
+Depends: hugs, libhugs-haskell98, libhugs-base, ${shlibs:Depends}
+Section: devel
+Priority: optional
+Provides: libhugs-xhtml
+Conflicts: libhugs-xhtml
+Description: A Haskell XHTML combinator library
+ This is a version of the standard Text.Html
+ modified to produce XHTML 1.0.
+ .
+ This is the version bundled with the interpreter.

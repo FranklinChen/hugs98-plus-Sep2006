@@ -1,0 +1,22 @@
+name:		PACKAGE
+version:	VERSION
+license:	BSD3
+maintainer:	bjorn@bringert.net
+exposed:	True
+
+exposed-modules:
+	Text.XHtml
+	Text.XHtml.Frameset
+	Text.XHtml.Strict
+	Text.XHtml.Transitional
+	Text.XHtml.Debug
+	Text.XHtml.Table
+
+import-dirs:	IMPORT_DIR
+library-dirs:	LIB_DIR
+hs-libraries:   "HSxhtml"
+
+depends:	base
+
+haddock-interfaces:	HADDOCK_IFACE
+haddock-html:		HTML_DIR

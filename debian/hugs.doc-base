@@ -1,0 +1,16 @@
+Document: hugs-users-guide
+Title: Hugs User's Guide
+Author: The Hugs Team
+Abstract:
+ Hugs is an interpreter for the non-strict, purely functional programming
+ language Haskell.  This version of Hugs, Hugs 98, supports nearly all of
+ the Haskell 98 specification, as well as a number of extensions.
+ <br>
+ The Haskell language is described by documents in the haskell-doc
+ package.  Many Haskell libraries are documented in the ghc6-doc
+ package.
+Section: interpreters
+
+Format: HTML
+Index: /usr/share/doc/hugs/users_guide/index.html
+Files: /usr/share/doc/hugs/users_guide/*.html

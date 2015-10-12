@@ -1,0 +1,27 @@
+#! /bin/sh
+
+set -e
+
+case "$1" in
+    remove|upgrade|deconfigure)
+    ;;
+
+    failed-upgrade)
+    ;;
+
+    *)
+        echo "prerm called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+package=hugs
+
+# FHS transition
+if [ -L /usr/doc/$package ]; then
+   rm -f /usr/doc/$package
+fi
+
+#DEBHELPER#
+
+exit 0

@@ -1,0 +1,10 @@
+<!DOCTYPE persons [
+<!ELEMENT persons	(person*)>
+<!ELEMENT person	(title?, forename?, surname?)>
+<!ATTLIST person	id ID #REQUIRED>
+<!ELEMENT title		(#PCDATA)>
+<!ELEMENT forename	(#PCDATA)>
+<!ELEMENT surname	(#PCDATA)>
+]>
+
+<persons/>

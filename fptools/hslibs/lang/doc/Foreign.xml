@@ -1,0 +1,9 @@
+
+<sect1 id="sec-Foreign">
+<title><literal>Foreign</literal><indexterm><primary>Foreign</primary></indexterm>
+</title>
+
+  <para>This module has moved to <ulink url="../libraries/base/Foreign.html"><literal>Foreign</literal></ulink> in the
+  hierarchical libraries.</para>
+
+</sect1>

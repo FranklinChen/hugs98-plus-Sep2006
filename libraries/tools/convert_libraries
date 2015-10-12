@@ -1,0 +1,124 @@
+#!/bin/sh
+
+# This script generates:
+# $2/packages/*:
+#	copies of the heirarchical libraries suitable for
+#	use with Hugs.  Note that some of the libraries require extensions
+#	to Haskell 98 and have to be run with the -98 flag.
+#
+# Usage:
+#
+#   ./convert_libraries <fptools directory> <build directory>
+#
+# NOTE: This script expects to be run in the top-level hugs98 directory,
+# and contains paths relative to there.
+
+case $# in
+2)	;;
+*)	echo "usage: $0 <fptools directory> <build directory>" >&2
+	exit 1 ;;
+esac
+
+lib_src=packages
+if [ ! -d $lib_src ]; then
+	echo "Can't find $lib_src directory" >&2
+	exit 1
+fi
+
+target="$2"
+
+# parameters set by configure
+case $0 in
+*/*)	. `dirname $0`/config ;;
+*)	. ./config ;;
+esac
+
+# Copy package examples (if any) to the demos directory
+
+copy_examples() {
+	to_dir=$1
+	if [ -d examples ]
+	then	$FIND examples -follow -name CVS -prune -o \! -name .cvsignore \! -name Makefile \! -name makefile -type f -print |
+			sed 's:^examples/::' |
+			while read name
+			do
+				target_file="$to_dir/$name"
+				mkdir -p `dirname $target_file`
+				cp examples/$name $target_file
+			done
+	fi
+}
+
+# Convert hierarchical modules
+
+# top directory relative to package directories.
+# absolute names won't work from Hugs on MSYS
+top_dir=../..
+
+HUGSDIR="$top_dir/$target"
+HUGSFLAGS="-P{Hugs}/packages/*:$top_dir/libraries/bootlib"
+export HUGSDIR HUGSFLAGS
+
+# extension for batch files/shell scripts
+case `uname -a` in
+CYGWIN*|MINGW32*) bat=.bat ;;
+*) bat= ;;
+esac
+
+build_package() {
+	source_dir=$1
+	pkg=`basename $1`
+	target_dir="$target/packages/$pkg"
+	cd $source_dir
+
+	runhugs=$top_dir/src/runhugs
+	ffihugs=$top_dir/src/ffihugs
+	HugsSetup="$runhugs -98 $top_dir/packages/Cabal/examples/hapax.hs"
+
+	case "$happy" in
+	'')	happyflag= ;;
+	/*)	happyflag="--with-happy=$happy" ;;
+	*)	happyflag="--with-happy=$top_dir/$happy" ;;
+	esac
+
+	# HACK: network package expects host settings
+	case "$source_dir" in
+	*/network)
+		extra_opts="--build=$HOST --host=$HOST" ;;
+	*)	extra_opts= ;;
+	esac
+
+	$HugsSetup configure --verbose --hugs \
+			--prefix="$PREFIX" \
+			--scratchdir="$top_dir/$target_dir" \
+			--with-hsc2hs="$top_dir/libraries/tools/hsc2hs$bat" \
+			--with-cpphs="$top_dir/libraries/tools/cpphs$bat" \
+			--with-compiler="$top_dir/src/ffihugs" $happyflag \
+			$extra_opts
+	if $HugsSetup build --verbose; then
+		for name in LICEN[CS]E* COPYING* COPYRIGHT* copyright; do
+			if test -f $name; then
+				cp $name $top_dir/$target_dir
+			fi
+		done
+		rm -rf $top_dir/$target_dir/autogen
+		copy_examples $top_dir/$target/demos/$pkg
+	else	echo "Skipping $pkg package"
+	fi
+	cd "$top_dir"
+}
+
+Win32=
+case `uname -a` in
+CYGWIN*|MINGW32*) Win32="Win32" ;;
+esac
+packages="base haskell98 Cabal haskell-src QuickCheck mtl fgl HaXml parsec html network HUnit $Win32 unix X11 HGL OpenGL GLUT OpenAL ALUT time stm xhtml"
+
+build_package libraries/hugsbase
+
+for package in $packages
+do
+	if test -d $lib_src/$package; then
+		build_package $lib_src/$package
+	fi
+done

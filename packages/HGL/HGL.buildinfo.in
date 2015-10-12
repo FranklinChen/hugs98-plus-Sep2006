@@ -1,0 +1,5 @@
+-- @configure_input@
+-- System-dependent values used by Distribution.Simple.defaultUserHooks
+--
+buildable: @BUILD_PACKAGE_BOOL@
+other-modules: @EXTRA_MODULES@

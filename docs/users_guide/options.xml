@@ -1,0 +1,1073 @@
+<chapter id="options">
+<title>Changing the behaviour of Hugs</title>
+
+<sect1 id="options-list">
+<title>Hugs options</title>
+
+<para>
+The behaviour of Hugs may be modified by options.
+These are initially set to default values,
+and then read from the following sources in order:
+</para>
+
+<orderedlist>
+<listitem>
+<para>
+(Windows only) the registry under the <literal>HKEY_LOCAL_MACHINE</literal> key.
+</para>
+</listitem>
+
+<listitem>
+<para>
+(Windows only) the registry under the <literal>HKEY_CURRENT_USER</literal> key.
+This is where options set using the <command>:set</command> command are saved
+(see <xref linkend="basic-commands"/>).
+This step is skipped if the environment variable
+<envar>IGNORE_USER_REGISTRY</envar> is set,
+providing an emergency workaround if the settings are invalid.
+</para>
+</listitem>
+
+<listitem>
+<para>
+(Hugs for Windows only)
+the GUI settings.
+</para>
+</listitem>
+
+<listitem>
+<para>
+(Mac OS prior to Mac OS X)
+the preferences file <quote><filename>Hugs Preferences</filename></quote>.
+</para>
+</listitem>
+
+<listitem>
+<para>
+The environment variable <envar>HUGSFLAGS</envar>, if set.
+</para>
+</listitem>
+
+<listitem>
+<para>
+The Hugs command line.
+</para>
+</listitem>
+
+</orderedlist>
+
+<note>
+<title>Parsing of option strings</title>
+<para>
+In each of the above cases except command line arguments,
+the string should consist of zero or more options separated by whitespace.
+To include a literal space in an option, either precede it with a backslash
+or wrap the whole option in double quotes.
+Double quoted options may also contain the escape sequences
+<quote><literal>\ </literal></quote>,
+<quote><literal>\"</literal></quote> and
+<quote><literal>\\</literal></quote>.
+Other backslashes are interpreted literally.
+</para>
+</note>
+
+<para>
+Most options can be changed within Hugs using the <command>:set</command>
+command (see <xref linkend="basic-commands"/>).
+</para>
+
+<para>
+Hugs takes two kinds of options:
+<itemizedlist>
+<listitem>
+<para>
+Toggles like <option>+t</option> or <option>-t</option>,
+which start with <literal>+</literal> or <literal>-</literal>
+to turn them on  or  off,  respectively.
+</para>
+</listitem>
+
+<listitem>
+<para>
+Options that set a parameter value, like
+<option>-P</option><replaceable>str</replaceable>,
+in which <literal>-</literal> could be replaced by <literal>+</literal>,
+the choice making no difference.
+</para>
+</listitem>
+</itemizedlist>
+</para>
+
+<para>
+A special option is provided to allow several options in a single argument:
+</para>
+
+<variablelist>
+
+<varlistentry id="option-split-options">
+<term><option>-X</option><replaceable>str</replaceable></term>
+<listitem>
+<para>
+The string <replaceable>str</replaceable> is interpreted as an option string,
+in the manner described above.
+This is useful, for example, in some uses of <command>runhugs</command>
+(see <xref linkend="runhugs"/>).
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<sect2 id="options-language">
+<title>Language options</title>
+
+<variablelist>
+
+<varlistentry id="option-98">
+<term><option>+98</option></term>
+<listitem>
+<para>
+Accept only Haskell 98.
+This is on by default, and cannot be changed within Hugs.
+Turning this off enables several special Hugs extensions,
+which are described in <xref linkend="hugs-ghc"/>, <xref linkend="hugs-only"/>
+and the <citetitle pubwork="article">Hugs 98 User Manual</citetitle>.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="option-constraint-cutoff">
+<term><option>-c</option><replaceable>num</replaceable></term>
+<listitem>
+<para>
+Set the constraint cutoff limit in the type checker to
+<replaceable>num</replaceable> (default: 40).
+See <xref linkend="flexible-instances"/>.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="option-overlapping">
+<term><option>+o</option></term>
+<listitem>
+<para>
+Allow certain overlapping instances (a Hugs extension; default: off).
+See <xref linkend="overlapping-instances"/> for details.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="option-unsafe-overlapping">
+<term><option>+O</option></term>
+<listitem>
+<para>
+Allow certain overlapping instances (a Hugs extension; default: off).
+These are the same overlapping instances as accepted by <option>+o</option>,
+but <option>+O</option> also accepts ambiguous uses of these instances,
+even though this is unsafe (see <xref linkend="overlapping-instances"/>).
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="option-here-documents">
+<term><option>+H</option></term>
+<listitem>
+<para>
+Support <emphasis>here documents</emphasis>
+(named after similar things in Unix shells),
+another way of writing large string literals
+(see <xref linkend="here-documents"/>).
+This extension is turned off by default.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+</sect2>
+
+<sect2 id="options-loading">
+<title>Module loading options</title>
+
+<variablelist>
+
+<varlistentry id="option-literate">
+<term><option>+l</option></term>
+<listitem>
+<para>
+Literate scripts as default (default: off).
+</para>
+<para>
+Files with names ending in <quote><literal>.hs</literal></quote>
+are always treated as ordinary Haskell,
+while those ending in <quote><literal>.lhs</literal></quote>
+are always treated as literate scripts.
+This option determines whether other files are literate scripts or not.
+(See <xref linkend="runhugs"/> for an example.)
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="option-dots">
+<term><option>+.</option></term>
+<listitem>
+<para>
+Print dots to show progress while loading modules (default: off).
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="option-quiet">
+<term><option>+q</option></term>
+<listitem>
+<para>
+Print nothing to show progress while loading modules (default: on).
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="option-show-loaded">
+<term><option>+w</option></term>
+<listitem>
+<para>
+Always show which files were loaded (default: off).
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="option-preprocessor">
+<term><option>-F</option><replaceable>cmd</replaceable></term>
+<listitem>
+<para>
+Preprocess source files before loading.
+Instead of reading a source file directly, Hugs will
+execute <replaceable>cmd</replaceable> with the source file name as argument,
+and read the standard output.
+</para>
+<para>
+This is handy for preprocessing source files with the C preprocessor,
+or some preprocessor implementing a language extension.
+However it is slower.
+In particular (because of the way Hugs handles imports),
+the preprocessor will be run twice on files that import modules
+that have not been loaded yet.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="option-search-path">
+<term><option>-P</option><replaceable>str</replaceable></term>
+<listitem>
+<para>
+Set search path for source files to <replaceable>str</replaceable>,
+which should be a list of directories separated by colons
+(semicolons on Windows, DOS or Macs).
+A null entry in this list will be replaced by the previous search path;
+a null <replaceable>str</replaceable> means the default path.
+Any occurrences of <literal>{Hugs}</literal> in this string will be replaced
+by the Hugs library directory.
+Similarly, <literal>{Home}</literal> is expanded to your home directory.
+An entry of the form
+<quote><replaceable>directory</replaceable><literal>/*</literal></quote>
+means all the immediate subdirectories of <replaceable>directory</replaceable>.
+(See <xref linkend="packages"/> for a way of using this.)
+On Unix, the default value is
+<screen>
+.:{Home}/lib/hugs/packages/*:/usr/local/lib/hugs/packages/*:{Hugs}/packages/*
+</screen>
+</para>
+<para>
+The interpreter won't let you change the search path if that would
+prevent it from reading the <literal>Prelude</literal>.
+If an entry occurs more than once in the search path, the extra copies
+will be removed, as searching them would be a waste of time.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="option-suffixes">
+<term><option>-S</option><replaceable>str</replaceable></term>
+<listitem>
+<para>
+Set list of filename suffixes.
+</para>
+<para>
+Normally, when you import a module <replaceable>M</replaceable>,
+Hugs looks for files <filename><replaceable>M</replaceable>.hs</filename>
+and <filename><replaceable>M</replaceable>.lhs</filename>
+in each directory in you search path.
+With this option, you can change this list,
+in a similar way to the <option>-P</option> option for the search path.
+By default, the suffix list is <quote><literal>.hs:.lhs</literal></quote>,
+which gives the behaviour just described.
+(NB: the <quote><literal>:</literal></quote> is the Unix separator.
+Windows or Macs use <quote><literal>;</literal></quote> instead.)
+If you use <literal>-S:.xhs</literal> then the suffix
+list becomes <quote><literal>.hs:.lhs:.xhs</literal></quote>,
+so Hugs will look for
+<filename><replaceable>M</replaceable>.hs</filename>,
+<filename><replaceable>M</replaceable>.lhs</filename>
+and <filename><replaceable>M</replaceable>.xhs</filename>.
+</para>
+<para>
+A null entry in this list will be replaced by the previous suffix list;
+a null <replaceable>str</replaceable> means the default list.
+</para>
+<para>
+The interpreter won't let you change the suffix list if that would
+prevent it from reading the <literal>Prelude</literal>,
+i.e. you must include <quote><literal>.hs</literal></quote>.
+Note also that the interpreter knows that files ending in
+<quote><literal>.lhs</literal></quote> are literate scripts;
+no other suffix is treated that way.
+</para>
+<para>
+This option can be useful in conjunction with the preprocessor option
+(<option>-F</option>).
+The preprocessor can examine the filename to decide what to do with the file.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+</sect2>
+
+<sect2 id="options-editor">
+<title>Specifying a source file editor</title>
+
+<variablelist>
+
+<varlistentry id="option-editor">
+<term><option>-E</option><replaceable>str</replaceable></term>
+<listitem>
+<para>
+Specify the editor used by the <literal>:edit</literal> command
+(see <xref linkend="module-commands"/>).
+For example, to have Hugs invoke <literal>vi</literal> to edit your files,
+use
+<screen>
+-Evi
+</screen>
+The argument string is actually a template string that gets expanded
+by Hugs, via the following rules:
+<itemizedlist>
+
+<listitem>
+<para>
+all occurrences of <literal>%d</literal> are replaced by the line number
+of where the last error occurred (if any).
+Please consult your editor's documentation for ways of specifying the
+line number.
+</para>
+</listitem>
+
+<listitem>
+<para>
+all occurrences of <literal>%s</literal> are replaced by the name of the file.
+If an occurrence of <literal>%s</literal> is both preceded by and followed
+by space, the filename is enclosed in double-quotes.
+</para>
+</listitem>
+
+<listitem>
+<para>
+all occurrences of <literal>%f</literal> are replaced by the absolute filename
+(provided your platform lets you find the absolute path to a file.)
+Most of the time, <literal>%s</literal> will be just fine, but in case your
+editor doesn't handle relative filenames correctly, try
+using <literal>%f</literal>.
+</para>
+</listitem>
+
+<listitem>
+<para>
+all occurrences of <literal>%%</literal> are replaced by <literal>%</literal>.
+</para>
+</listitem>
+
+<listitem>
+<para>
+(Win32 only): if the <option>-E</option> string is prefixed with
+the character <quote><literal>&amp;</literal></quote>,
+then the invocation is asynchronous, that is, the editor process
+is created, but Hugs won't wait for the editor to terminate.
+</para>
+</listitem>
+
+<listitem>
+<para>
+(Win32 only): if the <option>-E</option> string is prefixed with
+the character <quote><literal>!</literal></quote>,
+then the invocation will be asynchronous and use the underlying
+command processor/shell to execute the command.
+</para>
+</listitem>
+
+</itemizedlist>
+If neither <literal>%s</literal> nor <literal>%f</literal> occurs within
+the <option>-E</option> string,
+then the filename is appended before invoking the editor.
+</para>
+
+<para>
+Here are some example editor configurations:
+<variablelist>
+<varlistentry>
+<term>
+TextPad
+</term><listitem>
+<screen>
+-E"c:/Program Files/TextPad 4/textpad \"%s\"(%d)"
+</screen>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+vi and clones
+</term><listitem>
+<screen>
+-E"vi +%d %s"
+</screen>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+gnuclient (for use with (X)Emacs)
+</term><listitem>
+<screen>
+-E"gnuclient +%d %s"
+</screen>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+</sect2>
+
+<sect2 id="options-evaluation">
+<title>Evaluation and printing options</title>
+
+<variablelist>
+
+<varlistentry id="option-prompt">
+<term><option>-p</option><replaceable>str</replaceable></term>
+<listitem>
+<para>
+Set prompt string to <replaceable>str</replaceable>
+(default: <quote><literal>%s> </literal></quote>).
+Any <literal>%s</literal> in <replaceable>str</replaceable>
+will be replaced by the current module name.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="option-repeat-string">
+<term><option>-r</option><replaceable>str</replaceable></term>
+<listitem>
+<para>
+Set the string denoting the last expression to <replaceable>str</replaceable>
+(default: <quote><literal>$$</literal></quote>).
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="option-full-kind-errors">
+<term><option>+k</option></term>
+<listitem>
+<para>
+Show kind errors in full (default: off).
+</para>
+<para>
+In Haskell, each type expression has a <emphasis>kind</emphasis>.
+These kinds do not appear in the source language,
+but they are checked for consistency.
+By default, Hugs reports such errors as an <literal>Illegal type</literal>.
+For example, the declaration
+<programlisting>
+instance Monad Int
+</programlisting>
+gives rise to the error
+<screen>
+ERROR "Test.hs":4 - Illegal type in class constraint
+</screen>
+However if <option>+k</option> is given,
+the error message is identified as a <emphasis>Kind error</emphasis>,
+and is expanded to include the conflicting kinds:
+<screen>
+ERROR "Test.hs":4 - Kind error in class constraint
+*** constructor    : Int
+*** kind           : *
+*** does not match : * -> *
+</screen>
+Also, when <option>+k</option> is given,
+the output of the <command>:info</command> will include kind information
+for classes and type constructors:
+<screen>
+Hugs> :info Monad
+-- constructor class with arity * -> *
+...
+Hugs> :info Int
+-- type constructor with kind *
+</screen>
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="option-default-types">
+<term><option>+T</option></term>
+<listitem>
+<para>
+Apply defaulting rules to types before printing (default: off).
+</para>
+<para>
+When printing out types, the interpreter will normally not try to
+simplify types by applying defaulting rules, e.g.,
+<screen>
+Hugs> :t 1
+1 :: Num a => a
+Hugs>
+</screen>
+With the <option>+T</option> option,
+the interpreter attempts to <quote>default</quote> types first,
+using the same rules as for expressions (see <xref linkend="basic-commands"/>):
+<screen>
+Hugs> :set +T
+Hugs> :t 1
+1 :: Integer
+Hugs>
+</screen>
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="option-qualify-names">
+<term><option>+Q</option></term>
+<listitem>
+<para>
+Qualify names when printing (default: off).
+</para>
+<para>
+By default, the interpreter will print out names without qualifying
+them with their defining modules.
+Most of the time that's exactly what you want,
+but can become confusing if you re-define types and functions;
+the error messages not pinning down what entity it is referring to.
+To have the interpreter qualify the names, use <option>+Q</option>.
+Typically, you use <option>+Q</option> when resolving errors,
+but turn it back off again afterwards.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="option-print-type">
+<term><option>+t</option></term>
+<listitem>
+<para>
+Print the type of each expression evaluated (default: off).
+</para>
+<para>
+Normally Hugs merely prints the value of each expression evaluated:
+<screen>
+Hugs> 1+2
+3
+</screen>
+With the <option>+t</option> option, it also adds the type of the expression:
+<screen>
+Hugs> :set +t
+Hugs> 1+2
+3 :: Integer
+</screen>
+Note that defaulting has been applied to the type of the expression in order
+to evaluate it, so the type differs from that reported by the
+<command>:type</command> command (assuming that the
+<link linkend="option-default-types"><option>+T</option></link> option
+is not used):
+<screen>
+Hugs> :type 1+2
+1 + 2 :: Num a => a
+</screen>
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="option-use-show">
+<term><option>+u</option></term>
+<listitem>
+<para>
+Use <function>show</function> to display results (default: on).
+</para>
+
+<para>
+By default, the values of expressions typed at the prompt are printed using
+the <function>show</function> member of the <literal>Show</literal> class:
+<screen>
+Hugs> [Just (2+3), Nothing]
+[Just 5,Nothing]
+</screen>
+You can define this function as desired for any new datatype.
+If the type of the expression is not an instance of the
+<literal>Show</literal> class, an error results:
+<screen>
+Hugs> id
+ERROR - Cannot find "show" function for:
+*** Expression : id
+*** Of type    : a -> a
+</screen>
+With the <option>-u</option> option, a built-in printer is used instead,
+and this works for any type:
+<screen>
+Hugs> :set -u
+Hugs> id
+id
+Hugs> \x -> x
+v1497
+Hugs> [Just (2+3), Nothing]
+[Just 5,Nothing]
+</screen>
+Another feature of the built-in printer is its treatment of failures
+(or exceptions).
+Normally, an exception causes immediate failure of the expression:
+<screen>
+Hugs> :set +u
+Hugs> 1 + 2/0
+
+Program error: divide by zero
+
+Hugs> [1, 2 + error "foo", 3]
+[1,
+Program error: foo
+</screen>
+However the built-in printer prints the whole value, with embedded exceptions:
+<screen>
+Hugs> :set -u
+Hugs> [1, 2 + error "foo", 3]
+[1,{error "foo"},3]
+</screen>
+Sometimes a component could produce one of two or more exceptions,
+but the built-in printer shows only one of them:
+<screen>
+Hugs> 1 + error "foo" + error "bar"
+{error "foo"}
+</screen>
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="option-display-io">
+<term><option>+I</option></term>
+<listitem>
+<para>
+Display results of IO programs (default: off).
+</para>
+<para>
+By default, an expression of <literal>IO</literal> type typed at the prompt
+is executed for effect, but the final value it produces is discarded.
+When <option>+I</option> is used, such an expression is evaluated,
+and then its result is printed with <function>Prelude.print</function>:
+<screen>
+Hugs> :set +I
+Hugs> (return 'a' :: IO Char)
+'a'
+Hugs>
+</screen>
+i.e., evaluating an IO action <replaceable>m</replaceable>
+with <option>+I</option> in effect is equivalent to evaluating
+<quote><literal>do { x &lt;- m ; print x }</literal></quote>
+with <option>-I</option>.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+</sect2>
+
+<sect2 id="options-resource">
+<title>Resource usage options</title>
+
+<variablelist>
+
+<varlistentry id="option-heap-size">
+<term><option>-h</option><replaceable>num</replaceable></term>
+<listitem>
+<para>
+Set the maximum size in the Hugs heap (default: <literal>250k</literal>).
+The argument should be a decimal number, and may by suffixed with
+<quote><literal>k</literal></quote> (thousands),
+<quote><literal>M</literal></quote> (millions) or
+<quote><literal>G</literal></quote>
+(billions, if your machine has that much memory).
+Case is not significant.
+The heap size is measured in cells,
+each of which usually comprises two <literal>int</literal>s
+(taking up 8 bytes on most common architectures).
+</para>
+
+<para>
+Setting this option with <command>:set</command> does not change the heap
+size for the current execution of Hugs.
+On Win32, however, all options are saved to the registry,
+so it will take effect the next time Hugs is run.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="option-print-reductions">
+<term><option>+s</option></term>
+<listitem>
+<para>
+Print statistics after each evaluation (default: off).
+</para>
+<para>
+For each evaluation, this option shows
+<itemizedlist>
+<listitem><para>
+the number of reductions performed (a crude measure of the amount of
+work performed by the interpreter),
+</para></listitem>
+
+<listitem><para>
+the total number of cells allocated during evaluation, and
+</para></listitem>
+
+<listitem><para>
+the number of garbage collections that occurred during evaluation (if any).
+</para></listitem>
+</itemizedlist>
+Note that even the most trivial evaluation involves several reductions and
+cells, because Hugs wraps the expression in code to print the value and
+catch exceptions:
+<screen>
+Hugs> True
+True
+(25 reductions, 46 cells)
+</screen>
+Note that the cell count measures the total amount of allocation,
+rather than the number of cells in use at any time
+(the <emphasis>residency</emphasis>).
+For that, the <link linkend="option-print-gc"><option>+g</option></link>
+option may be more useful.
+In general these statistics cannot be safely used for much more than
+spotting general trends.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="option-print-gc">
+<term><option>+g</option></term>
+<listitem>
+<para>
+Print the number of cells recovered after each garbage collection
+(default: off).
+This can be useful for analysing the <firstterm>residency</firstterm> of an
+algorithm, the amount of memory it is actually using at each point in time.
+For example,
+<screen>
+Hugs> :set +g
+Hugs> length [1..60000]
+{{Gc:237618}}{{Gc:237617}}{{Gc:237616}}{{Gc:237623}}{{Gc:237621}}
+{{Gc:237628}}{{Gc:237623}}{{Gc:237618}}60000
+</screen>
+We see that the computation creates a lot of cells, but the number recovered
+on each garbage collection is roughly the same, so its residency is constant.
+In contrast, with
+<screen>
+Hugs> let xs = [1..60000] in sum xs `div` length xs
+{{Gc:237510}}{{Gc:213862}}{{Gc:190948}}{{Gc:170500}}{{Gc:152225}}
+{{Gc:135925}}{{Gc:121350}}{{Gc:108350}}{{Gc:96750}}{{Gc:86375}}
+{{Gc:77125}}{{Gc:68860}}{{Gc:61490}}{{Gc:72948}}{{Gc:97265}}
+{{Gc:129688}}{{Gc:172916}}{{Gc:230551}}30000
+</screen>
+we see that the amount reclaimed by each garbage collection is steadily
+falling until a certain point (because the original list is retained).
+These examples use the default heap size of 250000 cells;
+this may be changed with the
+<link linkend="option-heap-size"><option>-h</option></link> option.
+</para>
+<para>
+Since these garbage collection messages will be unpredictably interleaved
+with the desired output, you would usually only turn <option>+g</option>
+on to analyse memory problems, and then turn it off afterwards.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="option-root-optimisation">
+<term><option>+R</option></term>
+<listitem>
+<para>
+Enable root optimisation (default: on).
+</para>
+
+<para>
+This usually gives a small gain in speed, but you might want to turn it off
+if you're using the observation-based debugger
+(see <xref linkend="observe-and-root-optimisation"/>).
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+</sect2>
+
+</sect1>
+
+<sect1 id="environment-variables">
+<title>Environment variables used by Hugs</title>
+
+<para>
+Hugs also consults a number of environment variables
+on systems that support them.
+The method for setting these varies with the system.
+</para>
+
+<variablelist>
+
+<varlistentry id="EMACS">
+<term><envar>EMACS</envar></term>
+<listitem>
+<para>
+(Windows only)
+If this variable is set, Hugs is assumed to be running in an Emacs subshell
+(with different line termination conventions on input).
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="HOME">
+<term><envar>HOME</envar></term>
+<listitem>
+<para>
+The user's home directory.
+This is substituted for <literal>{Home}</literal> in the argument of the
+<link linkend="option-search-path"><option>-P</option></link> option
+(see <xref linkend="options-loading"/>),
+and for <quote><literal>~</literal></quote> in the argument of the
+<command>:cd</command> command
+(see <xref linkend="misc-commands"/>).
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="HUGSFLAGS">
+<term><envar>HUGSFLAGS</envar></term>
+<listitem>
+<para>
+Additional options for Hugs, processed before any given on the command line
+(see <xref linkend="options-list"/>).
+The following example assumes a shell compatible with the Unix Bourne shell:
+<programlisting>
+HUGSFLAGS='+k -E"vi +%d"'
+export HUGSFLAGS
+</programlisting>
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="HUGSDIR">
+<term><envar>HUGSDIR</envar></term>
+<listitem>
+<para>
+The Hugs library directory.
+This is substituted for <literal>{Hugs}</literal> in the argument of the
+<link linkend="option-search-path"><option>-P</option></link> option
+(see <xref linkend="options-loading"/>).
+This directory should also contain an <filename>include</filename>
+subdirectory, which <command>ffihugs</command> will search for include
+files, particularly <filename>HsFFI.h</filename>
+(see <xref linkend="ffihugs"/>).
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="IGNORE-USER-REGISTRY">
+<term><envar>IGNORE_USER_REGISTRY</envar></term>
+<listitem>
+<para>
+(Windows only)
+If this variable is set, options are not read from the user portion of the
+Registry (see <xref linkend="options-list"/>).
+You might use this to recover if your registry settings get messed up
+somehow.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="LCCTYPE">
+<term><envar>LC_CTYPE</envar></term>
+<listitem>
+<para>
+The locale used for external representation of Haskell <literal>Char</literal>
+values
+(see <xref linkend="locale"/>).
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="SHELL">
+<term><envar>SHELL</envar></term>
+<listitem>
+<para>
+The shell that is invoked by the <command>:!</command> command
+(see <xref linkend="misc-commands"/>).
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect1>
+
+<sect1 id="locale">
+<title>Locale-based character encoding</title>
+
+<para>
+The Haskell 98 Report defines values of the <literal>Char</literal> type
+as the code points of Unicode (or equivalently ISO/IEC 10646).
+However files and other I/O streams typically consist of bytes,
+with characters in text files encoded as one or more bytes.
+In many systems, a similar encoding is also required for interactions
+with the system.
+Therefore at these points Hugs converts characters to and from sequences
+of bytes in a manner determined by the <literal>LC_CTYPE</literal>
+category of the current <emphasis>locale</emphasis>.
+</para>
+
+<para>
+This conversion is not applied to the contents of files opened in binary mode.
+It is applied to program text, so you can use all the characters
+representable in your locale within comments and string literals.
+However only ISO Latin-1 characters are permitted in identifiers.
+</para>
+
+<para>
+The form of the locale string, and how it is set, vary between systems.
+</para>
+
+<itemizedlist>
+
+<listitem>
+<para>
+On POSIX systems, this value is taken from the first nonempty environment
+variable from <envar>LC_ALL</envar>, <envar>LC_CTYPE</envar> and
+<envar>LANG</envar>.
+</para>
+</listitem>
+
+<listitem>
+<para>
+On Windows, this value is the <quote>user-default ANSI code page</quote>
+(not the <quote>current OEM code page</quote> or
+the <quote>ANSI code page</quote>).
+This may be set using the General tab of the
+<quote>Regional Options</quote> control panel.
+</para>
+</listitem>
+
+</itemizedlist>
+
+</sect1>
+
+<sect1 id="packages">
+<title>Adding packages to a Hugs installation</title>
+
+<para>
+The recommended way to add Haskell libraries and programs to a Hugs
+installation (or any other Haskell implementation) is to use the
+<ulink url="http://www.haskell.org/cabal/">Cabal</ulink> packaging system.
+The necessary support library is included in the Hugs installation.
+For Hugs, a Cabal package will be installed in the following places,
+where <replaceable>prefix</replaceable> is the directory prefix given
+to the Cabal <command>setup</command> script:
+</para>
+
+<variablelist>
+
+<varlistentry>
+<term><filename><replaceable>prefix</replaceable>/lib/hugs/packages/<replaceable>package</replaceable></filename></term>
+<listitem>
+<para>
+A directory containing the module hierarchy for the package,
+with associated binary shared objects (if required).
+To enable Hugs to find these modules, you will need to ensure that the
+Hugs search path (see <xref linkend="option-search-path"/>) includes
+<quote><literal><replaceable>prefix</replaceable>/lib/hugs/packages/*</literal></quote>
+(with a literal <quote><literal>*</literal></quote>).
+</para>
+
+<para>
+You can remove the package by simply deleting this directory.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><filename><replaceable>prefix</replaceable>/lib/hugs/programs/<replaceable>program</replaceable></filename></term>
+<listitem>
+<para>
+A directory containing the modules of an executable Haskell program,
+with associated binary shared objects (if required).
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><filename><replaceable>prefix</replaceable>/bin/<replaceable>program</replaceable></filename></term>
+<listitem>
+<para>
+An executable shell script that invokes <command>runhugs</command>
+(see <xref linkend="runhugs"/>) on the <literal>Main</literal> module
+of an executable Haskell program from the above directory.  This program
+will be runnable if your program search path includes the directory
+<quote><filename><replaceable>prefix</replaceable>/bin</filename></quote>.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>
+The default setting of the module search path
+(see <xref linkend="option-search-path"/>) supports the following uses:
+</para>
+
+<itemizedlist>
+
+<listitem><para>
+To prepare to install a package privately, invoke the Cabal setup script with
+<screen>
+setup configure --prefix=$HOME
+</screen>
+</para></listitem>
+
+<listitem><para>
+To prepare to install a package for use by all users of the local host,
+invoke the Cabal setup script without a <literal>--prefix</literal> option.
+The package will then be installed under
+<filename>/usr/local/lib/hugs/packages</filename>
+(assuming you have the necessary permissions).
+</para></listitem>
+
+<listitem><para>
+Those preparing binary packages will use <literal>--prefix=/usr</literal>
+or similar, with an appropriate <literal>--destdir</literal>
+option to <quote><literal>setup copy</literal></quote>.
+</para></listitem>
+
+</itemizedlist>
+
+<note>
+<para>
+Cabal should work with Hugs on Windows for simple packages.
+More complex ones require a Unix-like environment such as MSYS/MinGW.
+Also there is as yet no package manipulation tool <command>hugs-pkg</command>.
+</para>
+</note>
+
+</sect1>
+
+</chapter>

@@ -1,0 +1,9 @@
+usr/bin/cpphs-hugs
+usr/bin/ffihugs
+usr/bin/hsc2hs-hugs
+usr/bin/hugs
+usr/bin/runhugs
+usr/lib/hugs/include
+usr/lib/hugs/oldlib
+usr/lib/hugs/packages/hugsbase
+usr/lib/hugs/programs

@@ -1,0 +1,11 @@
+hugs.obj
+storage.obj
+input.obj
+static.obj
+type.obj
+compiler.obj
+subst.obj
+plugin.obj
+builtin.obj
+machine.obj
+output.obj

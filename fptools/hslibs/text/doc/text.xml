@@ -1,0 +1,9 @@
+<chapter id="sec-text"><title>The <literal>text</literal> package: text manipulation</title>
+
+&matchps;
+&parsec;
+&pretty;
+&regex;
+&regexstring;
+
+</chapter>

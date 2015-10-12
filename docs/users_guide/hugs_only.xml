@@ -1,0 +1,617 @@
+<chapter id="hugs-only">
+<title>Hugs-specific language extensions</title>
+
+<para>These experimental features are unique to Hugs.
+Except of the debugging primitives,
+they require the <option>-98</option> option.
+</para>
+
+<sect1 id="trex">
+<title>Typed records with extensibility</title>
+
+<para>
+<acronym>Trex</acronym> is a very powerful and flexible record system.
+See
+<ulink url="http://cvs.haskell.org/Hugs/pages/hugsman/exts.html#sect7.2">Section 7.2 of the <citetitle pubwork="article">Hugs 98 User Manual</citetitle></ulink>
+for details.
+</para>
+
+<para>
+To use equality and <function>show</function> on extensible records,
+a module must import <literal>Hugs.Trex</literal>.
+This module also defines an empty record value and type:
+<programlisting>
+emptyRec :: Rec EmptyRow
+</programlisting>
+</para>
+
+</sect1>
+
+<sect1 id="restricted-synonyms">
+<title>Restricted type synonyms</title>
+
+<para>
+Restricted type synonyms are a mechanism for defining abstract datatypes.
+You can achieve similar effects, and more portably,
+using the Haskell 98 module system.
+</para>
+
+<para>
+The idea is that you can say that a type synonym is transparent
+in the definitions of certain functions (the operations on the type),
+but opaque elsewhere, by writing
+<programlisting>
+type Table a b = [(a,b)] in
+    empty :: Table a b,
+    isEmpty :: Table a b -> Bool,
+    add :: a -> b -> Table a b -> Table a b,
+    search :: a -> Table a b -> Maybe b
+
+empty = []
+isEmpty = null
+add a b t = (a,b):t
+search = lookup
+</programlisting>
+or equivalently
+<programlisting>
+type Table a b = [(a,b)] in empty, isEmpty, add, search
+
+empty :: Table a b
+empty = []
+
+...
+</programlisting>
+See
+<ulink url="http://cvs.haskell.org/Hugs/pages/hugsman/exts.html#sect7.3.5">Section 7.3.5 of the <citetitle pubwork="article">Hugs 98 User Manual</citetitle></ulink>
+for details.
+</para>
+
+</sect1>
+
+<sect1 id="here-documents">
+<title>Here documents</title>
+
+<para>
+These expressions
+(named after similar things in Unix shells)
+are another way of writing string literals, often useful for large strings.
+Everything from <literal>``</literal> to <literal>''</literal>
+(including newlines and backslashes, but not <literal>$</literal> characters)
+is treated as literal text, and layout is ignored.
+The exception is the <literal>$</literal> character,
+so that you can embed the value of the variable <replaceable>var</replaceable>
+in the string by writing
+<literal>$(</literal><replaceable>var</replaceable><literal>)</literal>.
+To get a literal <literal>$</literal> character,
+write <literal>$$</literal> &mdash;
+single <literal>$</literal> characters are not allowed.
+</para>
+<para>
+When the
+<link linkend="option-here-documents"><option>+H</option></link> option
+is given, the following
+<programlisting>
+letter name = ``Dear $(name),
+Here are some characters: \ ' ` ".
+To learn more, send $$10 to the address below.''
+</programlisting>
+is equivalent the Haskell 98 declaration
+<programlisting>
+letter name = "Dear " ++ quote name ++ ",\n\
+              \Here are some characters: \\ ' ` \".\n\
+              \To learn more, send $10 to the address below."
+</programlisting>
+The function
+<programlisting>
+class Quote where
+    quote :: a -> String
+</programlisting>
+(basically no change for <literal>String</literal> and <literal>Char</literal>,
+and <function>show</function> for everything else)
+comes from the <literal>Hugs.Quote</literal> module,
+which also defines several common instances,
+and should be imported if you use the
+<literal>$(</literal><replaceable>var</replaceable><literal>)</literal> form.
+(This module also requires the <option>-98</option> option.)
+</para>
+
+</sect1>
+
+<sect1 id="observe">
+<title>Hugs debugging primitives</title>
+
+<para>
+Hugs contains support for debugging by observations
+inspired by the Andy Gill's Hood library:
+</para>
+
+<orderedlist>
+<listitem>
+<para>
+Andy Gill,
+<citetitle>Debugging Haskell by Observing Intermediate Data Structures</citetitle>,
+in <citetitle>Draft Proceedings of the 2000 Haskell Workshop</citetitle>.
+</para>
+</listitem>
+
+<listitem>
+<para>
+The Haskell Object Observation Debugger
+<ulink url="http://www.haskell.org/hood/"></ulink>.
+</para>
+</listitem>
+</orderedlist>
+
+<para>
+Hood is a portable Haskell library that implements the combinator
+<programlisting>
+observe :: Observable a => String -> a -> a
+</programlisting>
+The partial application
+<screen>
+observe tag
+</screen>
+behaves exactly like the identity function, but also records the value
+of data to which it is applied.
+Any observations made are reported at the end of the computation.
+The <replaceable>tag</replaceable> argument is used to label the
+observed value when it is reported. Non-strict semantics is preserved
+&mdash; <function>observe</function> does not evaluate its second argument.
+</para>
+
+<para>
+HugsHood uses the same observation model but differs in a number of ways.
+</para>
+
+<itemizedlist>
+
+<listitem>
+<para>
+It is much faster. This is because HugsHood is implemented within the
+Hugs evaluator and uses primitive builtin functions.
+Performance depends upon the volume of observations. More frequent
+observations incur a higher overhead. As a simple comparison, a
+test program which executed 1 million reductions and made 250
+observations incurred a 625 percent overhead when observations were made
+with the Hood library but just 10 percent when using HugsHood.
+</para>
+
+<para>
+Caveat: When not using observations, the modifications to the evaluator
+to support HugsHood imposes an overhead of about 6 percent.
+</para>
+</listitem>
+
+<listitem>
+<para>
+It is possible to easily observe arbitrary data structures.
+HugsHood implements the primitive
+<programlisting>
+observe :: String -> a -> a
+</programlisting>
+which is unconstrained by the need to build instances of the
+<literal>Observable</literal> class for each user defined data type
+whose values are being observed.
+HugsHood uses an internal primitive function to display observed values.
+This may be considered both an advantage and a disadvantage:
+one does not need to define how to observe values,
+but one cannot define special user views of data.
+</para>
+</listitem>
+
+<listitem>
+<para>
+No modification to the program (apart from instrumentation with
+<function>observe</function>) is required.
+The Hood library must be invoked using a special IO monadic combinator
+to ensure that observations are collected and displayed.
+</para>
+</listitem>
+
+<listitem>
+<para>
+There are a number of minor differences in the display format which are
+a consequence of the Hugs implementation. These are described below.
+</para>
+</listitem>
+
+</itemizedlist>
+
+<sect2>
+<title>Using HugsHood</title>
+
+<para>
+Modules that use HugsHood combinators must import the module
+<literal>Hugs.Observe</literal>.
+Its only role is to provide the necessary primitive definitions, namely:
+<programlisting>
+primitive observe :: String -> a -> a
+primitive bkpt    :: String -> a -> a
+primitive setBkpt :: String -> Bool -> IO ()
+</programlisting>
+</para>
+
+<sect3>
+<title>Breakpoints</title>
+
+<para>
+HugsHood implements breakpoints. A program can be instrumented with the
+<function>bkpt</function> function. The partial application
+<screen>
+bkpt bkpt_name
+</screen>
+behaves exactly like the identity function, except that before it
+returns its argument it checks if <replaceable>bkpt_name</replaceable>
+is enabled, and if it is the user is presented with the opportunity to
+view observed data.
+A small set of commands is available when Hugs halts due to a breakpoint:
+</para>
+
+<variablelist>
+
+<varlistentry>
+<term>
+<cmdsynopsis>
+<command>p</command> <arg><replaceable>tag_name</replaceable></arg>
+</cmdsynopsis>
+</term>
+<listitem>
+<para>
+Print observations made since the computation began.
+If an observation tag is suppled then only the
+associated observations will be displayed. Otherwise
+all observations will be displayed.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<cmdsynopsis>
+<command>c</command> <arg><replaceable>n</replaceable></arg>
+</cmdsynopsis>
+</term>
+<listitem>
+<para>
+Continue with program evaluation. With no arguments,
+evaluation will continue until another active breakpoint
+is encountered. The optional numeric argument will skip
+<replaceable>n</replaceable> active breakpoints before stopping.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<cmdsynopsis>
+<command>s</command> <arg choice="plain"><replaceable>bkpt_name</replaceable></arg>
+</cmdsynopsis>
+</term>
+<listitem>
+<para>
+Set a breakpoint.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<cmdsynopsis>
+<command>r</command> <arg><replaceable>bkpt_name</replaceable></arg>
+</cmdsynopsis>
+</term>
+<listitem>
+<para>
+Reset a named breakpoint or, if no breakpoint name is
+supplied, reset all breakpoints.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>
+A breakpoint is by default disabled. It can be enabled by using the
+<command>s</command> command in the debug breakpoint dialogue,
+or by using the <function>setBkpt</function> combinator.
+Clearly at least one breakpoint must be enabled using
+<function>setBkpt</function> before a breakpoint dialogue can be triggered.
+</para>
+
+</sect3>
+
+<sect3>
+<title>Breakpoint Example</title>
+
+<para>
+Here is a very simple program using the three combinators.
+<programlisting>
+import Hugs.Observe
+
+prog n = do { setBkpt "fib" True; putStr $ show (observe "fun" f n) }
+f 0 = 1
+f n = n * (bkpt "fib" $ observe "fun" f (n-1))
+</programlisting>
+The following sample session shows how the <command>p</command> and
+<command>c</command> commands can be used.
+<screen><![CDATA[
+Main> prog 4
+Break @ fib> p
+
+>>>>>>> Observations <<<<<<
+
+fun
+  { \ 4  -> _
+  }
+
+Break @ fib> c
+Break @ fib> p
+
+>>>>>>> Observations <<<<<<
+
+fun
+  { \ 4  -> _
+  , \ 3  -> _
+  }
+
+Break @ fib> c 2
+Break @ fib> p
+
+>>>>>>> Observations <<<<<<
+
+fun
+  { \ 4  -> _
+  , \ 3  -> _
+  , \ 2  -> _
+  , \ 1  -> _
+  }
+
+Break @ fib> c
+24
+(98 reductions, 299 cells)
+
+>>>>>>> Observations <<<<<<
+
+fun
+  { \ 4  -> 24
+  , \ 3  -> 6
+  , \ 2  -> 2
+  , \ 1  -> 1
+  , \ 0  -> 1
+  }
+
+10 observations recorded
+]]></screen>
+</para>
+
+</sect3>
+
+</sect2>
+
+<sect2>
+<title>Differences from Hood</title>
+
+<para>
+HugsHood uses a similar style of display to Hood, though there are
+differences. One trivial difference is that Hood reports tags with a
+leading <quote><literal>--</literal></quote> while HugsHood does not.
+</para>
+
+<para>
+Consider now more significant differences.
+</para>
+
+<sect3>
+<title>Observing character strings</title>
+
+<para>
+HugsHood (and Hood) reports lists using the cons operator.
+<screen><![CDATA[
+Observe> observe "list" [1..3]
+[1,2,3]
+
+>>>>>>> Observations <<<<<<
+
+list
+  (1 : 2 : 3 : [])
+]]></screen>
+This is too verbose for lists of characters, so HugsHood reports
+strings in the usual format:
+<screen><![CDATA[
+Observe> observe "string" ['a'..'d']
+"abcd"
+
+>>>>>>> Observations <<<<<<
+
+string
+  "abcd"
+]]></screen>
+If only the initial part of the string is evaluated,
+a trailing <quote><literal>...</literal></quote> is reported.
+<screen><![CDATA[
+Observe> take 2  $ observe "string" ['a'..'d']
+"ab"
+
+>>>>>>> Observations <<<<<<
+
+string
+  "ab..."
+]]></screen>
+This is clearly ambiguous, because evaluating the expression
+<screen>
+observe "string" "ab..."
+</screen>
+will give the same result, but in practice the ambiguity
+should be easy to resolve.
+</para>
+
+</sect3>
+
+<sect3>
+<title>Unevaluated expressions</title>
+
+<para>
+The <quote><literal>_</literal></quote> symbol is used to indicate
+an unevaluated expression.
+In Hood all unevaluated expressions will be displayed using
+<quote><literal>_</literal></quote>.
+In HugsHood, <quote><literal>_</literal></quote> denotes an unevaluated
+expression, but not all unevaluated expressions are denoted
+by <quote><literal>_</literal></quote>.
+</para>
+
+<para>
+For example the expression <literal>fst $ observe "pair" (1,2)</literal> yields
+<screen>
+-- pair
+  (1, _)
+</screen>
+in both Hugs and HugsHood.
+However, <literal>fst $ observe "pair" ('a','b')</literal> yields
+<screen>
+pair
+  ('a','b')
+</screen>
+in HugsHood, and <literal>('a', _)</literal> in Hood.
+This is because HugsHood (unlike
+Hood) does not actually record evaluation steps. It merely maintains an
+internal pointer to that part of the heap representing the tagged
+expression. If the expression in not in weak head normal form, then it
+obviously has not been evaluated and so it is reported as just
+<quote><literal>_</literal></quote>;
+otherwise it displayed.  Integer constants like <literal>1</literal> and
+<literal>2</literal> are not in WHNF,
+as they must be coerced to the correct type when evaluated.
+Characters though are in WHNF so it is not possible to discern whether
+a character was evaluated.
+</para>
+
+<para>
+Another consequence of the HugsHood implementation by pointers rather
+than Hood's implementation by tracing evaluation is that the strictness
+behaviour of a function can be masked. Consider the example:
+<programlisting>
+lazy pair = let x = observe "fst" fst pair
+                y = snd pair
+            in  (y,x)
+</programlisting>
+For the expression <literal>lazy (1,2)</literal> Hood reports
+<screen>
+-- fst
+  { \ (1, _)  -> 1
+  }
+</screen>
+while HugsHood reports
+<screen>
+fst
+  { \ (1,2)  -> 1
+  }
+</screen>
+HugsHood should not be used to deduce the strictness behaviour of a function,
+or it should be done only with caution.
+</para>
+
+</sect3>
+
+<sect3 id="observe-and-root-optimisation">
+<title>Interaction with the root optimisation</title>
+
+<para>
+The Hugs compiler uses an optimisation when generating code that builds
+expressions on the heap. If a function definition has the form
+<programlisting>
+f arg1 .. argN = ..... f arg1 .. argM .....
+</programlisting>
+where 1 &le; <replaceable>M</replaceable> &le; <replaceable>N</replaceable>,
+then the expression graph for <replaceable>f arg1 .. argM</replaceable>
+is copied rather than rebuilt from individual application nodes.
+This interacts with the observation algorithm so that observing functions
+of the above form gives unexpected results.
+</para>
+
+<para>
+For instance consider the expression
+<screen>
+observe "fold" foldl (+) 0 [1..3]
+</screen>
+When the root optimisation is applied to the compilation
+of <function>foldl</function>, we see
+<screen>
+fold
+  { \ primPlusInteger 6 []  -> 6
+  , \ { \ 3 3  -> 6
+      } 3 (3 : [])  -> 6
+  , \ { \ 1 2  -> 3
+      } 1 (2 : 3 : [])  -> 6
+  , \ { \ 0 1  -> 1
+      } 0 (1 : 2 : 3 : [])  -> 6
+</screen>
+instead of the expected
+<screen>
+fold
+  { \ { \ 0 1  -> 1
+      , \ 1 2  -> 3
+      , \ 3 3  -> 6
+      } 0 (1 : 2 : 3 : [])  -> 6
+  }
+</screen>
+The first form reports the arguments at each application
+of <function>foldl</function>,
+while the second reports the arguments for just the initial application
+(the one marked by <function>observe</function>).
+</para>
+
+<para>
+The root optimisation can be disabled using the
+<link linkend="option-root-optimisation"><option>-R</option></link> option.
+This can be done from the command line or by using
+<command>:s</command> <option>-R</option> at the Hugs prompt.
+If you want to compile the prelude definitions without the root optimisation
+you must invoke Hugs with the <option>-R</option> option.
+</para>
+
+<para>
+Testing of execution time with and without the root optimisation for a
+selection of 23 benchmarks from the nofib suite has been carried out.
+All but 5 tests resulted in an execution time penalty of less than 3%
+when running without root optimisation (some even showed a very minor
+speedup).
+</para>
+
+</sect3>
+
+<sect3>
+<title>Known problems</title>
+
+<para>
+Hugs can produce infinite (cyclic) dictionaries when implementing overloading.
+The observation reporting mechanism does not detect these at present, which
+leads to a non-terminating report. We plan to address this in a future
+release.
+</para>
+
+</sect3>
+
+</sect2>
+
+<sect2>
+<title>Reporting HugsHood bugs</title>
+
+<para>
+Please report bugs to Richard Watson, <email>rwatson@usq.edu.au</email>
+</para>
+
+<para>
+In particular, if the message
+<screen>
+Warning: observation sanity counter > 0
+</screen>
+appears, and your program has not terminated abnormally, please report
+the error situation.
+</para>
+
+</sect2>
+
+</sect1>
+
+</chapter>

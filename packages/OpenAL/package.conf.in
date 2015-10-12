@@ -1,0 +1,58 @@
+#include "HsOpenALConfig.h"
+
+name:		PACKAGE
+version:	VERSION
+license:	BSD3
+maintainer:	MAINTAINER
+exposed:	True
+
+exposed-modules:
+	Sound.OpenAL,
+	Sound.OpenAL.AL,
+	Sound.OpenAL.AL.ALboolean,
+	Sound.OpenAL.AL.Attenuation,
+	Sound.OpenAL.AL.BasicTypes,
+	Sound.OpenAL.AL.Buffer,
+	Sound.OpenAL.AL.BufferInternal,
+	Sound.OpenAL.AL.Doppler,
+	Sound.OpenAL.AL.Errors,
+	Sound.OpenAL.AL.Extensions,
+	Sound.OpenAL.AL.Format,
+	Sound.OpenAL.AL.Listener,
+	Sound.OpenAL.AL.Source,
+	Sound.OpenAL.AL.StringQueries,
+	Sound.OpenAL.ALC,
+	Sound.OpenAL.ALC.BasicTypes,
+	Sound.OpenAL.ALC.Capture,
+	Sound.OpenAL.ALC.Context,
+	Sound.OpenAL.ALC.Device,
+	Sound.OpenAL.ALC.Errors,
+	Sound.OpenAL.ALC.Extensions
+
+hidden-modules:
+	Sound.OpenAL.AL.PeekPoke,
+	Sound.OpenAL.AL.QueryUtils,
+	Sound.OpenAL.AL.SourceState,
+	Sound.OpenAL.AL.String,
+	Sound.OpenAL.ALC.ALCboolean,
+	Sound.OpenAL.ALC.QueryUtils,
+	Sound.OpenAL.ALC.String,
+	Sound.OpenAL.Config,
+	Sound.OpenAL.Constants
+
+import-dirs:	IMPORT_DIR
+
+library-dirs:	LIB_DIR
+hs-libraries:   "HSOpenAL"
+extra-libraries:
+include-dirs: 	INCLUDE_DIR
+includes:	"HsOpenAL.h"
+depends:	base, OpenGL
+hugs-options:
+cc-options:
+ld-options:	AL_LIBS
+framework-dirs:
+frameworks: AL_FRAMEWORKS
+
+haddock-interfaces:	HADDOCK_IFACE
+haddock-html:		HTML_DIR

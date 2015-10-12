@@ -1,0 +1,14 @@
+<sect1 id="sec-Storable">
+  <title><literal>Storable</literal></title>
+  <indexterm><primary><literal>Storable</literal></primary></indexterm>
+
+  <para>This module has moved to <ulink url="../libraries/base/Foreign.Storable.html"><literal>Foreign.Storable</literal></ulink> in the
+  hierarchical libraries.</para>
+</sect1>
+
+<!-- Emacs stuff:
+     ;;; Local Variables: ***
+     ;;; mode:.xml ***
+     ;;;.xml-parent-document: ("../../doc/hslibs.xml" "book" "chapter" "sect1") ***
+     ;;; End: ***
+ -->

@@ -1,0 +1,468 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>
+  cpphs
+</title>
+</head>
+ 
+<body bgcolor='#ffffff'>
+
+<center>
+<h1>cpphs</h1>
+<table><tr><td width=200 align=center>
+<a href="#what">What is cpphs?</a><br>
+<a href="#how">How do I use it?</a><br>
+<a href="#download">Downloads</a><br>
+</td><td width=200 align=center>
+<a href="#diff">Differences to cpp</a><br>
+<a href="#library">cpphs as a library</a><br>
+<a href="#who">Contacts</a><br>
+</td></tr></table>
+</center>
+<hr>
+
+<center><h3><a name="what">What is cpphs?</a></h3></center>
+<p>
+<b>cpphs</b> is a liberalised re-implementation of
+<a href="http://gcc.gnu.org/onlinedocs/gcc-2.95.3/cpp.html">cpp</a>,
+the C pre-processor, in <a href="http://haskell.org/">Haskell</a>.
+
+<p>
+Why re-implement cpp?  Rightly or wrongly, the C pre-processor is
+widely used in Haskell source code.  It enables conditional compilation
+for different compilers, different versions of the same compiler,
+and different OS platforms.  It is also occasionally used for its
+macro language, which can enable certain forms of platform-specific
+detail-filling, such as the tedious boilerplate generation of instance
+definitions and FFI declarations.  However, there are two problems with
+cpp, aside from the obvious aesthetic ones:
+<ul>
+  <li> For some Haskell systems, notably Hugs on Windows, a true cpp
+       is not available by default.
+  <li> Even for the other Haskell systems, the common cpp provided by
+       the gcc 3.x and 4.x series has changed subtly in ways that are
+       incompatible with Haskell's syntax.  There have always been
+       problems with, for instance, string gaps, and prime characters
+       in identifiers.  These problems are only going to get worse.
+</ul>
+So, it seemed right to provide an alternative to cpp, both more
+compatible with Haskell, and itself written in Haskell so that it
+can be distributed with compilers.
+
+<p>
+This version of the C pre-processor is pretty-much feature-complete,
+and compatible with the <tt>-traditional</tt> style.
+It has two main modes:
+<ul>
+  <li> conditional compilation only (--nomacro),
+  <li> and full macro-expansion (default).
+</ul>
+In <tt>--nomacro</tt> mode, cpphs performs only conditional
+compilation actions, namely <tt>#include</tt>'s, <tt>#if</tt>'s,
+and <tt>#ifdef</tt>'s are processed according to text-replacement
+definitions (both command-line and internal), but no parameterised
+macro expansion is performed.  In full compatibility mode (the
+default), textual replacements and macro expansions are also processed
+in the remaining body of non-cpp text.
+
+<p>
+Source language features:
+<table border=0 align=center>
+<tr><td>#ifdef</td>  <td>simple conditional compilation</td></tr>
+<tr><td>#if</td>     <td>the full boolean language of defined(),
+                     &amp;&amp;, ||, ==, etc.</td></tr>
+<tr><td>#elif</td>   <td>chained conditionals</td></tr>
+<tr><td>#define</td> <td>in-line definitions (text replacements and macros)</td></tr>
+<tr><td>#undef</td>  <td>in-line revocation of definitions</td></tr>
+<tr><td>#include</td><td>file inclusion</td></tr>
+<tr><td>#line</td>   <td>line number directives</td></tr>
+<tr><td>\\n</td>     <td>line continuations within all # directives</td></tr>
+<tr><td>/**/</td>    <td>token catenation within a macro definition</td></tr>
+<tr><td>##</td>      <td>ANSI-style token catenation</td></tr>
+<tr><td>#</td>       <td>ANSI-style token stringisation</td></tr>
+<tr><td>__FILE__</td><td>special text replacement for DIY error messages</td></tr>
+<tr><td>__LINE__</td><td>special text replacement for DIY error messages</td></tr>
+<tr><td>__DATE__</td><td>special text replacement</td></tr>
+<tr><td>__TIME__</td><td>special text replacement</td></tr>
+</table>
+
+<p>
+Macro expansion is recursive.  Redefinition of a macro name does not
+generate a warning.  Macros can be defined on the command-line with
+-D just like textual replacements.  Macro names are permitted to be
+Haskell identifiers e.g. with the prime ' and backtick ` characters,
+which is slightly looser than in C, but they still may not include
+operator symbols.
+
+<p>
+Numbering of lines in the output is preserved so that any later
+processor can give meaningful error messages.  When a file is
+<tt>#include</tt>'d, cpphs inserts <tt>#line</tt> directives for the
+same reason.  Numbering should be correct even in the presence of
+line continuations.  If you don't want <tt>#line</tt> directives in
+the final output, use the <tt>--noline</tt> option.
+
+<p>
+Any syntax error in a cpp directive gives a warning message to stderr.
+Failure to find a #include'd file also produces a warning to stderr.  In
+both cases, processing continues on the rest of the input.
+
+<hr>
+<center><h3><a name="how">How do I use it?</a></h3></center>
+<p>
+<center><pre>
+Usage: cpphs  [ filename | -Dsym | -Dsym=val | -Ipath ]+  [-Ofile]
+              [--nomacro|--noline|--strip|--text|--hashes|--layout|--unlit]*
+       cpphs --version                                             
+</pre></center>
+<p>
+You can give any number of filenames on the command-line.  If no
+filename is given, cpphs reads from standard input.  The results are
+catenated on standard output.  (Macro definitions in one file do not
+carry over into the next.)
+
+<p>
+Options:
+<table border=0 align=center>
+<tr><td>-Dsym</td>
+    <td>define a textual replacement (default value is 1)</td></tr>
+<tr><td>-Dsym=val</td>
+    <td>define a textual replacement with a specific value</td></tr>
+<tr><td>-Dsym(args)=val</td>
+    <td>define a macro with arguments</td></tr>
+<tr><td>-Ipath</td>
+    <td>add a directory to the search path for #include's</td></tr>
+<tr><td>-Ofile</td>
+    <td>specify a file for output (default is stdout)</td></tr>
+<tr><td>--nomacro</td>
+    <td>only process #ifdef's and #include's, do not expand macros</td></tr>
+<tr><td>--noline</td>
+    <td>remove #line droppings from the output</td></tr>
+<tr><td>--strip</td>
+    <td>convert C-style comments to whitespace, even outside
+                      cpp directives</td></tr>
+<tr><td>--hashes</td>
+    <td>recognise the ANSI # stringise operator, and ## for
+                      token catenation, within macros</td></tr>
+<tr><td>--text</td>
+    <td>treat input as plain text, not Haskell code</td></tr>
+<tr><td>--layout</td>
+    <td>preserve newlines within macro expansions</td></tr>
+<tr><td>--unlit</td>
+    <td>unlit literate source code</td></tr>
+<tr><td>--version</td>
+    <td>report version number of cpphs and stop</td></tr>
+</table>
+
+<p>
+There are NO textual replacements defined by default.  (Normal cpp
+usually has definitions for machine, OS, etc.  You can easily create
+a wrapper script if you need these.) The search path is searched in
+order of the -I options, except that the directory of the calling file,
+then the current directory, are always searched first.  Again, there
+is no default search path (unless you define one via a wrapper script).
+
+
+<hr>
+<center><h3><a name="download">Downloads</a></h3></center>
+
+<p>
+<b>Current stable version:</b>
+<p>
+cpphs-1.2, release date 2006.05.04<br>
+By HTTP:
+<a href="http://www.cs.york.ac.uk/fp/cpphs/cpphs-1.2.tar.gz">.tar.gz</a>,
+<a href="http://www.cs.york.ac.uk/fp/cpphs/cpphs-1.2.zip">.zip</a>,
+<a href="http://www.cs.york.ac.uk/fp/cpphs-1.2-win32.zip">Windows binary</a>,
+<a href="http://www.haskell.org/fedora/">Fedora package</a>,
+<a href="http://packages.gentoo.org/packages/?category=dev-haskell;name=cpphs">Gentoo package</a>,
+<a href="http://www.freshports.org/devel/hs-cpphs/">FreeBSD port</a>,
+<a href="http://www.openbsd.org/cgi-bin/cvsweb/ports/devel/cpphs/">OpenBSD port</a>.
+<ul>
+<li> Re-arranged the source files into hierarchical libraries.
+<li> Exposed the library interface as an installable Cabal package, with
+     Haddock documentation.
+<li> Added the --unlit option, for removing literate-style comments.
+</ul>
+
+<p>
+<b>Development:</b>
+<p>
+The current <a href="http://darcs.net/">darcs</a> repository of
+cpphs is available at
+<pre>
+    darcs get http://www.cs.york.ac.uk/fp/darcs/cpphs
+</pre>
+(Users on Windows or MacOS filesystems need to use the
+<tt>--partial</tt> flag.)  The source tree and version history can
+be browsed on-line through
+<a href="http://www.cs.york.ac.uk/fp/darcs/">darcsweb</a>.
+
+<p>
+<b>Older versions:</b>
+<p>
+cpphs-1.1, release date 2005.10.14<br>
+By HTTP:
+<a href="http://www.cs.york.ac.uk/fp/cpphs/cpphs-1.1.tar.gz">.tar.gz</a>,
+<a href="http://www.cs.york.ac.uk/fp/cpphs/cpphs-1.1.zip">.zip</a>,
+<ul>
+<li> Fixed the .cabal way of building cpphs.
+<li> Update the --version reported (forgotten in 1.0, which still
+     mistakenly reports 0.9).
+<li> No longer throws an error on an empty file.
+</ul>
+
+<p>
+cpphs-1.0, release date 2005.10.05<br>
+By HTTP:
+<a href="http://www.cs.york.ac.uk/fp/cpphs/cpphs-1.0.tar.gz">.tar.gz</a>,
+<a href="http://www.cs.york.ac.uk/fp/cpphs/cpphs-1.0.zip">.zip</a>,
+<ul>
+<li> Included the <tt>cpphs.compat</tt> script for argument
+     compatibility with the original <em>cpp</em>.
+<li> Placed quotes around replacements for special macros __FILE__, __DATE__,
+     and __TIME__.
+<li> If no files are specified, read from stdin.
+<li> Ignore #! lines (e.g. in scripts)
+<li> Parse -D commandline options consistently with cpp,
+     i.e. -Dfoo means foo=1
+<li> Fix compatibility with preprocessors like hsc2hs, which use
+     non-cpp directives like #def.  They are now passed through to the
+     output with a warning to stderr.
+</ul>
+
+<p>
+cpphs-0.9, release date 2005.03.17<br>
+By HTTP:
+<a href="http://www.cs.york.ac.uk/fp/cpphs/cpphs-0.9.tar.gz">.tar.gz</a>,
+<a href="http://www.cs.york.ac.uk/fp/cpphs/cpphs-0.9.zip">.zip</a>,
+<ul>
+<li> Bugfix for <tt>ghc-6.4 -O</tt>: flush output buffer.
+</ul>
+
+<p>
+cpphs-0.8, release date 2004.11.14<br>
+By HTTP:
+<a href="http://www.cs.york.ac.uk/fp/cpphs/cpphs-0.8.tar.gz">.tar.gz</a>,
+<a href="http://www.cs.york.ac.uk/fp/cpphs/cpphs-0.8.zip">.zip</a>,
+<ul>
+<li> Added the <tt>--text</tt> option, to signify the input should not
+     be lexed as Haskell.  This causes macros to be defined or expanded
+     regardless of their location within comments, string delimiters, etc.
+<li> Shuffled some source files around - there is now a runhugs script
+     to invoke cpphs nicely.
+</ul>
+
+<p>
+cpphs-0.7, release date 2004.09.01<br>
+By HTTP:
+<a href="http://www.cs.york.ac.uk/fp/cpphs/cpphs-0.7.tar.gz">.tar.gz</a>,
+<a href="http://www.cs.york.ac.uk/fp/cpphs/cpphs-0.7.zip">.zip</a>,
+<ul>
+<li> Enable the <tt>__FILE__</tt>, <tt>__LINE__</tt>, <tt>__DATE__</tt>,
+     and <tt>__TIME__</tt> specials, which can be useful for creating
+     DIY error messages.
+</ul>
+
+<p>
+cpphs-0.6, release date 2004.07.30<br>
+By HTTP:
+<a href="http://www.cs.york.ac.uk/fp/cpphs/cpphs-0.6.tar.gz">.tar.gz</a>,
+<a href="http://www.cs.york.ac.uk/fp/cpphs/cpphs-0.6.zip">.zip</a>,
+<ul>
+<li> Recognise and ignore the <tt>#pragma</tt> cpp directive.
+<li> Fix beginning-of-file bug, where in <tt>--noline</tt> mode, a
+     <tt>#line</tt> cpp directive appeared at the top of the output file.
+<li> Fix chained parenthesised boolean exprs in <tt>#if</tt>, e.g.
+        <pre>#if ( foo ) &amp;&amp; ( bar )</pre>
+<li> Fix precedence in chained unparenthesised boolean exprs in
+     <tt>#if</tt>, e.g.
+        <pre>#if foo &amp;&amp; bar || baz &amp;&amp; frob</pre>
+<li> For better compatibility with cpp, and because otherwise
+     there are certain constructs that cannot be expressed, we no
+     longer permit whitespace in a <tt>#define</tt> between the
+     symbolname and an opening parenthesis, e.g.  
+     <pre>#define f (f' id)</pre>.  Previously, this was interpreted
+     as a parametrised macro, with arguments in the parens, and
+     no expansion.  Now, the space indicates that this is a textual
+     replacement, and the parenthesised expression is in fact the
+     replacement.
+</ul>
+
+<p>
+cpphs-0.5, release date 2004.06.07<br>
+By HTTP:
+<a href="http://www.cs.york.ac.uk/fp/cpphs/cpphs-0.5.tar.gz">.tar.gz</a>,
+<a href="http://www.cs.york.ac.uk/fp/cpphs/cpphs-0.5.zip">.zip</a>,
+<ul>
+<li> Added a --version flag to report the version number.
+<li> Renamed --stringise to --hashes, and use it to turn on ## catenation
+     as well.
+<li> Bugfix for <tt>#if 1</tt>, previously interpreted as false.
+<li> Bugfix for --nolines: it no longer adds extra spurious newlines.
+<li> File inclusion now looks in the directory of the calling file.
+<li> Failure to find an include file is now merely a warning to stderr
+     rather than an error.
+<li> Added a --layout flag.  Previously, line continuations in a macro
+     definition were always preserved in the output, permitting use
+     of the Haskell layout rule even inside a macro.  The default is now
+     to remove line continuations for conformance with cpp, but the option
+     of using --layout is still possible.
+</ul>
+
+<p>
+cpphs-0.4, release date 2004.05.19<br>
+By HTTP:
+<a href="http://www.cs.york.ac.uk/fp/cpphs/cpphs-0.4.tar.gz">.tar.gz</a>,
+<a href="http://www.cs.york.ac.uk/fp/cpphs/cpphs-0.4.zip">.zip</a>.
+<ul>
+<li> New flag -Ofile to redirect output
+<li> Bugfix for precedence of ! in #if !False &amp;&amp; False
+<li> Bugfix for whitespace permitted between # and if
+<li> Bugfix for <tt>#define F "blah";  #include F</tt>
+</ul>
+
+<p>
+cpphs-0.3, release date 2004.05.18<br>
+By HTTP:
+<a href="http://www.cs.york.ac.uk/fp/cpphs/cpphs-0.3.tar.gz">.tar.gz</a>,
+<a href="http://www.cs.york.ac.uk/fp/cpphs/cpphs-0.3.zip">.zip</a>.
+<p>
+Fix recursive macro expansion bug.  Added option to strip C comments.
+Added option to recognise the # stringise operator.
+
+<p>
+cpphs-0.2, release date 2004.05.15<br>
+By HTTP:
+<a href="http://www.cs.york.ac.uk/fp/cpphs/cpphs-0.2.tar.gz">.tar.gz</a>,
+<a href="http://www.cs.york.ac.uk/fp/cpphs/cpphs-0.2.zip">.zip</a>.
+<p>
+Implements textual replacement and macro expansion.
+
+<p>
+cpphs-0.1, release date 2004.04.07<br>
+By HTTP:
+<a href="http://www.cs.york.ac.uk/fp/cpphs/cpphs-0.1.tar.gz">.tar.gz</a>,
+<a href="http://www.cs.york.ac.uk/fp/cpphs/cpphs-0.1.zip">.zip</a>.
+<p>
+Initial release: implements conditional compilation and file inclusion only.
+
+
+<p>
+<b>Building instructions</b>
+<p>
+To build cpphs, use
+<pre>    hmake cpphs [-package base]
+</pre>
+or
+<pre>    ghc --make cpphs [-o cpphs]
+</pre>
+or
+<pre>    mv cpphs.hugs cpphs	# a simple runhugs script
+</pre>
+
+<p>
+You will notice that the command-line arguments for <em>cpphs</em>
+are not the same as for the original <em>cpp</em>.  If you want
+to use <em>cpphs</em> as a completely drop-in replacement for
+the real <em>cpp</em>, that is, to accept the same arguments, and
+have broadly the same behaviour in response to them, then edit the
+<tt>cpphs.compat</tt> script to point to the installed location of
+<em>cpphs</em>, then use this script instead of <em>cpp</em>, e.g.
+<pre>
+    ghc -cpp -pgmPcpphs.compat
+</pre>
+
+
+<hr>
+<center><h3><a name="diff">Differences from cpp</a></h3></center>
+<p>
+In general, cpphs is based on the <tt>-traditional</tt> behaviour, not
+ANSI C, and has the following main differences from the standard cpp.
+
+<p>
+<b>General</b>
+<ul>
+<li> The <tt>#</tt> that introduces any cpp directive must be in the first
+     column of a line (whereas ANSI permits whitespace before the <tt>#</tt>).
+<li> Generates the <tt>#line n "filename"</tt> syntax, not the <tt># n
+     "filename"</tt> variant.
+<li> C comments are only removed from within cpp directives.  They are
+     not stripped from other text.  Consider for instance that in
+     Haskell, all of the following are valid operator symbols:  <tt>/*
+     */  */*</tt>   However, you can turn on C-comment removal with the
+     <tt>--strip</tt> option.
+<li> Macros are never expanded within Haskell comments, strings,
+     or character constants, unless you give the <tt>--text</tt> option to
+     disable lexing the input as Haskell.
+<li> Macros are always expanded recursively, unlike ANSI, which detects
+     and prevents self-recursion.  For instance, <tt>#define foo x:foo</tt>
+     expands <tt>foo</tt> once only to <tt>x:foo</tt> in ANSI, but in cpphs
+     it becomes an infinite list <tt>x:x:x:x:...</tt>, i.e. cpphs does not
+     terminate.
+</ul>
+<p>
+<b>Macro definition language</b>
+<ul>
+<li> Accepts <tt>/**/</tt> for token-pasting in a macro definition.
+     However, <tt>/* */</tt> (with any text between the open/close
+     comment) inserts whitespace.
+<li> The ANSI <tt>##</tt> token-pasting operator is available with
+     the <tt>--hashes</tt> flag.  This is to avoid misinterpreting
+     any valid Haskell operator of the same name.
+<li> Replaces a macro formal parameter with the actual, even inside a
+     string (double or single quoted).  This is -traditional behaviour,
+     not supported in ANSI.
+<li> Recognises the <tt>#</tt> stringisation operator in a macro
+     definition only if you use the <tt>--hashes</tt> option.  (It is
+     an ANSI addition, only needed because quoted stringisation (above)
+     is prohibited by ANSI.)
+<li> Preserves whitespace within a textual replacement definition
+     exactly (modulo newlines), but leading and trailing space is eliminated.
+<li> Preserves whitespace within a macro definition (and trailing it)
+     exactly (modulo newlines), but leading space is eliminated.
+<li> Preserves whitespace within macro call arguments exactly
+     (including newlines), but leading and trailing space is eliminated.
+<li> With the <tt>--layout</tt> option, line continuations in a textual
+     replacement or macro definition are preserved as line-breaks in the
+     macro call.  (Useful for layout-sensitive code in Haskell.)
+</ul>
+
+<hr>
+<center><h3><a name="library">cpphs as a library</a></h3></center>
+<p>
+You can use cpphs as a library from within a Haskell program.  The main
+interface is in <tt>Language.Preprocessor.Cpphs</tt>.  Haddock
+documentation is <a href="cpphs/">here</a>.  To make the library
+available to your haskell compiler, you must install the cpphs package
+using Cabal.
+
+<hr>
+<center><h3><a name="who">Contacts</a></h3></center>
+<p>
+I am interested in hearing your feedback on cpphs.  Bug reports
+especially welcome.  You can send feature requests too, but I won't
+guarantee to implement them if they depart much from the ordinary
+cpp's behaviour.  Please mail
+<ul>
+<li>    <a href="mailto:Malcolm.Wallace@cs.york.ac.uk">
+        Malcolm.Wallace@cs.york.ac.uk</a> 
+</ul>
+
+<p><b>Copyright:</b> &copy; 2004-2006 Malcolm Wallace,
+except for ParseLib (Copyright &copy; 1995 Graham Hutton and Erik Meijer)
+
+<p><b>License:</b> The library modules in cpphs are distributed under
+the terms of the LGPL (see file <a href="LICENCE-LGPL">LICENCE-LGPL</a>
+for more details).  If that's a problem for you, contact me to make
+other arrangements.  The application module 'cpphs.hs' itself is GPL
+(see file <a href="LICENCE-GPL">LICENCE-GPL</a>).
+
+<p>
+This software comes with no warranty.  Use at your own risk.
+
+<hr>
+ 
+</body>
+</html>

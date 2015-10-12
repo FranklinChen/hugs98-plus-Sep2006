@@ -1,0 +1,6 @@
+# @configure_input@
+# Shell variable definitions for make_bootlib and convert_libraries
+
+: ${cpp='@CPP_TRADITIONAL@'}
+: ${SORT=@SortCmd@}
+: ${FIND=@FindCmd@}

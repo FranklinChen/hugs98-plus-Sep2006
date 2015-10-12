@@ -1,0 +1,93 @@
+name:		HaXml
+version:	1.17
+ghc-options:	-DVERSION="1.17"
+cc-options:	-DVERSION="1.17"
+license:	LGPL
+license-file:	COPYRIGHT
+author:		Malcolm Wallace <Malcolm.Wallace@cs.york.ac.uk>
+homepage:	http://www.cs.york.ac.uk/fp/HaXml/
+category:	Text
+synopsis:	Utilities for manipulating XML documents
+description:
+	Haskell utilities for parsing, filtering, transforming and
+	generating XML documents.
+exposed-modules:
+	Text.ParserCombinators.HuttonMeijer,
+	Text.ParserCombinators.HuttonMeijerWallace,
+	Text.ParserCombinators.Poly,
+	Text.ParserCombinators.PolyState,
+	Text.ParserCombinators.PolyLazy,
+	Text.ParserCombinators.PolyStateLazy,
+	Text.ParserCombinators.TextParser,
+	Text.XML.HaXml,
+	Text.XML.HaXml.Combinators,
+	Text.XML.HaXml.DtdToHaskell.Convert,
+	Text.XML.HaXml.DtdToHaskell.Instance,
+	Text.XML.HaXml.DtdToHaskell.TypeDef,
+	Text.XML.HaXml.Escape,
+	Text.XML.HaXml.Html.Generate,
+	Text.XML.HaXml.Html.Parse,
+	Text.XML.HaXml.Html.ParseLazy,
+	Text.XML.HaXml.Html.Pretty,
+	Text.XML.HaXml.Lex,
+	Text.XML.HaXml.OneOfN,
+	Text.XML.HaXml.Parse,
+	Text.XML.HaXml.ParseLazy,
+	Text.XML.HaXml.Posn,
+	Text.XML.HaXml.Pretty,
+	Text.XML.HaXml.SAX,
+	Text.XML.HaXml.ShowXmlLazy,
+	Text.XML.HaXml.Types,
+	Text.XML.HaXml.TypeMapping,
+	Text.XML.HaXml.Validate,
+	Text.XML.HaXml.Verbatim,
+	Text.XML.HaXml.Wrappers,
+	Text.XML.HaXml.XmlContent,
+	Text.XML.HaXml.Xtract.Combinators,
+	Text.XML.HaXml.Xtract.Lex,
+	Text.XML.HaXml.Xtract.Parse
+hs-source-dir:	src
+build-depends:	base, haskell98
+extensions:	CPP
+
+Executable: Canonicalise
+GHC-Options: -Wall -O2
+Extensions:  CPP
+Hs-Source-Dirs: src/tools, src
+Main-Is: Canonicalise.hs
+
+Executable: CanonicaliseLazy
+GHC-Options: -Wall -O2
+Extensions:  CPP
+Hs-Source-Dirs: src/tools, src
+Main-Is: CanonicaliseLazy.hs
+
+Executable: Xtract
+GHC-Options: -Wall -O2
+Extensions:  CPP
+Hs-Source-Dirs: src/tools, src
+Main-Is: Xtract.hs
+
+Executable: XtractLazy
+GHC-Options: -Wall -O2
+Extensions:  CPP
+Hs-Source-Dirs: src/tools, src
+Main-Is: XtractLazy.hs
+
+Executable: Validate
+GHC-Options: -Wall -O2
+Extensions:  CPP
+Hs-Source-Dirs: src/tools, src
+Main-Is: Validate.hs
+
+Executable: MkOneOf
+GHC-Options: -Wall -O2
+Extensions:  CPP
+Hs-Source-Dirs: src/tools, src
+Main-Is: MkOneOf.hs
+
+Executable: DtdToHaskell
+GHC-Options: -Wall -O2
+Extensions:  CPP
+Hs-Source-Dirs: src/tools, src
+Main-Is: DtdToHaskell.hs

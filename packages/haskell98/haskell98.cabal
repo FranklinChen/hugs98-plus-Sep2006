@@ -1,0 +1,22 @@
+name:		haskell98
+version:	1.0
+license:	BSD3
+license-file:	LICENSE
+maintainer:	libraries@haskell.org
+synopsis:	Compatibility with Haskell 98
+description:
+	This package provides compatibility with the modules of Haskell
+	98 and the FFI addendum, by means of wrappers around modules from
+	the base package (which in many cases have additional features).
+	However Prelude, Numeric and Foreign are provided directly by
+	the base package.
+homepage:	http://www.haskell.org/definition/
+build-depends:	base
+exposed-modules:
+	-- Haskell 98 (Prelude and Numeric are in the base package)
+	Array, CPUTime, Char, Complex, Directory, IO, Ix, List, Locale,
+	Maybe, Monad, Random, Ratio, System, Time,
+	-- FFI addendum (Foreign is in the base package)
+	Bits, CError, CForeign, CString, CTypes, ForeignPtr, Int,
+	MarshalAlloc, MarshalArray, MarshalError, MarshalUtils, Ptr,
+	StablePtr, Storable, Word

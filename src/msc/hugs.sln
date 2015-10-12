@@ -1,0 +1,37 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hugs", "hugs.vcproj", "{705885EA-3D93-4ADC-8820-DEE50A79E76B}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "runhugs", "runhugs.vcproj", "{D61C0FB3-4D9D-46CF-B89B-E295CC91E38C}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ffihugs", "ffihugs.vcproj", "{7F28DDDF-EA93-45EE-93B4-AF476392B680}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{705885EA-3D93-4ADC-8820-DEE50A79E76B}.Debug.ActiveCfg = Debug|Win32
+		{705885EA-3D93-4ADC-8820-DEE50A79E76B}.Debug.Build.0 = Debug|Win32
+		{705885EA-3D93-4ADC-8820-DEE50A79E76B}.Release.ActiveCfg = Release|Win32
+		{705885EA-3D93-4ADC-8820-DEE50A79E76B}.Release.Build.0 = Release|Win32
+		{D61C0FB3-4D9D-46CF-B89B-E295CC91E38C}.Debug.ActiveCfg = Debug|Win32
+		{D61C0FB3-4D9D-46CF-B89B-E295CC91E38C}.Debug.Build.0 = Debug|Win32
+		{D61C0FB3-4D9D-46CF-B89B-E295CC91E38C}.Release.ActiveCfg = Release|Win32
+		{D61C0FB3-4D9D-46CF-B89B-E295CC91E38C}.Release.Build.0 = Release|Win32
+		{7F28DDDF-EA93-45EE-93B4-AF476392B680}.Debug.ActiveCfg = Debug|Win32
+		{7F28DDDF-EA93-45EE-93B4-AF476392B680}.Debug.Build.0 = Debug|Win32
+		{7F28DDDF-EA93-45EE-93B4-AF476392B680}.Release.ActiveCfg = Release|Win32
+		{7F28DDDF-EA93-45EE-93B4-AF476392B680}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

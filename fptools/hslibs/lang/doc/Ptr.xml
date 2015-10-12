@@ -1,0 +1,14 @@
+<sect1 id="sec-Ptr">
+  <title><literal>Ptr</literal></title>
+  <indexterm><primary><literal>Ptr</literal></primary></indexterm>
+
+  <para>This module has moved to <ulink url="../libraries/base/Foreign.Ptr.html"><literal>Foreign.Ptr</literal></ulink> in the
+  hierarchical libraries.</para>
+</sect1>
+
+<!-- Emacs stuff:
+     ;;; Local Variables: ***
+     ;;; mode:.xml ***
+     ;;;.xml-parent-document: ("../../doc/hslibs.xml" "book" "chapter" "sect1") ***
+     ;;; End: ***
+ -->

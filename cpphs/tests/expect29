@@ -1,0 +1,12 @@
+#line 1 "Test.hsc"
+module Test where
+
+main :: IO ()
+main = putStrLn "shows a cpphs+hsc2hs bug with comments"
+
+
+
+{-
+#def inline int cpphs_will_stumble(void) {return 42;}
+-}
+

@@ -1,0 +1,61 @@
+hugs.$(OBJEXT): hugs.c prelude.h config.h platform.h options.h storage.h HsFFI.h \
+  command.h connect.h errors.h script.h opts.h strutil.h evaluator.h \
+  machdep.h output.h module.h timer.c
+runhugs.$(OBJEXT): runhugs.c prelude.h config.h platform.h options.h storage.h \
+  HsFFI.h connect.h machdep.h observe.h builtin.h evaluator.h errors.h \
+  server.h HugsAPI.h
+server.$(OBJEXT): server.c prelude.h config.h platform.h options.h storage.h \
+  HsFFI.h connect.h script.h machdep.h evaluator.h opts.h strutil.h \
+  errors.h server.h HugsAPI.h
+edit.$(OBJEXT): edit.c prelude.h config.h platform.h options.h storage.h HsFFI.h \
+  connect.h errors.h opts.h strutil.h machdep.h
+observe.$(OBJEXT): observe.c prelude.h config.h platform.h options.h storage.h \
+  HsFFI.h connect.h command.h errors.h machdep.h builtin.h output.h \
+  observe.h
+builtin.$(OBJEXT): builtin.c prelude.h config.h platform.h options.h storage.h \
+  HsFFI.h connect.h errors.h machdep.h char.h builtin.h bignums.c \
+  printer.c iomonad.c timeprim.c dirprim.c interns.c array.c
+char.$(OBJEXT): char.c prelude.h config.h platform.h options.h storage.h HsFFI.h \
+  connect.h errors.h char.h unitable.c
+compiler.$(OBJEXT): compiler.c prelude.h config.h platform.h options.h storage.h \
+  HsFFI.h connect.h errors.h goal.h char.h output.h opts.h
+errors.$(OBJEXT): errors.c prelude.h config.h platform.h options.h storage.h \
+  HsFFI.h connect.h errors.h output.h opts.h goal.h char.h evaluator.h
+evaluator.$(OBJEXT): evaluator.c prelude.h config.h platform.h options.h \
+  storage.h HsFFI.h connect.h errors.h script.h output.h strutil.h opts.h \
+  machdep.h evaluator.h
+ffi.$(OBJEXT): ffi.c prelude.h config.h platform.h options.h storage.h HsFFI.h \
+  connect.h errors.h output.h strutil.h
+goal.$(OBJEXT): goal.c prelude.h config.h platform.h options.h storage.h HsFFI.h \
+  connect.h errors.h machdep.h opts.h goal.h
+input.$(OBJEXT): input.c prelude.h config.h platform.h options.h storage.h \
+  HsFFI.h connect.h command.h errors.h module.h script.h opts.h goal.h \
+  machdep.h char.h parser.c
+machdep.$(OBJEXT): machdep.c prelude.h config.h platform.h options.h storage.h \
+  HsFFI.h connect.h errors.h opts.h strutil.h machdep.h char.h \
+  evaluator.h
+machine.$(OBJEXT): machine.c prelude.h config.h platform.h options.h storage.h \
+  HsFFI.h connect.h errors.h char.h opts.h
+module.$(OBJEXT): module.c prelude.h config.h platform.h options.h storage.h \
+  HsFFI.h connect.h errors.h module.h output.h
+opts.$(OBJEXT): opts.c prelude.h config.h platform.h options.h storage.h HsFFI.h \
+  connect.h errors.h machdep.h strutil.h opts.h char.h
+output.$(OBJEXT): output.c prelude.h config.h platform.h options.h storage.h \
+  HsFFI.h connect.h errors.h output.h char.h
+plugin.$(OBJEXT): plugin.c prelude.h config.h platform.h options.h storage.h \
+  HsFFI.h connect.h
+script.$(OBJEXT): script.c prelude.h config.h platform.h options.h storage.h \
+  HsFFI.h connect.h errors.h machdep.h opts.h strutil.h script.h
+static.$(OBJEXT): static.c prelude.h config.h platform.h options.h storage.h \
+  HsFFI.h connect.h machdep.h errors.h output.h subst.h module.h opts.h \
+  goal.h scc.c
+storage.$(OBJEXT): storage.c prelude.h config.h platform.h options.h storage.h \
+  HsFFI.h connect.h opts.h errors.h machdep.h evaluator.h strutil.h \
+  output.h
+strutil.$(OBJEXT): strutil.c prelude.h config.h platform.h options.h storage.h \
+  HsFFI.h connect.h errors.h strutil.h
+subst.$(OBJEXT): subst.c prelude.h config.h platform.h options.h storage.h \
+  HsFFI.h connect.h errors.h output.h opts.h subst.h
+type.$(OBJEXT): type.c prelude.h config.h platform.h options.h storage.h HsFFI.h \
+  connect.h errors.h output.h subst.h goal.h opts.h preds.c scc.c
+version.$(OBJEXT): version.c prelude.h config.h platform.h options.h

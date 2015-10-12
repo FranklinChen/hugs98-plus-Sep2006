@@ -1,0 +1,45 @@
+name: hugsbase
+version: 1.0
+build-depends:
+license: BSD3
+maintainer: <hugs-bugs@haskell.org>
+homepage: http://www.haskell.org/hugs/
+synopsis: Internal modules for Hugs
+stability: internal
+exposed-modules:
+	Hugs,
+	Hugs.Array,
+	Hugs.Bits,
+	Hugs.ByteArray,
+	Hugs.CVHAssert,
+	Hugs.Char,
+	Hugs.ConcBase,
+	Hugs.Directory,
+	Hugs.Dynamic,
+	Hugs.Exception,
+	Hugs.ForeignPtr,
+	Hugs.GenericPrint,
+	Hugs.IO,
+	Hugs.IOArray,
+	Hugs.IOExts,
+	Hugs.IORef,
+	Hugs.Int,
+	Hugs.Internals,
+	Hugs.LazyST,
+	Hugs.Memo,
+	Hugs.Numeric,
+	Hugs.Observe,
+	Hugs.Prelude,
+	Hugs.Ptr,
+	Hugs.Quote,
+	Hugs.ST,
+	Hugs.Stable,
+	Hugs.StablePtr,
+	Hugs.Storable,
+	Hugs.System,
+	Hugs.Time,
+	Hugs.Trex,
+	Hugs.Weak,
+	Hugs.Word
+c-sources: Hugs/Storable_aux.c
+include-dirs: Hugs

@@ -1,0 +1,61 @@
+<sect1 id="sec-DirectoryExts">
+<title><literal>DirectoryExts</literal>
+<indexterm>
+  <primary>DirectoryExts</primary>
+  <secondary>library</secondary>
+</indexterm>
+</title>
+
+<para>
+The <literal>DirectoryExts</literal> module follows the footstep of
+other '<literal>Exts</literal>' modules and provides functionality
+that goes beyond what the Haskell 98 module
+<literal>Directory</literal> offers. That is, functionality that
+provides access to file/directory operations in an OS-independent
+manner.
+</para>
+
+
+<para>
+<literal>DirectoryExts</literal> currently exports the following:
+</para>
+
+<para>
+<programlisting>
+copyFile  :: FilePath -&#62; FilePath -&#62; IO ()
+</programlisting>
+
+<indexterm>
+  <primary><literal>copyFile</literal></primary>
+  <secondary>file copying</secondary>
+</indexterm>
+</para>
+
+<para>
+Notes:
+
+<itemizedlist>
+<listitem>
+<para>
+<function>copyFile</function> lets you copy a file to another
+non-existent file.
+</para>
+
+<para>
+File copying is done external to Haskell, and is for natural
+reasons quicker as a result and, most importantly, file copying
+handles the number of the OS-specific error conditions that might
+arise as a result of trying to perform the file copy operation.
+</para>
+
+<para>
+Should the file copying operation for some reason not succeed, the
+action <function>copyFile</function> raises an IO exception to
+signal the fact.
+</para>
+</listitem>
+
+</itemizedlist>
+</para>
+
+</sect1>

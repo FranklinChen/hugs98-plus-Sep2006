@@ -1,0 +1,14 @@
+<!DOCTYPE persons [
+<!ELEMENT persons	(Person*)>
+<!ELEMENT Person	((Male, FathersName?) | (Female, MothersName?))>
+<!ATTLIST Person	id ID #REQUIRED>
+<!ELEMENT FathersName	(#PCDATA)>
+<!ELEMENT MothersName	(#PCDATA)>
+<!ELEMENT Male		EMPTY>
+<!ATTLIST Male		src CDATA #IMPLIED
+			alt (A|B) #REQUIRED>
+<!ELEMENT Female	EMPTY>
+]>
+<persons/>
+<Extra>
+</Extra>

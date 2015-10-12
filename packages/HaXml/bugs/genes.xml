@@ -1,0 +1,30 @@
+<Integrated_data>
+        <lethal_genes db='mips'>
+                <gene>
+                        <name>one</name>
+                        <orf>one mips orf</orf>
+                </gene>
+                <gene>
+                        <name>two</name>
+                        <orf>two mips orf</orf>
+                </gene>
+                <gene>
+                        <name>three</name>
+                        <orf>three mips orf</orf>
+                </gene>
+        </lethal_genes>
+        <lethal_genes db='ypd'>
+                <gene>
+                        <name>one</name>
+                        <orf>one ypd orf</orf>
+                </gene>
+                <gene>
+                        <name>two</name>
+                        <orf>two ypd orf</orf>
+                </gene>
+                <gene>
+                        <name>four</name>
+                        <orf>four ypd orf</orf>
+                </gene>
+        </lethal_genes>
+</Integrated_data>

@@ -1,0 +1,1270 @@
+<!--  .......................................................................  -->
+<!--  SMIL 2.0 DTD  .........................................................  -->
+<!--  file: SMIL20.dtd                                                         
+ -->
+<!--  SMIL 2.0 DTD
+
+     This is SMIL 2.0.
+
+     Copyright 1998-2000 World Wide Web Consortium
+        (Massachusetts Institute of Technology, Institut National de
+         Recherche en Informatique et en Automatique, Keio University).
+         All Rights Reserved.
+
+     Permission to use, copy, modify and distribute the SMIL 2.0 DTD and
+     its accompanying documentation for any purpose and without fee is
+     hereby granted in perpetuity, provided that the above copyright notice
+     and this paragraph appear in all copies.  The copyright holders make
+     no representation about the suitability of the DTD for any purpose.
+
+     It is provided "as is" without expressed or implied warranty.
+
+        Author:     Jacco van Ossenbruggen
+        Revision:   $Id: log.dtd,v 1.1.1.1 2002/03/19 12:29:25 malcolm Exp $
+
+ -->
+<!--  This is the driver file for the SMIL 2.0 DTD.
+
+     Please use this formal public identifier to identify it:
+
+         "-//W3C//DTD SMIL 2.0//EN"
+ -->
+<!ENTITY %NS.prefixed "IGNORE">
+<!ENTITY %SMIL.prefix "">
+<!--  Define the Content Model  -->
+<!ENTITY %smil-model.mod PUBLIC "-//W3C//ENTITIES SMIL 2.0 Document Model 1.0//EN" "smil-model-1.mod">
+<!--  Modular Framework Module  ...................................  -->
+<!ENTITY %smil-framework.module "INCLUDE">
+<!ENTITY %smil-framework.mod PUBLIC "-//W3C//ENTITIES SMIL 2.0 Modular Framework 1.0//EN" "smil-framework-1.mod">
+<!--  ......................................................................  -->
+<!--  SMIL 2.0 Modular Framework Module  ...................................  -->
+<!--  file: smil-framework-1.mod
+
+     This is SMIL 2.0.
+     Copyright 1998-2000 W3C (MIT, INRIA, Keio), All Rights Reserved.
+
+     This DTD module is identified by the PUBLIC and SYSTEM identifiers:
+
+     PUBLIC "-//W3C//ENTITIES SMIL 2.0 Modular Framework 1.0//EN"
+     SYSTEM "smil-framework-1.mod"
+
+     Revision: $Id: log.dtd,v 1.1.1.1 2002/03/19 12:29:25 malcolm Exp $
+     .......................................................................  -->
+<!--  Modular Framework
+
+     This required module instantiates the modules needed
+     to support the SMIL 2.0 modularization model, including:
+
+        +  datatypes
+        +  namespace-qualified names
+        +  common attributes
+        +  document model
+
+     The Intrinsic Events module is ignored by default but
+     occurs in this module because it must be instantiated
+     prior to Attributes but after Datatypes.
+ -->
+<!--  The (still to be determined) SMIL namespace:  -->
+<!ENTITY %SMIL.ns "'http://www.w3.org/TR/REC-smil/SMIL20'">
+<!ENTITY %smil-datatypes.module "INCLUDE">
+<!ENTITY %smil-datatypes.mod PUBLIC "-//W3C//ENTITIES SMIL 2.0 Datatypes 1.0//EN" "smil-datatypes-1.mod">
+<!--  ......................................................................  -->
+<!--  SMIL 2.0 Datatypes Module  ...........................................  -->
+<!--  file: smil-datatypes-1.mod
+
+     This is SMIL 2.0.
+     Copyright 1998-2000 W3C (MIT, INRIA, Keio), All Rights Reserved.
+     Revision: $Id: log.dtd,v 1.1.1.1 2002/03/19 12:29:25 malcolm Exp $
+
+     This DTD module is identified by the PUBLIC and SYSTEM identifiers:
+
+     PUBLIC "-//W3C//ENTITIES SMIL 2.0 Datatypes 1.0//EN"
+     SYSTEM "smil-datatypes-1.mod"
+
+     .......................................................................  -->
+<!--  Datatypes
+
+     defines containers for the following datatypes, many of
+     these imported from other specifications and standards.
+ -->
+<!ENTITY %Character "CDATA">
+<!--  a single character from [ISO10646]  -->
+<!ENTITY %ContentType "CDATA">
+<!--  media type, as per [RFC2045]  -->
+<!ENTITY %LanguageCode "NMTOKEN">
+<!--  a language code, as per [RFC1766]  -->
+<!ENTITY %LanguageCodes "CDATA">
+<!--  comma-separated list of language codes, as per [RFC1766]  -->
+<!ENTITY %Number "CDATA">
+<!--  one or more digits  -->
+<!ENTITY %Script "CDATA">
+<!--  script expression  -->
+<!ENTITY %Text "CDATA">
+<!--  used for titles etc.  -->
+<!ENTITY %TimeValue "CDATA">
+<!--  a Number, possibly with its dimension, or a reserved 
+         word like 'indefinite'  -->
+<!ENTITY %URI.datatype "CDATA">
+<!ENTITY %URI "CDATA">
+<!--  used for URI references  -->
+<!ENTITY %smil-qname.module "INCLUDE">
+<!ENTITY %smil-qname.mod PUBLIC "-//W3C//ENTITIES SMIL 2.0 Qualified Names 1.0//EN" "smil-qname-1.mod">
+<!--  .......................................................................  -->
+<!--  SMIL Qualified Names Module  ..........................................  -->
+<!--  file: smil-qname-1.mod
+
+     This is SMIL.
+     Copyright 1998-2000 W3C (MIT, INRIA, Keio), All Rights Reserved.
+     Revision: $Id: log.dtd,v 1.1.1.1 2002/03/19 12:29:25 malcolm Exp $ SMI
+
+     This DTD module is identified by the PUBLIC and SYSTEM identifiers:
+
+       PUBLIC "-//W3C//ENTITIES SMIL Qualified Names 1.0//EN"
+       SYSTEM "smil-qname-1.mod"
+
+     .......................................................................  -->
+<!--  SMIL Qualified Names
+
+     This module is contained in two parts, labeled Section 'A' and 'B':
+
+       Section A declares parameter entities to support namespace-
+       qualified names, namespace declarations, and name prefixing 
+       for SMIL and extensions.
+    
+       Section B declares parameter entities used to provide
+       namespace-qualified names for all SMIL element types:
+
+         %animation.qname; the xmlns-qualified name for <animation>
+         %video.qname;     the xmlns-qualified name for <video>
+         ...
+
+     SMIL extensions would create a module similar to this one, 
+     using the '%smil-qname-extra.mod;' parameter entity to insert 
+     it within Section A.  A template module suitable for this purpose 
+     ('template-qname-1.mod') is included in the XHTML distribution.
+ -->
+<!--  Section A: SMIL XML Namespace Framework ::::::::::::::::::::  -->
+<!--  1. Declare the two parameter entities used to support XLink,
+        first the parameter entity container for the URI used to
+        identify the XLink namespace:
+ -->
+<!ENTITY %XLINK.xmlns "http://www.w3.org/1999/xlink">
+<!--  This contains the XLink namespace declaration attribute.
+ -->
+<!ENTITY %XLINK.xmlns.attrib "xmlns:xlink  %URI.datatype;           #FIXED '%XLINK.xmlns;'">
+<!--  2. Declare parameter entities (eg., %SMIL.xmlns;) containing 
+        the namespace URI for the SMIL namespace, and any namespaces
+        included by SMIL:
+ -->
+<!ENTITY %SMIL.xmlns "http://www.w3.org/TR/REC-smil/SMIL20">
+<!--  3. Declare parameter entities (eg., %SMIL.prefix;) containing
+        the default namespace prefix string(s) to use when prefixing 
+        is enabled. This may be overridden in the DTD driver or the
+        internal subset of an document instance.
+
+     NOTE: As specified in [XMLNAMES], the namespace prefix serves 
+     as a proxy for the URI reference, and is not in itself significant.
+ -->
+<!ENTITY %SMIL.prefix "">
+<!--  4. Declare a %SMIL.prefixed; conditional section keyword, used
+        to activate namespace prefixing. The default value should 
+        inherit '%NS.prefixed;' from the DTD driver, so that unless 
+        overridden, the default behaviour follows the overall DTD 
+        prefixing scheme.
+ -->
+<!ENTITY %NS.prefixed "IGNORE">
+<!ENTITY %SMIL.prefixed "%NS.prefixed;">
+<!--  5. Declare parameter entities (eg., %SMIL.pfx;) containing the 
+        colonized prefix(es) (eg., '%SMIL.prefix;:') used when 
+        prefixing is active, an empty string when it is not.
+ -->
+<!ENTITY %SMIL.pfx "">
+<!--  declare qualified name extensions here  -->
+<!ENTITY %smil-qname-extra.mod "">
+<!--  6. The parameter entity %SMIL.xmlns.extra.attrib; may be
+        redeclared to contain any non-SMIL namespace declaration 
+        attributes for namespaces embedded in SMIL. The default 
+        is an empty string.  XLink should be included here if used 
+        in the DTD and not already included by a previously-declared 
+        %*.xmlns.extra.attrib;.
+ -->
+<!ENTITY %SMIL.xmlns.extra.attrib "">
+<!--  7. The parameter entity %NS.prefixed.attrib; is defined to be
+        the prefix for SMIL elements if any and whatever is in
+		SMIL.xmlns.extra.attrib.
+ -->
+<!ENTITY %NS.prefixed.attrib "%SMIL.xmlns.extra.attrib;">
+<!--  Section B: SMIL Qualified Names :::::::::::::::::::::::::::::  -->
+<!--  This section declares parameter entities used to provide
+     namespace-qualified names for all SMIL element types.
+ -->
+<!ENTITY %animate.qname "%SMIL.pfx;animate">
+<!ENTITY %set.qname "%SMIL.pfx;set">
+<!ENTITY %animateMotion.qname "%SMIL.pfx;animateMotion">
+<!ENTITY %animateColor.qname "%SMIL.pfx;animateColor">
+<!ENTITY %switch.qname "%SMIL.pfx;switch">
+<!ENTITY %customTest.qname "%SMIL.pfx;customTest">
+<!ENTITY %customAttributes.qname "%SMIL.pfx;customAttributes">
+<!ENTITY %prefetch.qname "%SMIL.pfx;prefetch">
+<!ENTITY %layout.qname "%SMIL.pfx;layout">
+<!ENTITY %region.qname "%SMIL.pfx;region">
+<!ENTITY %root-layout.qname "%SMIL.pfx;root-layout">
+<!ENTITY %viewport.qname "%SMIL.pfx;viewport">
+<!ENTITY %regPoint.qname "%SMIL.pfx;regPoint">
+<!ENTITY %a.qname "%SMIL.pfx;a">
+<!ENTITY %area.qname "%SMIL.pfx;area">
+<!ENTITY %anchor.qname "%SMIL.pfx;anchor">
+<!ENTITY %ref.qname "%SMIL.pfx;ref">
+<!ENTITY %audio.qname "%SMIL.pfx;audio">
+<!ENTITY %img.qname "%SMIL.pfx;img">
+<!ENTITY %video.qname "%SMIL.pfx;video">
+<!ENTITY %text.qname "%SMIL.pfx;text">
+<!ENTITY %textstream.qname "%SMIL.pfx;textstream">
+<!ENTITY %animation.qname "%SMIL.pfx;animation">
+<!ENTITY %param.qname "%SMIL.pfx;param">
+<!ENTITY %brush.qname "%SMIL.pfx;brush">
+<!ENTITY %meta.qname "%SMIL.pfx;meta">
+<!ENTITY %metadata.qname "%SMIL.pfx;metadata">
+<!ENTITY %rtpmap.qname "%SMIL.pfx;rtpmap">
+<!ENTITY %smil.qname "%SMIL.pfx;smil">
+<!ENTITY %head.qname "%SMIL.pfx;head">
+<!ENTITY %body.qname "%SMIL.pfx;body">
+<!ENTITY %seq.qname "%SMIL.pfx;seq">
+<!ENTITY %par.qname "%SMIL.pfx;par">
+<!ENTITY %excl.qname "%SMIL.pfx;excl">
+<!ENTITY %transition.qname "%SMIL.pfx;transition">
+<!ENTITY %transitionFilter.qname "%SMIL.pfx;transitionFilter">
+<!--  end of smil-qname-1.mod  -->
+<!ENTITY %smil-events.module "IGNORE">
+<!ENTITY %smil-attribs.module "INCLUDE">
+<!ENTITY %smil-attribs.mod PUBLIC "-//W3C//ENTITIES SMIL 2.0 Common Attributes 1.0//EN" "smil-attribs-1.mod">
+<!--  ......................................................................  -->
+<!--  SMIL 2.0 Common Attributes Module  ...................................  -->
+<!--  file: smil-attribs-1.mod
+
+     This is SMIL 2.0.
+     Copyright 1998-2000 W3C (MIT, INRIA, Keio), All Rights Reserved.
+     Revision: $Id: log.dtd,v 1.1.1.1 2002/03/19 12:29:25 malcolm Exp $
+
+     This DTD module is identified by the PUBLIC and SYSTEM identifiers:
+
+     PUBLIC "-//W3C//ENTITIES SMIL 2.0 Common Attributes 1.0//EN"
+     SYSTEM "smil-attribs-1.mod"
+
+     ......................................................................  -->
+<!--  Common Attributes
+
+     This module declares the common attributes for the SMIL DTD Modules.
+ -->
+<!ENTITY %SMIL.pfx "">
+<!ENTITY %Id.attrib "%SMIL.pfx;id           ID                       #IMPLIED">
+<!ENTITY %Class.attrib "%SMIL.pfx;class        CDATA                    #IMPLIED">
+<!ENTITY %Title.attrib "%SMIL.pfx;title        %Text;                   #IMPLIED">
+<!ENTITY %Core.extra.attrib "">
+<!ENTITY %Core.attrib "%Id.attrib;
+  %Class.attrib;
+  %Title.attrib;
+  %Core.extra.attrib;">
+<!ENTITY %I18n.extra.attrib "">
+<!ENTITY %I18n.attrib "
+  xml:lang %LanguageCode; #IMPLIED
+  %I18n.extra.attrib;">
+<!--  ================== BasicLayout =======================================  -->
+<!ENTITY %Region.attrib "
+ %SMIL.pfx;region         CDATA #IMPLIED
+">
+<!ENTITY %Fill.attrib "
+ %SMIL.pfx;fill         (remove|freeze|hold|transition) #IMPLIED
+">
+<!--  ================== HierarchicalLayout =======================================  -->
+<!ENTITY %BackgroundColor.attrib "
+ %SMIL.pfx;backgroundColor     CDATA    #IMPLIED
+">
+<!ENTITY %BackgroundColor-deprecated.attrib "
+ %SMIL.pfx;background-color     CDATA    #IMPLIED
+">
+<!ENTITY %Sub-region.attrib "
+ %SMIL.pfx;top     CDATA    'auto'
+ %SMIL.pfx;bottom  CDATA    'auto'
+ %SMIL.pfx;left    CDATA    'auto'
+ %SMIL.pfx;right   CDATA    'auto'
+">
+<!ENTITY %Fit.attrib "
+ %SMIL.pfx;fit            (hidden|fill|meet|scroll|slice)    'hidden'
+">
+<!--  ================ Registration Point attribute for media elements ============  -->
+<!--  integrating language using HierarchicalLayout must include regPoint    -->
+<!--  attribute on media elements for regPoint elements to be useful         -->
+<!ENTITY %RegistrationPoint.attrib "
+ %SMIL.pfx;regPoint  CDATA    #IMPLIED
+ %SMIL.pfx;regAlign  (topLeft|topMid|topRight|midLeft|center|
+                     midRight|bottomLeft|bottomMid|bottomRight) #IMPLIED
+">
+<!-- =================== Content Control ======================= -->
+<!--  customTest Attribute  -->
+<!ENTITY %CustomTest.attrib "
+        %SMIL.pfx;customTest              IDREF           #IMPLIED
+">
+<!--  ========================= SkipContentControl Module =========================  -->
+<!ENTITY %skipContent.attrib "
+	%SMIL.pfx;skip-content		(true|false)	'true'
+">
+<!--  Switch Parameter Attributes  -->
+<!ENTITY %System.attrib "
+        %CustomTest.attrib;
+        %SMIL.pfx;systemBitrate                	CDATA		#IMPLIED
+	%SMIL.pfx;systemCaptions		(on|off)	#IMPLIED
+	%SMIL.pfx;systemLanguage		CDATA		#IMPLIED
+	%SMIL.pfx;systemOverdubOrSubtitle	(overdub|subtitle) #IMPLIED
+	%SMIL.pfx;systemRequired		NMTOKEN		#IMPLIED
+	%SMIL.pfx;systemScreenSize		CDATA		#IMPLIED
+	%SMIL.pfx;systemScreenDepth		CDATA		#IMPLIED
+	%SMIL.pfx;systemAudioDesc		(on|off)	#IMPLIED
+	%SMIL.pfx;systemOperatingSystem		NMTOKEN		#IMPLIED
+	%SMIL.pfx;systemCPU			NMTOKEN		#IMPLIED
+	%SMIL.pfx;systemComponent		CDATA		#IMPLIED
+
+	%SMIL.pfx;system-bitrate		CDATA		#IMPLIED
+	%SMIL.pfx;system-captions		(on|off)	#IMPLIED
+	%SMIL.pfx;system-language		CDATA		#IMPLIED
+	%SMIL.pfx;system-overdub-or-caption	(overdub|caption) #IMPLIED
+	%SMIL.pfx;system-required		NMTOKEN		#IMPLIED
+	%SMIL.pfx;system-screen-size		CDATA		#IMPLIED
+	%SMIL.pfx;system-screen-depth		CDATA		#IMPLIED
+">
+<!--  SMIL Animation Module  ================================================  -->
+<!ENTITY %BasicAnimation.attrib "
+  %SMIL.pfx;values     CDATA #IMPLIED
+  %SMIL.pfx;from       CDATA #IMPLIED
+  %SMIL.pfx;to         CDATA #IMPLIED
+  %SMIL.pfx;by         CDATA #IMPLIED
+">
+<!--  SMIL Timing Module  ===================================================  -->
+<!ENTITY %BasicInlineTiming.attrib "
+  %SMIL.pfx;dur                       %TimeValue;                  #IMPLIED
+  %SMIL.pfx;repeatCount               %TimeValue;                  #IMPLIED
+  %SMIL.pfx;repeatDur                 %TimeValue;                  #IMPLIED
+  %SMIL.pfx;begin                     %TimeValue;                  #IMPLIED
+  %SMIL.pfx;end                       %TimeValue;                  #IMPLIED
+">
+<!ENTITY %MinMaxTiming.attrib "
+  %SMIL.pfx;min                       %TimeValue;                  #IMPLIED
+  %SMIL.pfx;max                       %TimeValue;                  #IMPLIED
+">
+<!ENTITY %BasicInlineTiming-deprecated.attrib "
+  %SMIL.pfx;repeat                   %TimeValue;                   #IMPLIED
+">
+<!ENTITY %BasicTimeContainers.attrib "
+  %SMIL.pfx;endsync                  (first|last|all|IDREF)        'last'
+  %Fill.attrib;
+">
+<!ENTITY %TimeContainerAttributes.attrib "
+  %SMIL.pfx;timeAction            CDATA                        #IMPLIED
+  %SMIL.pfx;timeContainer         CDATA                        #IMPLIED
+">
+<!ENTITY %RestartTiming.attrib "
+  %SMIL.pfx;restart               (always|whenNotActive|never) 'always'
+">
+<!ENTITY %RestartDefaultTiming.attrib "
+  %SMIL.pfx;restartDefault        (inherit|always|never|whenNotActive) 'always'
+">
+<!ENTITY %SyncBehavior.attrib "
+  %SMIL.pfx;syncBehavior  (canSlip|locked|independent) #IMPLIED
+  %SMIL.pfx;syncTolerence %TimeValue;                  #IMPLIED
+">
+<!ENTITY %SyncBehaviorDefault.attrib "
+  %SMIL.pfx;syncBehaviorDefault   (canSlip|locked|independent) #IMPLIED
+  %SMIL.pfx;syncToleranceDefault  %TimeValue;                  #IMPLIED
+">
+<!ENTITY %SyncMaster.attrib "
+  %SMIL.pfx;syncMaster    (true|false)                 'false'
+">
+<!--  ================== Time Manipulations =================================  -->
+<!ENTITY %TimeManipulations.attrib "
+  %SMIL.pfx;accelerate		%Number;	'0'
+  %SMIL.pfx;decelerate		%Number;	'0'
+  %SMIL.pfx;autoReverse         (true|false)    'false'
+  %SMIL.pfx;speed		%Number;	'1.0'
+">
+<!--  ================== Streaming Media ====================================  -->
+<!ENTITY %Streaming-media.attrib "
+  %SMIL.pfx;port                  CDATA   #IMPLIED
+  %SMIL.pfx;rtpformat             CDATA   #IMPLIED
+  %SMIL.pfx;transport             CDATA   #IMPLIED
+">
+<!ENTITY %Streaming-timecontainer.attrib "
+  %SMIL.pfx;control               CDATA   #IMPLIED
+">
+<!--  ================== Transitions Media ==================================  -->
+<!ENTITY %Transition.attrib "
+ %SMIL.pfx;transIn                IDREF        #IMPLIED
+ %SMIL.pfx;transOut               IDREF        #IMPLIED
+">
+<!ENTITY %smil-model.module "INCLUDE">
+<!--  A content model MUST be defined by the driver file  -->
+<!--  ....................................................................  -->
+<!--  SMIL 2.0 Document Model Module .....................................  -->
+<!--  file: smil-model-1.mod
+
+     This is SMIL 2.0.
+     Copyright 1998-2000 W3C (MIT, INRIA, Keio), All Rights Reserved.
+
+     This DTD module is identified by the PUBLIC and SYSTEM identifiers:
+
+     PUBLIC "-//W3C//ENTITIES SMIL 2.0 Document Model 1.0//EN"
+     SYSTEM "smil-model-1.mod"
+
+     Author: Warner ten Kate, Jacco van Ossenbruggen, Aaron Cohen
+     Revision: $Id: log.dtd,v 1.1.1.1 2002/03/19 12:29:25 malcolm Exp $
+     .......................................................................  -->
+<!-- 
+        This file defines the SMIL 2.0 Language Document Model.
+        All attributes and content models are defined in the second
+        half of this file.  We first start with some utility definitions.
+        These are mainly used to simplify the use of Modules in the
+        second part of the file.
+
+ -->
+<!--  ================== Util: Head =========================================  -->
+<!ENTITY %head-meta.content "metadata?,meta*">
+<!ENTITY %head-layout.content "layout|switch">
+<!ENTITY %head-control.content "customAttributes">
+<!ENTITY %head-transition.content "transition+, meta*">
+<!-- =================== Util: Body - Content Control =======================  -->
+<!ENTITY %content-control "switch|prefetch">
+<!-- =================== Util: Body - Animation =========================  -->
+<!ENTITY %animation.elements "animate|set|animateMotion|animateColor">
+<!-- =================== Util: Body - Media =========================  -->
+<!ENTITY %media-object "audio|video|animation|text|img|textstream|ref|brush
+                               |%animation.elements;">
+<!-- =================== Util: Body - Timing ================================  -->
+<!ENTITY %BasicTimeContainers.class "par|seq">
+<!ENTITY %ExclTimeContainers.class "excl">
+<!ENTITY %timecontainer.class "%BasicTimeContainers.class;|%ExclTimeContainers.class;">
+<!ENTITY %timecontainer.content "%timecontainer.class;|%media-object;|%content-control;|a">
+<!ENTITY %smil-time.attrib "
+ %BasicInlineTiming.attrib;
+ %MinMaxTiming.attrib;
+ %RestartTiming.attrib;
+ %SyncBehavior.attrib;
+ %SyncBehaviorDefault.attrib;
+ %BasicInlineTiming-deprecated.attrib;
+ %Fill.attrib;
+">
+<!ENTITY %timecontainer.attrib "
+ %BasicInlineTiming.attrib;
+ %MinMaxTiming.attrib;
+ %BasicTimeContainers.attrib;
+ %RestartTiming.attrib;
+ %SyncBehavior.attrib;
+ %SyncBehaviorDefault.attrib;
+ %BasicInlineTiming-deprecated.attrib;
+ %System.attrib;
+">
+<!--  ======================================================================  -->
+<!--  ======================================================================  -->
+<!--  ======================================================================  -->
+<!--  
+     The actual content model and attribute definitions for each module 
+     sections follow below.
+ -->
+<!--  ================== Content Control ===================================  -->
+<!ENTITY %BasicContentControl.module "INCLUDE">
+<!ENTITY %CustomTestAttributes.module "INCLUDE">
+<!ENTITY %PrefetchControl.module "INCLUDE">
+<!ENTITY %SkipContentControl.module "INCLUDE">
+<!ENTITY %switch.content "(layout|%timecontainer.class;|%media-object;|
+			   %content-control;|a)*">
+<!ENTITY %prefetch.content "%switch.content;">
+<!ENTITY %customAttributes.content "(customTest)+">
+<!ENTITY %switch.attrib "%System.attrib; %skipContent.attrib;">
+<!ENTITY %prefetch.attrib "%timecontainer.attrib; %skipContent.attrib; ">
+<!ENTITY %customAttributes.attrib "%skipContent.attrib;">
+<!ENTITY %customTest.attrib "%skipContent.attrib;">
+<!--  ================== Animation =========================================  -->
+<!ENTITY %BasicAnimation.module "INCLUDE">
+<!--  choose targetElement or XLink:  -->
+<!ENTITY %animation-targetElement "INCLUDE">
+<!ENTITY %animation-XLinkTarget "IGNORE">
+<!ENTITY %animate.content "EMPTY">
+<!ENTITY %animateColor.content "EMPTY">
+<!ENTITY %animateMotion.content "EMPTY">
+<!ENTITY %set.content "EMPTY">
+<!ENTITY %animate.attrib "%skipContent.attrib;">
+<!ENTITY %animateColor.attrib "%skipContent.attrib;">
+<!ENTITY %animateMotion.attrib "%skipContent.attrib;">
+<!ENTITY %set.attrib "%skipContent.attrib;">
+<!--  ================== Layout ============================================  -->
+<!ENTITY %BasicLayout.module "INCLUDE">
+<!ENTITY %AudioLayout.module "INCLUDE">
+<!ENTITY %MultiWindowLayout.module "INCLUDE">
+<!ENTITY %HierarchicalLayout.module "INCLUDE">
+<!ENTITY %layout.content "(region|viewport|root-layout|regPoint)*">
+<!ENTITY %region.content "(region)*">
+<!ENTITY %rootlayout.content "(region)*">
+<!ENTITY %viewport.content "(region)*">
+<!ENTITY %regPoint.content "EMPTY">
+<!ENTITY %rootlayout.attrib "%skipContent.attrib;">
+<!ENTITY %viewport.attrib "%skipContent.attrib;">
+<!ENTITY %region.attrib "%skipContent.attrib;">
+<!ENTITY %regPoint.attrib "%skipContent.attrib;">
+<!--  ================== Linking ===========================================  -->
+<!ENTITY %LinkingAttributes.module "INCLUDE">
+<!ENTITY %BasicLinking.module "INCLUDE">
+<!ENTITY %ObjectLinking.module "INCLUDE">
+<!ENTITY %a.content "(%timecontainer.class;|%media-object;|
+                            %content-control;)*">
+<!ENTITY %area.content "EMPTY">
+<!ENTITY %anchor.content "EMPTY">
+<!ENTITY %a.attrib "%smil-time.attrib;">
+<!ENTITY %area.attrib "%smil-time.attrib; %skipContent.attrib;">
+<!ENTITY %anchor.attrib "%smil-time.attrib; %skipContent.attrib;">
+<!--  ================== Media  ============================================  -->
+<!ENTITY %BasicMedia.module "INCLUDE">
+<!ENTITY %MediaClipping.module "INCLUDE">
+<!ENTITY %MediaClipping.deperecated.module "INCLUDE">
+<!ENTITY %MediaClipMarkers.module "INCLUDE">
+<!ENTITY %MediaParam.module "INCLUDE">
+<!ENTITY %BrushMedia.module "INCLUDE">
+<!ENTITY %MediaAccessibility.module "INCLUDE">
+<!ENTITY %media-object.content "(%animation.elements;|anchor|area
+                                  |transitionFilter|param)*">
+<!ENTITY %media-object.attrib "
+  %smil-time.attrib;
+  %System.attrib;
+  %Region.attrib;
+  %Transition.attrib;
+  %BackgroundColor.attrib;
+  %BackgroundColor-deprecated.attrib;
+  %Sub-region.attrib;
+  %RegistrationPoint.attrib;
+  %Fit.attrib;
+">
+<!ENTITY %brush.attrib "%skipContent.attrib;">
+<!--  ================== Metadata ==========================================  -->
+<!ENTITY %meta.content "EMPTY">
+<!ENTITY %meta.attrib "%skipContent.attrib;">
+<!ENTITY %metadata.content "EMPTY">
+<!ENTITY %metadata.attrib "%skipContent.attrib;">
+<!--  ================== Structure =========================================  -->
+<!ENTITY %Structure.module "INCLUDE">
+<!ENTITY %smil.content "(head?,body?)">
+<!ENTITY %head.content "
+	((%head-meta.content;)?,
+	((%head-layout.content;),meta*)?,
+	 (%head-transition.content;)?,
+	((%head-control.content;),meta*)?)">
+<!ENTITY %body.content "(%timecontainer.class;|%media-object;|
+                          %content-control;|a)*">
+<!ENTITY %body.attrib "%timecontainer.attrib; %Region.attrib;">
+<!--  ================== Transitions =======================================  -->
+<!ENTITY %BasicTransitions.module "INCLUDE">
+<!ENTITY %MultiElementTransitions.module "INCLUDE">
+<!ENTITY %transition.content "(transitionFilter*)">
+<!ENTITY %transition.attrib "%skipContent.attrib;">
+<!ENTITY %transitionFilter.attrib "%skipContent.attrib;">
+<!--  ================== Timing ============================================  -->
+<!ENTITY %BasicInlineTiming.module "INCLUDE">
+<!ENTITY %SyncbaseTiming.module "INCLUDE">
+<!ENTITY %EventTiming.module "INCLUDE">
+<!ENTITY %WallclockTiming.module "INCLUDE">
+<!ENTITY %MultiSyncArcTiming.module "INCLUDE">
+<!ENTITY %MediaMarkerTiming.module "INCLUDE">
+<!ENTITY %MinMaxTiming.module "INCLUDE">
+<!ENTITY %BasicTimeContainers.module "INCLUDE">
+<!ENTITY %ExclTimeContainers.module "INCLUDE">
+<!ENTITY %PrevTiming.module "INCLUDE">
+<!ENTITY %RestartTiming.module "INCLUDE">
+<!ENTITY %SyncBehavior.module "INCLUDE">
+<!ENTITY %SyncBehaviorDefault.module "INCLUDE">
+<!ENTITY %RestartDefault.module "INCLUDE">
+<!ENTITY %FillDefault.module "INCLUDE">
+<!ENTITY %par.attrib "%timecontainer.attrib; %Region.attrib;">
+<!ENTITY %seq.attrib "%timecontainer.attrib; %Region.attrib;">
+<!ENTITY %excl.attrib "%timecontainer.attrib; %Region.attrib; %skipContent.attrib;">
+<!ENTITY %par.content "(%timecontainer.content;)*">
+<!ENTITY %seq.content "(%timecontainer.content;)*">
+<!ENTITY %excl.content "((%timecontainer.content;)*|priorityClass+)">
+<!ENTITY %priorityClass.attrib "%skipContent.attrib;">
+<!ENTITY %priorityClass.content "((%timecontainer.content;)*|priorityClass+)">
+<!--  end of smil-framework-1.mod  -->
+<!--  The SMIL 2.0 Profile includes the following sections:
+             C. The SMIL Animation Module 
+             D. The SMIL Content Control Module 
+             G. The SMIL Layout Module 
+             H. The SMIL Linking Module 
+             I. The SMIL Media Object Module 
+             J. The SMIL Metainformation Module 
+             K. The SMIL Structure Module 
+             L. The SMIL Timing and Synchronization Module 
+             M. Integrating SMIL Timing into other XML-Based Languages 
+             P. The SMIL Transition effects Module 
+
+             The SMIL Streaming Media Object Module is optional.
+ -->
+<!ENTITY %streamingmedia.model "IGNORE">
+<!ENTITY %anim-mod PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Animation//EN" "SMIL-anim.mod">
+<!ENTITY %control-mod PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Content Control//EN" "SMIL-control.mod">
+<!ENTITY %layout-mod PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Layout//EN" "SMIL-layout.mod">
+<!ENTITY %link-mod PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Linking//EN" "SMIL-link.mod">
+<!ENTITY %media-mod PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Media Objects//EN" "SMIL-media.mod">
+<!ENTITY %meta-mod PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Document Metainformation//EN" "SMIL-metainformation.mod">
+<!ENTITY %struct-mod PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Document Structure//EN" "SMIL-struct.mod">
+<!ENTITY %timing-mod PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Timing//EN" "SMIL-timing.mod">
+<!ENTITY %transition-mod PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Transition//EN" "SMIL-transition.mod">
+<!--  ======================================================================  -->
+<!--  SMIL Structure Module  ===============================================  -->
+<!--  file: SMIL-struct.mod
+
+     This is SMIL 2.0.
+     Copyright 2000 W3C (MIT, INRIA, Keio), All Rights Reserved.
+
+     This DTD module is identified by the PUBLIC and SYSTEM identifiers:
+
+     PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Document Structure//EN"
+     SYSTEM "SMIL-struct.mod"
+
+     Author: Warner ten Kate, Jacco van Ossenbruggen
+     Revision: $Id: log.dtd,v 1.1.1.1 2002/03/19 12:29:25 malcolm Exp $
+
+     =====================================================================  -->
+<!--  ================== SMIL Document Root ===============================  -->
+<!ENTITY %smil.attrib "">
+<!ENTITY %smil.content "EMPTY">
+<!ENTITY %smil.qname "smil">
+<!ELEMENT smil EMPTY>
+<!ATTLIST smil id ID #IMPLIED class CDATA #IMPLIED
+	       title CDATA #IMPLIED xml:lang NMTOKEN #IMPLIED
+	       xmlns CDATA #FIXED "http://www.w3.org/TR/REC-smil/SMIL20">
+<!--  ================== The Document Head ================================  -->
+<!ENTITY %head.content "EMPTY">
+<!ENTITY %head.attrib "">
+<!ENTITY %head.qname "head">
+<!ELEMENT head EMPTY>
+<!ATTLIST head id ID #IMPLIED class CDATA #IMPLIED
+	       title CDATA #IMPLIED xml:lang NMTOKEN #IMPLIED>
+<!-- =================== The Document Body - Timing Root ==================  -->
+<!ENTITY %body.content "EMPTY">
+<!ENTITY %body.attrib "">
+<!ENTITY %body.qname "body">
+<!ELEMENT body EMPTY>
+<!ATTLIST body id ID #IMPLIED class CDATA #IMPLIED
+	       title CDATA #IMPLIED xml:lang NMTOKEN #IMPLIED>
+<!--  end of SMIL-struct.mod  -->
+<!--  =======================================================================  -->
+<!--  SMIL Animation Module  ================================================  -->
+<!--  file: SMIL-anim.mod
+
+     This is SMIL 2.0.
+     Copyright 2000 W3C (MIT, INRIA, Keio), All Rights Reserved.
+
+        Author:     Patrick Schmitz, Ken Day, Jacco van Ossenbruggen
+        Revision:   $Id: log.dtd,v 1.1.1.1 2002/03/19 12:29:25 malcolm Exp $
+
+     This DTD module is identified by the PUBLIC and SYSTEM identifiers:
+
+     PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Animation//EN"
+     SYSTEM "SMIL-anim.mod"
+
+     =======================================================================  -->
+<!--  ============================= Dependencies ============================  -->
+<!--  The integrating profile is expected to define the following entities,
+     Unless the defaults provided are sufficient.
+  -->
+<!--  SplineAnimation.module entity:  Define as "INCLUDE" if the integrating
+     profile includes the SMIL 2.0 SplineAnimation Module, "IGNORE" if not.
+     The default is "IGNORE", i.e. by default SplineAnimation is not included
+     in the integrating language profile.
+  -->
+<!ENTITY %SplineAnimation.module "IGNORE">
+<!--  Animation depends on SMIL Timing, importing the attributes listed
+     in the AnimationTime.attrib entity.  If the integrating profile does 
+     include the MinMaxTiming.module, its default value includes the 
+     attributes defined in BasicInlineTiming.attrib and inMaxTiming.attrib.
+     Otherwise, it is defaulted to BasicInlineTiming.attrib, which is the 
+     minimum requirement.
+     
+     Note that the profile can override these defaults by redefining 
+     AnimationTime.attrib.  The profile is also expected to define 
+     Fill.attrib.
+  -->
+<!ENTITY %MinMaxTiming.module "IGNORE">
+<!ENTITY %AnimationTime.attrib "%BasicInlineTiming.attrib;">
+<!ENTITY %Fill.attrib "">
+<!ENTITY %animTimingAttrs "
+  %AnimationTime.attrib;             
+  %Fill.attrib;            
+">
+<!--  Language Designer chooses to integrate targetElement or xlink attributes.
+     To integrate the targetElement attribute, define the entity
+     animation-targetElement as "INCLUDE"; to integrate the XLink attributes,
+     define animation-XLinkTarget as "INCLUDE".
+     
+     One or the other MUST be defined.  It is strongly recommended that only one
+     of the two be defined.
+ -->
+<!ENTITY %animation-targetElement "IGNORE">
+<!ENTITY %animTargetElementAttr "">
+<!ENTITY %animation-XLinkTarget "IGNORE">
+<!ENTITY %animTargetElementXLink "">
+<!--  ========================== Attribute Groups ===========================  -->
+<!--  All animation elements include these attributes  -->
+<!ENTITY %animAttrsCommon "%Core.attrib;
+  %I18n.attrib;
+  %System.attrib;
+  %animTimingAttrs;
+  %animTargetElementAttr;
+  %animTargetElementXLink;">
+<!--  All except animateMotion need an identified target attribute  -->
+<!ENTITY %animAttrsNamedTarget "%animAttrsCommon;
+  attributeName  CDATA  #REQUIRED
+  attributeType  CDATA  #IMPLIED">
+<!--  All except set support the full animation-function specification,
+     additive and cumulative animation.
+     SplineAnimation adds the attributes keyTimes, keySplines and path,
+	 and the calcMode value "spline", to those of BasicAnimation.
+  -->
+<!ENTITY %splineAnimCalcModeValues "">
+<!ENTITY %splineAnimValueAttrs "">
+<!ENTITY %splineAnimPathAttr "">
+<!ENTITY %animValueAttrs "
+  %BasicAnimation.attrib;
+  calcMode   (discrete|linear|paced %splineAnimCalcModeValues;) 'linear'
+  %splineAnimValueAttrs;
+  additive   (replace | sum) 'replace'
+  accumulate (none | sum) 'none'">
+<!--  ========================== Animation Elements =========================  -->
+<!ENTITY %animate.attrib "">
+<!ENTITY %animate.content "EMPTY">
+<!ENTITY %animate.qname "animate">
+<!ELEMENT animate EMPTY>
+<!ATTLIST animate id ID #IMPLIED class CDATA #IMPLIED
+		  title CDATA #IMPLIED xml:lang NMTOKEN #IMPLIED
+		  customTest IDREF #IMPLIED
+		  systemBitrate CDATA #IMPLIED
+		  systemCaptions (on|off) #IMPLIED
+		  systemLanguage CDATA #IMPLIED
+		  systemOverdubOrSubtitle (overdub|subtitle) #IMPLIED
+		  systemRequired NMTOKEN #IMPLIED
+		  systemScreenSize CDATA #IMPLIED
+		  systemScreenDepth CDATA #IMPLIED
+		  systemAudioDesc (on|off) #IMPLIED
+		  systemOperatingSystem NMTOKEN #IMPLIED
+		  systemCPU NMTOKEN #IMPLIED
+		  systemComponent CDATA #IMPLIED
+		  system-bitrate CDATA #IMPLIED
+		  system-captions (on|off) #IMPLIED
+		  system-language CDATA #IMPLIED
+		  system-overdub-or-caption (overdub|caption) #IMPLIED
+		  system-required NMTOKEN #IMPLIED
+		  system-screen-size CDATA #IMPLIED
+		  system-screen-depth CDATA #IMPLIED dur CDATA #IMPLIED
+		  repeatCount CDATA #IMPLIED repeatDur CDATA #IMPLIED
+		  begin CDATA #IMPLIED end CDATA #IMPLIED
+		  attributeName CDATA #REQUIRED
+		  attributeType CDATA #IMPLIED values CDATA #IMPLIED
+		  from CDATA #IMPLIED to CDATA #IMPLIED
+		  by CDATA #IMPLIED
+		  calcMode (discrete|linear|paced) "linear"
+		  additive (replace|sum) "replace"
+		  accumulate (none|sum) "none">
+<!ENTITY %set.attrib "">
+<!ENTITY %set.content "EMPTY">
+<!ENTITY %set.qname "set">
+<!ELEMENT set EMPTY>
+<!ATTLIST set id ID #IMPLIED class CDATA #IMPLIED
+	      title CDATA #IMPLIED xml:lang NMTOKEN #IMPLIED
+	      customTest IDREF #IMPLIED
+	      systemBitrate CDATA #IMPLIED
+	      systemCaptions (on|off) #IMPLIED
+	      systemLanguage CDATA #IMPLIED
+	      systemOverdubOrSubtitle (overdub|subtitle) #IMPLIED
+	      systemRequired NMTOKEN #IMPLIED
+	      systemScreenSize CDATA #IMPLIED
+	      systemScreenDepth CDATA #IMPLIED
+	      systemAudioDesc (on|off) #IMPLIED
+	      systemOperatingSystem NMTOKEN #IMPLIED
+	      systemCPU NMTOKEN #IMPLIED
+	      systemComponent CDATA #IMPLIED
+	      system-bitrate CDATA #IMPLIED
+	      system-captions (on|off) #IMPLIED
+	      system-language CDATA #IMPLIED
+	      system-overdub-or-caption (overdub|caption) #IMPLIED
+	      system-required NMTOKEN #IMPLIED
+	      system-screen-size CDATA #IMPLIED
+	      system-screen-depth CDATA #IMPLIED dur CDATA #IMPLIED
+	      repeatCount CDATA #IMPLIED repeatDur CDATA #IMPLIED
+	      begin CDATA #IMPLIED end CDATA #IMPLIED
+	      attributeName CDATA #REQUIRED
+	      attributeType CDATA #IMPLIED to CDATA #IMPLIED>
+<!ENTITY %animateMotion.attrib "">
+<!ENTITY %animateMotion.content "EMPTY">
+<!ENTITY %animateMotion.qname "animateMotion">
+<!ELEMENT animateMotion EMPTY>
+<!ATTLIST animateMotion id ID #IMPLIED
+			class CDATA #IMPLIED title CDATA #IMPLIED
+			xml:lang NMTOKEN #IMPLIED customTest IDREF #IMPLIED
+			systemBitrate CDATA #IMPLIED
+			systemCaptions (on|off) #IMPLIED
+			systemLanguage CDATA #IMPLIED
+			systemOverdubOrSubtitle (overdub|subtitle) #IMPLIED
+			systemRequired NMTOKEN #IMPLIED
+			systemScreenSize CDATA #IMPLIED
+			systemScreenDepth CDATA #IMPLIED
+			systemAudioDesc (on|off) #IMPLIED
+			systemOperatingSystem NMTOKEN #IMPLIED
+			systemCPU NMTOKEN #IMPLIED
+			systemComponent CDATA #IMPLIED
+			system-bitrate CDATA #IMPLIED
+			system-captions (on|off) #IMPLIED
+			system-language CDATA #IMPLIED
+			system-overdub-or-caption (overdub|caption) #IMPLIED
+			system-required NMTOKEN #IMPLIED
+			system-screen-size CDATA #IMPLIED
+			system-screen-depth CDATA #IMPLIED dur CDATA #IMPLIED
+			repeatCount CDATA #IMPLIED repeatDur CDATA #IMPLIED
+			begin CDATA #IMPLIED end CDATA #IMPLIED
+			values CDATA #IMPLIED from CDATA #IMPLIED
+			to CDATA #IMPLIED by CDATA #IMPLIED
+			calcMode (discrete|linear|paced) "linear"
+			additive (replace|sum) "replace"
+			accumulate (none|sum) "none"
+			origin (default) "default">
+<!ENTITY %animateColor.attrib "">
+<!ENTITY %animateColor.content "EMPTY">
+<!ENTITY %animateColor.qname "animateColor">
+<!ELEMENT animateColor EMPTY>
+<!ATTLIST animateColor id ID #IMPLIED
+		       class CDATA #IMPLIED title CDATA #IMPLIED
+		       xml:lang NMTOKEN #IMPLIED customTest IDREF #IMPLIED
+		       systemBitrate CDATA #IMPLIED
+		       systemCaptions (on|off) #IMPLIED
+		       systemLanguage CDATA #IMPLIED
+		       systemOverdubOrSubtitle (overdub|subtitle) #IMPLIED
+		       systemRequired NMTOKEN #IMPLIED
+		       systemScreenSize CDATA #IMPLIED
+		       systemScreenDepth CDATA #IMPLIED
+		       systemAudioDesc (on|off) #IMPLIED
+		       systemOperatingSystem NMTOKEN #IMPLIED
+		       systemCPU NMTOKEN #IMPLIED
+		       systemComponent CDATA #IMPLIED
+		       system-bitrate CDATA #IMPLIED
+		       system-captions (on|off) #IMPLIED
+		       system-language CDATA #IMPLIED
+		       system-overdub-or-caption (overdub|caption) #IMPLIED
+		       system-required NMTOKEN #IMPLIED
+		       system-screen-size CDATA #IMPLIED
+		       system-screen-depth CDATA #IMPLIED dur CDATA #IMPLIED
+		       repeatCount CDATA #IMPLIED repeatDur CDATA #IMPLIED
+		       begin CDATA #IMPLIED end CDATA #IMPLIED
+		       attributeName CDATA #REQUIRED
+		       attributeType CDATA #IMPLIED values CDATA #IMPLIED
+		       from CDATA #IMPLIED to CDATA #IMPLIED
+		       by CDATA #IMPLIED
+		       calcMode (discrete|linear|paced) "linear"
+		       additive (replace|sum) "replace"
+		       accumulate (none|sum) "none">
+<!--  ========================== End Animation =============================  -->
+<!--  end of SMIL-anim.mod  -->
+<!--  =================================================================  -->
+<!--  SMIL Content Control Module  ====================================  -->
+<!--  file: SMIL-control.mod
+
+     This is SMIL 2.0.
+     Copyright 2000 W3C (MIT, INRIA, Keio), All Rights Reserved.
+
+     Author:     Jacco van Ossenbruggen, Aaron Cohen
+     Revision:   $Id: log.dtd,v 1.1.1.1 2002/03/19 12:29:25 malcolm Exp $
+
+     This DTD module is identified by the PUBLIC and SYSTEM identifiers:
+
+     PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Content Control//EN"
+     SYSTEM "SMIL-control.mod"
+
+     =================================================================  -->
+<!ENTITY %BasicContentControl.module "INCLUDE">
+<!ENTITY %switch.attrib "">
+<!ENTITY %switch.content "EMPTY">
+<!ENTITY %switch.qname "switch">
+<!ELEMENT switch EMPTY>
+<!ATTLIST switch id ID #IMPLIED class CDATA #IMPLIED
+		 title CDATA #IMPLIED xml:lang NMTOKEN #IMPLIED>
+<!--  ========================= CustomTest Elements =========================  -->
+<!ENTITY %CustomTestAttributes.module "IGNORE">
+<!--  end of CustomTestAttributes  -->
+<!--  ========================= PrefetchControl Elements ====================  -->
+<!ENTITY %PrefetchControl.module "IGNORE">
+<!--  ================================================================  -->
+<!--  SMIL Metainformation Module  ===================================  -->
+<!--  file: SMIL-metainformation.mod
+
+     This is SMIL 2.0.
+     Copyright 2000 W3C (MIT, INRIA, Keio), All Rights Reserved.
+
+     This module declares the meta and metadata elements types and 
+     its attributes, used to provide declarative document metainformation.
+
+     Author: Thierry Michel, Jacco van Ossenbruggen
+     Revision: $Id: log.dtd,v 1.1.1.1 2002/03/19 12:29:25 malcolm Exp $
+   
+     This DTD module is identified by the PUBLIC and SYSTEM identifiers:
+
+     PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Document Metadata//EN"
+     SYSTEM "SMIL-metainformation.mod"
+
+     ================================================================  -->
+<!--  ================== Profiling Entities ==========================  -->
+<!ENTITY %meta.content "EMPTY">
+<!ENTITY %meta.attrib "">
+<!ENTITY %meta.qname "meta">
+<!ENTITY %metadata.content "EMPTY">
+<!ENTITY %metadata.attrib "">
+<!ENTITY %metadata.qname "metadata">
+<!--  ================== meta element ================================  -->
+<!ELEMENT meta EMPTY>
+<!ATTLIST meta content CDATA #IMPLIED
+	       name CDATA #REQUIRED>
+<!--  ================== metadata element ============================  -->
+<!ELEMENT metadata EMPTY>
+<!ATTLIST metadata id ID #IMPLIED
+		   class CDATA #IMPLIED title CDATA #IMPLIED
+		   xml:lang NMTOKEN #IMPLIED>
+<!--  end of SMIL-metadata.mod  -->
+<!--  =======================================================================  -->
+<!--  SMIL 2.0 Layout Modules ===============================================  -->
+<!--  file: SMIL-layout.mod
+
+        This is SMIL 2.0.
+        Copyright 2000 W3C (MIT, INRIA, Keio), All Rights Reserved.
+
+        Authors:  Jacco van Ossenbruggen, Aaron Cohen
+        Revision: $Id: log.dtd,v 1.1.1.1 2002/03/19 12:29:25 malcolm Exp $
+
+        This DTD module is identified by the PUBLIC and SYSTEM identifiers:
+
+        PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Layout//EN"
+        SYSTEM "SMIL-layout.mod"
+
+        ====================================================================  -->
+<!--  ================== BasicLayout ========================================  -->
+<!--  ================== BasicLayout Profiling Entities =====================  -->
+<!ENTITY %layout.attrib "">
+<!ENTITY %region.attrib "">
+<!ENTITY %rootlayout.attrib "">
+<!ENTITY %layout.content "EMPTY">
+<!ENTITY %region.content "EMPTY">
+<!ENTITY %rootlayout.content "EMPTY">
+<!--  ================== BasicLayout Entities ===============================  -->
+<!ENTITY %viewport-attrs "
+        height              CDATA    'auto'
+        width               CDATA    'auto'
+	close               (never|whenNotActive) 'never'
+	open                (always|whenActive)   'always'
+        %BackgroundColor.attrib;
+        %BackgroundColor-deprecated.attrib;
+">
+<!ENTITY %region-attrs "
+        bottom              CDATA    'auto'
+        left                CDATA    'auto'
+        right               CDATA    'auto'
+        top                 CDATA    'auto'
+        z-index             CDATA    #IMPLIED
+	showBackground      (always|whenActive) 'always'
+	%Fit.attrib;
+">
+<!--  ================== BasicLayout Elements ===============================  -->
+<!-- 
+     Layout contains the region and root-layout elements defined by
+     smil-basic-layout or other elements defined an external layout
+     mechanism.
+ -->
+<!ENTITY %layout.qname "layout">
+<!ELEMENT layout EMPTY>
+<!ATTLIST layout id ID #IMPLIED class CDATA #IMPLIED
+		 title CDATA #IMPLIED xml:lang NMTOKEN #IMPLIED
+		 type CDATA "text/smil-basic-layout">
+<!--  ================== Region Element ====================================== -->
+<!ENTITY %region.qname "region">
+<!ELEMENT region EMPTY>
+<!ATTLIST region id ID #IMPLIED class CDATA #IMPLIED
+		 title CDATA #IMPLIED xml:lang NMTOKEN #IMPLIED
+		 height CDATA "auto" width CDATA "auto"
+		 close (never|whenNotActive) "never"
+		 open (always|whenActive) "always"
+		 backgroundColor CDATA #IMPLIED
+		 background-color CDATA #IMPLIED bottom CDATA "auto"
+		 left CDATA "auto" right CDATA "auto" top CDATA "auto"
+		 z-index CDATA #IMPLIED
+		 showBackground (always|whenActive) "always"
+		 fit (hidden|fill|meet|scroll|slice) "hidden">
+<!--  ================== Root-layout Element ================================= -->
+<!ENTITY %root-layout.qname "root-layout">
+<!ELEMENT root-layout EMPTY>
+<!ATTLIST root-layout id ID #IMPLIED
+		      class CDATA #IMPLIED title CDATA #IMPLIED
+		      xml:lang NMTOKEN #IMPLIED height CDATA "auto"
+		      width CDATA "auto"
+		      close (never|whenNotActive) "never"
+		      open (always|whenActive) "always"
+		      backgroundColor CDATA #IMPLIED
+		      background-color CDATA #IMPLIED>
+<!--  ================== AudioLayout ========================================  -->
+<!ENTITY %AudioLayout.module "IGNORE">
+<!--  end AudioLayout.module  -->
+<!--  ================ MultiWindowLayout ====================================  -->
+<!ENTITY %MultiWindowLayout.module "IGNORE">
+<!--  end MultiWindowLayout.module  -->
+<!--  ====================== HierarchicalLayout =============================  -->
+<!ENTITY %HierarchicalLayout.module "IGNORE">
+<!--  end HierarchicalLayout.module  -->
+<!--  end of SMIL-layout.mod  -->
+<!--  =======================================================================  -->
+<!--  SMIL Linking Module  ==================================================  -->
+<!--  file: SMIL-link.mod
+
+     This is SMIL 2.0.
+     Copyright 2000 W3C (MIT, INRIA, Keio), All Rights Reserved.
+
+        Author:     Jacco van Ossenbruggen, Lloyd Rutledge, Aaron Cohen
+        Revision:   $Id: log.dtd,v 1.1.1.1 2002/03/19 12:29:25 malcolm Exp $
+
+     This DTD module is identified by the PUBLIC and SYSTEM identifiers:
+
+     PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Linking//EN"
+     SYSTEM "SMIL-link.mod"
+
+     =======================================================================  -->
+<!--  ======================== LinkingAttributes Entities ===================  -->
+<!ENTITY %linking-attrs "
+	sourceLevel             CDATA               '100&#37;'
+	destinationLevel        CDATA               '100&#37;'
+	sourcePlaystate         (play|pause|stop)   #IMPLIED
+	destinationPlaystate    (play|pause|stop)   'play'
+	show                    (new|pause|replace) 'replace'
+	accesskey               CDATA               #IMPLIED
+	tabindex                CDATA               #IMPLIED
+	target                  CDATA               #IMPLIED
+	external                (true|false)        'false'
+	actuate                 (onRequest|onLoad)  'onRequest'
+">
+<!--  ========================= BasicLinking Elements =======================  -->
+<!ENTITY %BasicLinking.module "IGNORE">
+<!--  end of BasicLinking  -->
+<!--  ======================== ObjectLinking ================================  -->
+<!ENTITY %ObjectLinking.module "IGNORE">
+<!--  ======================== End ObjectLinking ============================  -->
+<!--  end of SMIL-link.mod  -->
+<!--  =======================================================================  -->
+<!--  SMIL 2.0 Media Objects Modules ========================================  -->
+<!--  file: SMIL-media.mod
+
+     This is SMIL 2.0.
+     Copyright 2000 W3C (MIT, INRIA, Keio), All Rights Reserved.
+
+     Author:     Rob Lanphier, Jacco van Ossenbruggen
+     Revision:   $Id: log.dtd,v 1.1.1.1 2002/03/19 12:29:25 malcolm Exp $
+
+     This DTD module is identified by the PUBLIC and SYSTEM identifiers:
+
+     PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Media Objects//EN"
+     SYSTEM "SMIL-media.mod"
+
+     =======================================================================  -->
+<!--  ================== Profiling Entities =================================  -->
+<!ENTITY %BasicMedia.module "INCLUDE">
+<!ENTITY %media-object.content "EMPTY">
+<!ENTITY %media-object.attrib "">
+<!--  ================ Media Objects Entities =============================  -->
+<!ENTITY %mo-attributes-BasicMedia "
+        abstract        CDATA   #IMPLIED
+        alt             CDATA   #IMPLIED
+        author          CDATA   #IMPLIED
+        copyright       CDATA   #IMPLIED
+        longdesc        CDATA   #IMPLIED
+        src             CDATA   #IMPLIED
+        type            CDATA   #IMPLIED
+  ">
+<!ENTITY %mo-attributes-BasicMedia "">
+<!ENTITY %MediaClipping.module "IGNORE">
+<!ENTITY %mo-attributes-MediaClipping "">
+<!ENTITY %MediaClipping.deprecated.module "IGNORE">
+<!ENTITY %mo-attributes-MediaClipping-deprecated "">
+<!ENTITY %MediaParam.module "IGNORE">
+<!ENTITY %mo-attributes-MediaParam "">
+<!ENTITY %MediaAccessibility.module "IGNORE">
+<!ENTITY %mo-attributes-MediaAccessibility "">
+<!ENTITY %mo-attributes "
+        %Core.attrib;
+        %I18n.attrib;
+        %mo-attributes-BasicMedia;
+        %mo-attributes-MediaParam;
+        %mo-attributes-MediaAccessibility;
+        %media-object.attrib;
+">
+<!-- 
+     Most info is in the attributes, media objects are empty or
+     have children defined at the language integration level:
+ -->
+<!ENTITY %mo-content "%media-object.content;">
+<!--  ================== Media Objects Elements =============================  -->
+<!--  BasicMedia  -->
+<!ENTITY %ref.qname "ref">
+<!ENTITY %audio.qname "audio">
+<!ENTITY %img.qname "img">
+<!ENTITY %video.qname "video">
+<!ENTITY %text.qname "text">
+<!ENTITY %textstream.qname "textstream">
+<!ENTITY %animation.qname "animation">
+<!ENTITY %ref.content "%mo-content;">
+<!ENTITY %audio.content "%mo-content;">
+<!ENTITY %img.content "%mo-content;">
+<!ENTITY %video.content "%mo-content;">
+<!ENTITY %text.content "%mo-content;">
+<!ENTITY %textstream.content "%mo-content;">
+<!ENTITY %animation.content "%mo-content;">
+<!ELEMENT ref EMPTY>
+<!ELEMENT audio EMPTY>
+<!ELEMENT img EMPTY>
+<!ELEMENT video EMPTY>
+<!ELEMENT text EMPTY>
+<!ELEMENT textstream EMPTY>
+<!ELEMENT animation EMPTY>
+<!ATTLIST img id ID #IMPLIED class CDATA #IMPLIED
+	      title CDATA #IMPLIED xml:lang NMTOKEN #IMPLIED>
+<!ATTLIST text id ID #IMPLIED class CDATA #IMPLIED
+	       title CDATA #IMPLIED xml:lang NMTOKEN #IMPLIED>
+<!ATTLIST ref id ID #IMPLIED class CDATA #IMPLIED
+	      title CDATA #IMPLIED xml:lang NMTOKEN #IMPLIED>
+<!ATTLIST audio id ID #IMPLIED class CDATA #IMPLIED
+		title CDATA #IMPLIED xml:lang NMTOKEN #IMPLIED>
+<!ATTLIST video id ID #IMPLIED class CDATA #IMPLIED
+		title CDATA #IMPLIED xml:lang NMTOKEN #IMPLIED>
+<!ATTLIST textstream id ID #IMPLIED
+		     class CDATA #IMPLIED title CDATA #IMPLIED
+		     xml:lang NMTOKEN #IMPLIED>
+<!ATTLIST animation id ID #IMPLIED
+		    class CDATA #IMPLIED title CDATA #IMPLIED
+		    xml:lang NMTOKEN #IMPLIED>
+<!--  MediaParam  -->
+<!--  BrushMedia  -->
+<!ENTITY %BrushMedia.module "IGNORE">
+<!--  end of SMIL-media.mod  -->
+<!--  =================================================================  -->
+<!--  SMIL Timing and Synchronization Modules =========================  -->
+<!--  file: SMIL-timing.mod
+
+     This is SMIL 2.0.
+     Copyright 2000 W3C (MIT, INRIA, Keio), All Rights Reserved.
+
+     Author:     Jacco van Ossenbruggen.
+     Revision:   $Id: log.dtd,v 1.1.1.1 2002/03/19 12:29:25 malcolm Exp $
+
+     This DTD module is identified by the PUBLIC and SYSTEM identifiers:
+
+     PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Timing//EN"
+     SYSTEM "SMIL-timing.mod"
+
+     =================================================================  -->
+<!--  ================== Timing Elements ==============================  -->
+<!ENTITY %BasicTimeContainers.module "IGNORE">
+<!--  End of BasicTimeContainers.module  -->
+<!ENTITY %ExclTimeContainers.module "IGNORE">
+<!--  End of ExclTimeContainers.module  -->
+<!--  end of SMIL-timing.mod  -->
+<!--  ======================================================================  -->
+<!--  SMIL Transition Module  ==============================================  -->
+<!--  file: SMIL-transition.mod
+
+     This is SMIL 2.0
+     Copyright 2000 W3C (MIT, INRIA, Keio), All Rights Reserved.
+
+     Revision:   $Id: log.dtd,v 1.1.1.1 2002/03/19 12:29:25 malcolm Exp $
+
+     This DTD module is identified by the PUBLIC and SYSTEM identifiers:
+
+     PUBLIC "-//W3C//ELEMENTS SMIL 2.0 Transition//EN"
+     SYSTEM "SMIL-transition.mod"
+
+    
+
+     ======================================================================  -->
+<!ENTITY %transition-types "(barWipe|boxWipe|fourBoxWipe|barnDoorWipe|
+diagonalWipe|bowTieWipe|miscDiagonalWipe|veeWipe|barnVeeWipe|zigZagWipe|
+barnZigZagWipe|miscShapeWipe|triangleWipe|arrowHeadWipe|pentagonWipe|
+hexagonWipe|ellipseWipe|eyeWipe|roundRectWipe|starWipe|clockWipe|
+pinWheelWipe|singleSweepWipe|fanWipe|doubleFanWipe|doubleSweepWipe|
+saloonDoorWipe|windshieldWipe|snakeWipe|spiralWipe|parallelSnakesWipe|
+boxSnakesWipe|waterfallWipe|pushWipe|slideWipe|fade)">
+<!ENTITY %transition-subtypes "(bottom
+|bottomCenter|bottomLeft|bottomLeftClockwise|bottomLeftCounterClockwise|
+bottomLeftDiagonal|bottomRight|bottomRightClockwise|
+bottomRightCounterClockwise|bottomRightDiagonal|centerRight|centerTop|
+circle|clockwiseBottom|clockwiseBottomRight|clockwiseLeft|clockwiseNine|
+clockwiseRight|clockwiseSix|clockwiseThree|clockwiseTop|clockwiseTopLeft|
+clockwiseTwelve|cornersIn|cornersOut|counterClockwiseBottomLeft|
+counterClockwiseTopRight|crossfade|diagonalBottomLeft|
+diagonalBottomLeftOpposite|diagonalTopLeft|diagonalTopLeftOpposite|
+diamond|doubleBarnDoor|doubleDiamond|down|fadeFromColor|fadeToColor|
+fanInHorizontal|fanInVertical|fanOutHorizontal|fanOutVertical|fivePoint|
+fourBlade|fourBoxHorizontal|fourBoxVertical|fourPoint|fromBottom|fromLeft|
+fromRight|fromTop|heart|horizontal|horizontalLeft|horizontalLeftSame|
+horizontalRight|horizontalRightSame|horizontalTopLeftOpposite|
+horizontalTopRightOpposite|keyhole|left|leftCenter|leftToRight|
+oppositeHorizontal|oppositeVertical|parallelDiagonal|
+parallelDiagonalBottomLeft|parallelDiagonalTopLeft|
+parallelVertical|rectangle|right|rightCenter|sixPoint|top|topCenter|
+topLeft|topLeftClockwise|topLeftCounterClockwise|topLeftDiagonal|
+topLeftHorizontal|topLeftVertical|topRight|topRightClockwise|
+topRightCounterClockwise|topRightDiagonal|topToBottom|twoBladeHorizontal|
+twoBladeVertical|twoBoxBottom|twoBoxLeft|twoBoxRight|twoBoxTop|up|
+vertical|verticalBottomLeftOpposite|verticalBottomSame|verticalLeft|
+verticalRight|verticalTopLeftOpposite|verticalTopSame)">
+<!ENTITY %transition-attrs '
+    type         %transition-types;     #IMPLIED
+    subtype      %transition-subtypes;  #IMPLIED
+    horzRepeat   CDATA                  "0"
+    vertRepeat   CDATA                  "0"
+    borderWidth  CDATA                  "0"
+    borderColor  CDATA                  "black"
+    fadeColor	 CDATA		        "black"
+    coordinated  (true|false)           "false" 
+    clibBoundary (parent|children)      "children" 
+'>
+<!ENTITY %transition.attrib "">
+<!ENTITY %transition.content "EMPTY">
+<!ENTITY %transition.qname "transition">
+<!ELEMENT transition EMPTY>
+<!ATTLIST transition id ID #IMPLIED
+		     class CDATA #IMPLIED title CDATA #IMPLIED
+		     xml:lang NMTOKEN #IMPLIED
+		     type (barWipe|boxWipe|fourBoxWipe|barnDoorWipe|diagonalWipe|bowTieWipe|miscDiagonalWipe|veeWipe|barnVeeWipe|zigZagWipe|barnZigZagWipe|miscShapeWipe|triangleWipe|arrowHeadWipe|pentagonWipe|hexagonWipe|ellipseWipe|eyeWipe|roundRectWipe|starWipe|clockWipe|pinWheelWipe|singleSweepWipe|fanWipe|doubleFanWipe|doubleSweepWipe|saloonDoorWipe|windshieldWipe|snakeWipe|spiralWipe|parallelSnakesWipe|boxSnakesWipe|waterfallWipe|pushWipe|slideWipe|fade) #IMPLIED
+		     subtype (bottom|bottomCenter|bottomLeft|bottomLeftClockwise|bottomLeftCounterClockwise|bottomLeftDiagonal|bottomRight|bottomRightClockwise|bottomRightCounterClockwise|bottomRightDiagonal|centerRight|centerTop|circle|clockwiseBottom|clockwiseBottomRight|clockwiseLeft|clockwiseNine|clockwiseRight|clockwiseSix|clockwiseThree|clockwiseTop|clockwiseTopLeft|clockwiseTwelve|cornersIn|cornersOut|counterClockwiseBottomLeft|counterClockwiseTopRight|crossfade|diagonalBottomLeft|diagonalBottomLeftOpposite|diagonalTopLeft|diagonalTopLeftOpposite|diamond|doubleBarnDoor|doubleDiamond|down|fadeFromColor|fadeToColor|fanInHorizontal|fanInVertical|fanOutHorizontal|fanOutVertical|fivePoint|fourBlade|fourBoxHorizontal|fourBoxVertical|fourPoint|fromBottom|fromLeft|fromRight|fromTop|heart|horizontal|horizontalLeft|horizontalLeftSame|horizontalRight|horizontalRightSame|horizontalTopLeftOpposite|horizontalTopRightOpposite|keyhole|left|leftCenter|leftToRight|oppositeHorizontal|oppositeVertical|parallelDiagonal|parallelDiagonalBottomLeft|parallelDiagonalTopLeft|parallelVertical|rectangle|right|rightCenter|sixPoint|top|topCenter|topLeft|topLeftClockwise|topLeftCounterClockwise|topLeftDiagonal|topLeftHorizontal|topLeftVertical|topRight|topRightClockwise|topRightCounterClockwise|topRightDiagonal|topToBottom|twoBladeHorizontal|twoBladeVertical|twoBoxBottom|twoBoxLeft|twoBoxRight|twoBoxTop|up|vertical|verticalBottomLeftOpposite|verticalBottomSame|verticalLeft|verticalRight|verticalTopLeftOpposite|verticalTopSame) #IMPLIED
+		     horzRepeat CDATA "0" vertRepeat CDATA "0"
+		     borderWidth CDATA "0" borderColor CDATA "black"
+		     fadeColor CDATA "black"
+		     coordinated (true|false) "false"
+		     clibBoundary (parent|children) "children"
+		     dur CDATA #IMPLIED startProgress CDATA "0.0"
+		     endProgress CDATA "1.0"
+		     direction (forward|reverse) "forward">
+<!ENTITY %transitionFilter.attrib "">
+<!ENTITY %transitionFilter.content "EMPTY">
+<!ENTITY %transitionFilter.qname "transitionFilter">
+<!ELEMENT transitionFilter EMPTY>
+<!ATTLIST transitionFilter id ID #IMPLIED
+			   class CDATA #IMPLIED title CDATA #IMPLIED
+			   xml:lang NMTOKEN #IMPLIED
+			   type (barWipe|boxWipe|fourBoxWipe|barnDoorWipe|diagonalWipe|bowTieWipe|miscDiagonalWipe|veeWipe|barnVeeWipe|zigZagWipe|barnZigZagWipe|miscShapeWipe|triangleWipe|arrowHeadWipe|pentagonWipe|hexagonWipe|ellipseWipe|eyeWipe|roundRectWipe|starWipe|clockWipe|pinWheelWipe|singleSweepWipe|fanWipe|doubleFanWipe|doubleSweepWipe|saloonDoorWipe|windshieldWipe|snakeWipe|spiralWipe|parallelSnakesWipe|boxSnakesWipe|waterfallWipe|pushWipe|slideWipe|fade) #IMPLIED
+			   subtype (bottom|bottomCenter|bottomLeft|bottomLeftClockwise|bottomLeftCounterClockwise|bottomLeftDiagonal|bottomRight|bottomRightClockwise|bottomRightCounterClockwise|bottomRightDiagonal|centerRight|centerTop|circle|clockwiseBottom|clockwiseBottomRight|clockwiseLeft|clockwiseNine|clockwiseRight|clockwiseSix|clockwiseThree|clockwiseTop|clockwiseTopLeft|clockwiseTwelve|cornersIn|cornersOut|counterClockwiseBottomLeft|counterClockwiseTopRight|crossfade|diagonalBottomLeft|diagonalBottomLeftOpposite|diagonalTopLeft|diagonalTopLeftOpposite|diamond|doubleBarnDoor|doubleDiamond|down|fadeFromColor|fadeToColor|fanInHorizontal|fanInVertical|fanOutHorizontal|fanOutVertical|fivePoint|fourBlade|fourBoxHorizontal|fourBoxVertical|fourPoint|fromBottom|fromLeft|fromRight|fromTop|heart|horizontal|horizontalLeft|horizontalLeftSame|horizontalRight|horizontalRightSame|horizontalTopLeftOpposite|horizontalTopRightOpposite|keyhole|left|leftCenter|leftToRight|oppositeHorizontal|oppositeVertical|parallelDiagonal|parallelDiagonalBottomLeft|parallelDiagonalTopLeft|parallelVertical|rectangle|right|rightCenter|sixPoint|top|topCenter|topLeft|topLeftClockwise|topLeftCounterClockwise|topLeftDiagonal|topLeftHorizontal|topLeftVertical|topRight|topRightClockwise|topRightCounterClockwise|topRightDiagonal|topToBottom|twoBladeHorizontal|twoBladeVertical|twoBoxBottom|twoBoxLeft|twoBoxRight|twoBoxTop|up|vertical|verticalBottomLeftOpposite|verticalBottomSame|verticalLeft|verticalRight|verticalTopLeftOpposite|verticalTopSame) #IMPLIED
+			   horzRepeat CDATA "0" vertRepeat CDATA "0"
+			   borderWidth CDATA "0" borderColor CDATA "black"
+			   fadeColor CDATA "black"
+			   coordinated (true|false) "false"
+			   clibBoundary (parent|children) "children"
+			   dur CDATA #IMPLIED repeatCount CDATA #IMPLIED
+			   repeatDur CDATA #IMPLIED begin CDATA #IMPLIED
+			   end CDATA #IMPLIED values CDATA #IMPLIED
+			   from CDATA #IMPLIED to CDATA #IMPLIED
+			   by CDATA #IMPLIED
+			   calcMode (discrete|linear|paced) "linear">
+<!--  end of SMIL-transition.mod  -->

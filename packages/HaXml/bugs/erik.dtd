@@ -1,0 +1,9 @@
+<!DOCTYPE erik [
+    <!ELEMENT kenmerk (#PCDATA | begin | eind)*>
+     <!ATTLIST kenmerk
+      kmc CDATA #REQUIRED
+      gewicht CDATA "1"
+     >
+    <!ELEMENT begin (#PCDATA)*>
+    <!ELEMENT eind  (#PCDATA)>
+]>

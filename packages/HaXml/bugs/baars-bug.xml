@@ -1,0 +1,41 @@
+<!DOCTYPE descriptions [
+
+<!ELEMENT descriptions (item,description)? >
+<!ELEMENT item (#PCDATA)>
+<!ELEMENT description (#PCDATA)>
+]>
+
+<descriptions>
+  <item>cow</item><description>animal</description>
+  <item>farmer</item><description>human</description>
+</descriptions>
+
+<!--
+The generated code for Descriptions and Descriptions_. 
+The instance for Descriptions_ makes no sense to me.
+
+newtype Descriptions = Descriptions [Descriptions_] 
+data Descriptions_ = Descriptions_ Item Description
+
+
+instance XmlContent Descriptions where
+    fromElem (CElem (Elem "descriptions" [] c0):rest) =
+	(\(a,ca)->
+	   (Just (Descriptions a), rest))
+	(many fromElem c0)
+    fromElem (CMisc _:rest) = fromElem rest
+    fromElem rest = (Nothing, rest)
+    toElem (Descriptions a) =
+	[CElem (Elem "descriptions" [] (concatMap toElem a))]
+instance XmlContent Descriptions_ where
+    fromElem (CElem (Elem "descriptions" [] c0):rest) =
+	(\(a,ca)->
+	   (\(b,cb)->
+	      (Just (Descriptions_ a b), rest))
+	   (definite fromElem "<description>" "descriptions" ca))
+	(definite fromElem "<item>" "descriptions" c0)
+    fromElem (CMisc _:rest) = fromElem rest
+    fromElem rest = (Nothing, rest)
+    toElem (Descriptions_ a b) =
+	[CElem (Elem "descriptions" [] (toElem a ++ toElem b))]
+-->

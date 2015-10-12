@@ -1,0 +1,8 @@
+<!DOCTYPE doc [
+<!ELEMENT doc (#PCDATA)>
+<!ENTITY % e SYSTEM "http://dev.w3.org/cvsweb/~checkout~/2001/XML-Test-Suite/xmlconf/xmltest/valid/sa/097.ent?rev=1.1&content-type=text/plain">
+<!ATTLIST doc a1 CDATA "v1">
+%e;
+<!ATTLIST doc a2 CDATA "v2">
+]>
+<doc></doc>

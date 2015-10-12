@@ -1,0 +1,171 @@
+#! /bin/sh
+
+# Typical usage:
+#    mkdir /tmp/graphics
+#    ./mkdistrib `pwd`/.. /tmp/graphics
+#    # check it looks ok
+#    rm -rf /tmp/graphics
+
+SRCDIR=$1
+XLIBSRCDIR=$1/../xlib
+DSTDIR=$2
+VERSION="2.0.4"
+
+TMP=/tmp
+GDIR=graphics-$VERSION
+TMPROOT=$TMP/$GDIR
+TMPDOCS=$TMPROOT/doc
+TMPDEMO=$TMPROOT/demos
+TMPSOE=$TMPROOT/demos/SOE
+TMPSOEBITS=$TMPROOT/demos/SOE/book
+TMPLIB=$TMPROOT/lib
+TMPXLIB=$TMPLIB/x11
+TMPWINLIB=$TMPLIB/win32
+TMPTEST=$TMPROOT/test
+
+if (test "!" -d "$SRCDIR") then
+  echo "Bogus srcdir $SRCDIR";
+  exit 1;
+fi
+
+if (test "!" -d "$XLIBSRCDIR") then
+  echo "Bogus xlib srcdir $XLIBSRCDIR";
+  exit 1;
+fi
+
+if (test "!" -d "$DSTDIR") then
+  echo "Bogus dstdir $DSTDIR";
+  exit 1;
+fi
+
+# No longer needed: we include StdDIS in the CVS tree (bad, bad, bad!)
+# if (test "!" -r "$HOME/local/greencard-2.0/lib/hugs/StdDIS.gc") then
+#   echo "Can't find StdDIS in $HOME/local/greencard-2.0/lib/hugs/StdDIS.gc";
+#   exit 1;
+# fi
+
+if (test "!" -r "$HOME/Win32.zip") then
+  echo "Can't find $HOME/Win32.zip";
+  exit 1;
+fi
+
+echo "Building release in $DSTDIR from $SRCDIR"
+
+################################################################
+# Building the distribution source tree
+################################################################
+
+echo "Building distribution source tree in $TMPROOT"
+
+rm -rf $TMPROOT
+mkdir  $TMPROOT
+mkdir  $TMPLIB
+mkdir  $TMPXLIB
+mkdir  $TMPXLIB/cbits
+mkdir  $TMPWINLIB
+mkdir  $TMPTEST
+mkdir  $TMPDEMO
+mkdir  $TMPSOE
+mkdir  $TMPSOEBITS
+mkdir  $TMPDOCS
+
+echo "Populating distribution source tree"
+
+sed $SRCDIR/License > $TMPROOT/License -e "s/@VERSION@/$VERSION/g"
+sed $SRCDIR/Readme  > $TMPROOT/Readme  -e "s/@VERSION@/$VERSION/g"
+sed $SRCDIR/Install > $TMPROOT/Install -e "s/@VERSION@/$VERSION/g"
+echo $VERSION       > $TMPROOT/Version
+echo                > $TMPROOT/Version-$VERSION
+
+cp $SRCDIR/doc/*.tex                  $TMPDOCS
+cp $SRCDIR/doc/*.bib                  $TMPDOCS
+
+make -fMakefile.hugs -C $XLIBSRCDIR rerun_GC=yes Xlib_StdDIS.c X.c Xlib.c
+cp $XLIBSRCDIR/Makefile.hugs           $TMPXLIB/Makefile
+cp $XLIBSRCDIR/*.hs                    $TMPXLIB
+cp $XLIBSRCDIR/*.c                     $TMPXLIB
+cp $XLIBSRCDIR/*.gc                    $TMPXLIB
+cp $XLIBSRCDIR/cbits/*.c               $TMPXLIB/cbits
+cp $XLIBSRCDIR/cbits/*.h               $TMPXLIB/cbits
+
+cp $SRCDIR/lib/x11/*.hs                $TMPXLIB
+
+cp $SRCDIR/lib/win32/*.hs              $TMPWINLIB
+
+cp $SRCDIR/tests/Tests.hs              $TMPTEST
+cp $SRCDIR/tests/GTest.hs              $TMPTEST
+
+cp $SRCDIR/demos/*.hs                  $TMPDEMO
+cp $SRCDIR/demos/SOE/README            $TMPSOE
+cp $SRCDIR/demos/SOE/*.lhs             $TMPSOE
+cp $SRCDIR/demos/SOE/book/*.lhs        $TMPSOEBITS
+
+(cd $SRCDIR/doc; latex Graphics > /dev/null; bibtex Graphics; latex Graphics > /dev/null; latex Graphics > /dev/null)
+cp $SRCDIR/doc/Graphics.dvi           $TMPDOCS
+
+################################################################
+# Building the web pages and download directory
+################################################################
+
+echo "Building web pages"
+(cd $DSTDIR; runhugs $SRCDIR/distrib/Webpage.hs)
+
+echo "Building fresh download directory"
+rm -rf $DSTDIR/downloads
+mkdir  $DSTDIR/downloads
+
+cp $TMPROOT/License $DSTDIR/downloads/License.txt
+cp $TMPROOT/Readme  $DSTDIR/downloads/Readme.txt
+cp $TMPROOT/Install $DSTDIR/downloads/Install.txt
+cp $TMPROOT/Version $DSTDIR/downloads/Version.txt
+cp $TMPROOT/Version-$VERSION $DSTDIR/downloads/Version-$VERSION.txt
+
+cp    $TMPDOCS/Graphics.dvi $DSTDIR/downloads/graphics-$VERSION.dvi
+dvips $DSTDIR/downloads/graphics-$VERSION.dvi -o $DSTDIR/downloads/graphics-$VERSION.ps
+gzip  -c $DSTDIR/downloads/graphics-$VERSION.ps >> $DSTDIR/downloads/graphics-$VERSION.ps.gz
+
+echo "Building tar file"
+(cd $TMP; tar zcf $DSTDIR/downloads/graphics-$VERSION.src.tar.gz $GDIR)
+echo "Building zip file"
+(cd $TMP; zip -rq9 $DSTDIR/downloads/graphics-$VERSION.src.zip $GDIR)
+
+cp $HOME/Win32.zip $DSTDIR/downloads
+
+# tar zcvf $DSTDIR/downloads/graphics-$VERSION.bin.linux.tar.gz ??
+# tar zcvf $DSTDIR/downloads/graphics-$VERSION.bin.freebsd.tar.gz ??
+
+(cd $DSTDIR/downloads; ln -s graphics-$VERSION.src.tar.gz graphics-current.src.tar.gz)
+(cd $DSTDIR/downloads; ln -s graphics-$VERSION.src.zip graphics-current.src.zip)
+
+# haskell.org doesn't let you see directory contents so we build
+# an index for you
+cat > $DSTDIR/downloads/index.html <<EOF
+<p>Contents of this directory
+
+<p><a href="Install.txt">Install.txt</a>         
+<p><a href="License.txt">License.txt</a>         
+<p><a href="Readme.txt">Readme.txt</a>          
+<p><a href="Version-$VERSION.txt">Version-$VERSION.txt</a>   
+<p><a href="Version.txt">Version.txt</a>         
+<p><a href="Win32.zip">Win32.zip</a>           
+<p><a href="graphics-$VERSION.dvi">graphics-$VERSION.dvi</a>  
+<p><a href="graphics-$VERSION.ps">graphics-$VERSION.ps</a>   
+<p><a href="graphics-$VERSION.ps.gz">graphics-$VERSION.ps.gz</a>
+<p><a href="graphics-$VERSION.src.tar.gz">graphics-$VERSION.src.tar.gz</a>
+<p><a href="graphics-$VERSION.src.zip">graphics-$VERSION.src.zip</a>
+<p><a href="graphics-current.src.tar.gz">graphics-current.src.tar.gz</a>
+<p><a href="graphics-current.src.zip">graphics-current.src.zip</a>
+EOF
+
+
+echo "Contents of $TMPROOT"
+ls -sRF --color $TMPROOT
+
+echo "Contents of $DSTDIR"
+ls -sRF --color $DSTDIR
+
+exit 0
+
+################################################################
+# End
+################################################################

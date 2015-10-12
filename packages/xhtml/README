@@ -1,0 +1,8 @@
+This is a version of the standard 
+[http://www.haskell.org/ghc/docs/latest/html/libraries/base/Text-Html.html Text.Html module], 
+modified to produce [http://www.w3.org/TR/xhtml1/ XHTML 1.0].
+There are modules for XHTML 1.0 Strict, Frameset and Transitional.
+
+The original Html combinator library was written by Andy Gill. He has
+[http://www.cse.ogi.edu/~andy/html/intro.htm some notes on using the 
+Haskell Html library] which are mostly applicable also to this library.

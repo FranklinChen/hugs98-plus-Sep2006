@@ -1,0 +1,46 @@
+#!/bin/sh
+CPPHS=${1:-"../cpphs"}
+FAIL=0
+
+runtest() {
+  if $1 >out 2>/dev/null && diff $2 out >/dev/null
+  then echo "passed: " $1
+  else FAIL=$?
+       echo "FAILED: ($2) " $1
+  fi
+}
+
+if $CPPHS </dev/null; then echo -n "passed: "; else echo -n "FAILED: "; fi
+echo " $CPPHS </dev/null"
+runtest "$CPPHS --nomacro testfile" expect1
+runtest "$CPPHS --nomacro -Dnoelif testfile" expect2
+runtest "$CPPHS --nomacro -Delif testfile" expect3
+runtest "$CPPHS --nomacro -Dinclude testfile" expect4
+runtest "$CPPHS --noline -Dinclude testfile" expect5
+runtest "$CPPHS cpp" expect6
+runtest "$CPPHS -D__GLASGOW_HASKELL__ --layout Storable.hs " expect7
+runtest "$CPPHS -DCALLCONV=ccall --hashes --layout HsOpenGLExt.h" expect8
+runtest "$CPPHS --layout multiline" expect9
+runtest "$CPPHS --nomacro multiline" expect10
+runtest "$CPPHS --hashes stringise" expect11
+runtest "$CPPHS recursive" expect12
+runtest "$CPPHS --strip ross" expect13
+runtest "$CPPHS precedence" expect14
+runtest "$CPPHS indirect" expect15
+runtest "$CPPHS numbers" expect16
+runtest "$CPPHS pragma" expect17
+runtest "$CPPHS --noline pragma" expect18
+runtest "$CPPHS -D__NHC__=117 parens" expect19
+runtest "$CPPHS -Dc -Dd -De -Df -Dg -Dh chains" expect20
+runtest "$CPPHS --hashes specials" expect21
+runtest "$CPPHS --hashes specialinclude" expect22
+runtest "$CPPHS incomplete" expect23
+runtest "$CPPHS text" expect24
+runtest "$CPPHS --text text" expect25
+runtest "$CPPHS --text nastyhack" expect26
+runtest "$CPPHS nastyhack" expect27
+runtest "$CPPHS -DXXX symbolvalue" expect28
+runtest "$CPPHS Test.hsc" expect29
+runtest "$CPPHS --unlit Arr.lhs" expect30
+runtest "$CPPHS -D__NHC__=118 elif" expect31
+exit $FAIL

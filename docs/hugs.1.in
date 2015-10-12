@@ -1,0 +1,366 @@
+.\" @configure_input@
+.TH HUGS 1 "December 2005" "" ""
+.ds LB @HUGSDIR@
+.ds BN @BINDIR@
+.ds HP @HUGSPATH@
+.ds HS @HUGSSUFFIXES@
+.ds VI vi
+.SH NAME
+hugs, runhugs, ffihugs \- Hugs 98, functional programming system
+.SH SYNOPSIS
+.B hugs
+[
+.I options
+]
+[
+.I modules
+]
+.br
+.B runhugs
+[
+.I options
+]
+.I module
+[
+.I args
+]
+.br
+.B ffihugs
+[
+.I options
+]
+.I module
+[
+.I compiler_argument
+] ...
+.SH DESCRIPTION
+Hugs is an interpreter for Haskell, a standard non-strict functional
+programming language.  Hugs implements almost all of the
+Haskell 98 standard, except for mutually recursive modules.
+The name \fBHugs\fP is
+a mnemonic for the \fBHaskell User's Gofer System\fP.
+.PP
+The interpreter is started using the
+.I hugs
+command.
+After processing options, it loads the standard module \fBPrelude\fP
+and any other modules listed on the command line.
+.PP
+Each Haskell module is stored in a separate file.
+When loading a module \fIname\fP, \fIHugs\fP replaces each `\fB.\fP'
+in \fIname\fP with a `\fB/\fP' and looks in each of the directories
+on its search path (see \fB\-P\fP under \fBOPTIONS\fP)
+for the files \fIname\fP\fB.hs\fP and \fIname\fP\fB.lhs\fP.
+(The recognized suffixes may be changed using the \fB\-S\fP option,
+described under \fBOPTIONS\fP.)
+It also tries \fIname\fP as a literal filename.
+Files ending in "\fB.lhs\fP" are treated as literate scripts.
+.SH OPTIONS
+Some options are toggled with \fB+\fP or \fB\-\fP to turn them on or
+off, respectively.
+.SS "Language conformance"
+.TP
+.B +98
+Accept only Haskell 98
+(cannot be changed within \fIHugs\fP; default: on).
+Turning this off enables several special Hugs extensions,
+which are described in the \fIHugs 98 User Manual\fP.
+.TP
+.B +o
+Allow overlapping instances (a Hugs extension; default: off)
+.TP
+.B +O
+Allow unsafe overlapping instances (a Hugs extension; default: off)
+.TP
+.B +H
+Allow `here documents' (a Hugs extension; default: off)
+.SS "Module loading"
+.TP
+.B +l
+Treat files whose names end in neither `\fB.hs\fP' nor `\fB.lhs\fP'
+as literate scripts (default: off)
+.TP
+.B +\&.
+Print dots to show progress while loading modules (default: off)
+.TP
+.B +q
+Print nothing to show progress while loading modules (default: on)
+.TP
+.B +w
+Always show which files are loaded (default: off)
+.SS "Expression evaluation"
+.TP
+.B +s
+Print number of reductions/cells after each evaluation (default: off)
+.TP
+.B +t
+Print type after each evaluation (default: off)
+.TP
+.B +T
+Apply the Haskell defaulting rules before printing types (default: off)
+.TP
+.B +g
+Print number of cells recovered after each garbage collection (default: off)
+.TP
+.B +Q
+Qualify names when printing (default: off)
+.TP
+.B +k
+Show kind errors in full (default: off)
+.TP
+.B +u
+Use "\fBshow\fP" to display results (default: on)
+.TP
+.B +I
+Display results of IO programs (default: off)
+.SS Parameters
+.LP
+Other options (in which \fB\-\fP could be replaced by \fB+\fP,
+the choice making no difference) are:
+.TP
+.BI \-h num
+Set heap size (cannot be changed within \fIHugs\fP; default: 250K)
+.TP
+.BI \-p str
+Set prompt string to \fIstr\fP (default: `\fB%s> \fP').
+Any \fB%s\fP in the prompt will be replaced by the current module name.
+.TP
+.BI \-r str
+Set repeat last expression string to \fIstr\fP (default: \fB$$\fP).
+.TP
+.BI \-P str
+Set search path for source files to \fIstr\fP,
+which should be a colon-separated list of directories.
+A null entry in this list will be replaced by the previous search path;
+a null \fIstr\fP means the default path.
+Any occurrence of \fB{Hugs}\fP in this string is expanded to
+the Hugs library directory, namely \fB\*(LB\fP.
+Similarly, \fB{Home}\fP is expanded to your home directory
+(the value of the \fBHOME\fP environment variable).
+An entry of the form `\fIdirectory\fP\fB/*\fP'
+means all the immediate subdirectories of
+.IR directory .
+The default value is
+.RS
+.IP
+.B \*(HP
+.RE
+.TP
+.BI \-S str
+Set the colon-separated list of source file suffixes to \fIstr\fP
+(default: \fB\*(HS\fP).
+A null entry in this list will be replaced by the previous suffix list;
+a null \fIstr\fP means the default list.
+.TP
+.BI \-E str
+Use editor setting given by \fIstr\fP (default: the value of the
+.B EDITOR
+environment variable).
+Any occurrences of \fB%d\fP and \fB%s\fP in the editor option are replaced
+by the start line number and the name of the file to be edited, respectively.
+A common setting is "\fI\*(VI +%d %s\fP".
+.TP
+.BI \-c num
+Set constraint cutoff limit in the type checker to \fInum\fP (default: 40).
+.TP
+.BI \-F cmd
+Set preprocessor filter for source files to \fIcmd\fP (unset by default).
+Instead of reading a source file directly,
+\fIHugs\fP will read the standard output of
+\fIcmd\fP run with the source file name as argument.
+.TP
+.BI \-X str
+The string \fIstr\fP is interpreted as an option string.
+This is useful, for example, for passing multiple arguments to \fBrunhugs\fP
+in a \fB#!\fP script.
+.SH COMMANDS
+Once the interpreter has been loaded, the following commands are available:
+.TP 18
+\fB:load\fP [\fImodules\fP]
+clear all modules except the prelude,
+and load the specified modules.
+.TP
+\fB:also\fP \fImodules\fP
+read additional modules.
+.TP
+.B :reload
+repeat last \fBload\fP command.
+.TP
+\fB:edit\fP \fIfile\fP
+edit \fIfile\fP.
+.TP
+.B :edit
+edit last file.
+.TP
+\fB:module\fP \fImodule\fP
+set module for evaluating expressions.
+.TP
+\fIexpr\fP
+evaluate expression.
+.TP
+\fB:type\fP \fIexpr\fP
+print type of expression.
+.TP
+.B :?
+display this list of commands.
+.TP
+\fB:set\fP \fIoptions\fP
+set command line options.
+.TP
+.B :set
+help on command line options.
+.TP
+\fB:names\fP [\fIpatterns\fP]
+list names currently in scope matching any of the shell-style patterns.
+.TP
+\fB:info\fP \fInames\fP
+describe named objects.
+.TP
+\fB:browse\fP \fImodules\fP
+browse names exported by \fImodules\fP.
+.TP
+\fB:find\fP \fIname\fP
+edit file containing definition of \fIname\fP.
+.TP
+.BI :! command
+shell escape.
+.TP
+\fB:cd\fP \fIdir\fP
+change directory.
+.TP
+.B :gc
+force garbage collection.
+.TP
+.B :version
+print Hugs version.
+.TP
+.B :quit
+exit Hugs interpreter.
+.PP
+Any command may be abbreviated to \fB:\fIc\fR where
+\fIc\fP is the first character in the full name.
+On most systems, you can also
+exit from \fIHugs\fP by typing the end-of-file character (^D).
+.PP
+Note that the interrupt key (^C on most systems) can  be  used  at  any
+time whilst using \fIHugs\fP to abandon the process of reading in a file  of
+function definitions or the evaluation  of  an  expression.  When the
+interrupt is detected, \fIHugs\fP prints the string "\fB{Interrupted!}\fP"
+and prints the prompt so that further commands can be entered.
+.SH "STANDALONE PROGRAMS"
+The
+.I runhugs
+command is an interpreter for an executable Hugs script,
+which must contain a Haskell \fBMain\fP module.
+For example, the executable file \fBhello\fP might contain the lines
+.LP
+.nf
+.RS
+\fB#!\*(BN/runhugs +l
+.sp
+> module Main where
+> main = putStr "Hello, World\\n"\fP
+.RE
+.fi
+.LP
+When this file is executed,
+.I runhugs
+will invoke the
+.B main
+function.
+Any arguments given on the command line will be available through
+.BR getArgs .
+.LP
+Note that \fB#!\fP passes only one orgument to the script.
+The \fB\-X\fP option may be used to get around this.
+.SH "C INTERFACE"
+On architectures that support dynamic linking,
+.I Hugs
+implements the part of the
+.I "Haskell 98 Foreign Function Interface"
+(FFI) that allows Haskell functions to call C routines.
+(On the x86, PowerPC and Sparc architectures,
+all \fBforeign import\fPs are supported;
+on others, only \fBstatic\fP imports are provided.)
+Modules containing such
+.B foreign
+declarations must be compiled using the
+.I ffihugs
+command before use with
+.BR hugs .
+Additional arguments for the C compiler may be supplied via \fIcompiler_argument\fPs.
+For example,
+suppose you have some C functions in \fBtest.c\fP and some FFI declarations
+for those functions in \fBTest.hs\fP and the code in \fBtest.c\fP needs to be
+compiled with \fB\-lm\fP.
+Then you would compile the module with the command
+.IP
+\fBffihugs Test.hs test.c \-lm \fP
+.LP
+which generates an object file \fBTest.so\fP.
+Then when \fIhugs\fP loads \fBTest.hs\fP, it will also load \fBTest.so\fP.
+.LP
+In the standard FFI, each \fBforeign import\fP declaration should name
+a C header file containing the prototype of the function.
+Because this is often cumbersome, \fBffihugs\fP provides the following
+additional option:
+.TP
+.BI \-i str
+Specify an include for the generated C file.
+The include string should be something that can follow "\fB#include\fP"
+in a C program, as in
+.IP
+\fBffihugs '-i<math.h>' '-i"mydefs.h"' Test.hs test.c -lm\fP
+.SH ENVIRONMENT
+.TP
+.B HUGSFLAGS
+Additional options for \fIhugs\fP,
+processed before any given on the command line.
+.TP
+.B HUGSDIR
+The Hugs library directory (default:
+.BR \*(LB ).
+.TP
+.B EDITOR
+The default editor, if \fB\-E\fP is not given.
+.TP
+.B SHELL
+Used to specify the shell that is invoked by the \fB:!\fP command.
+.SH FILES
+.TP
+.I \*(BN/hugs
+executable binary.
+.TP
+.I \*(LB
+directory containing support files.
+.SH "WEB REFERENCES"
+.TP
+.I http://www.haskell.org/hugs/
+The Hugs home page.
+.TP
+.I http://www.haskell.org/
+The Haskell home page, including the language definition,
+various mailing lists and much more.
+.SH "SEE ALSO"
+Mark P. Jones et al. \fIHugs 98 User Manual\fP, June 1999.
+.PP
+\fIHugs 98 User's Guide\fP (distributed with Hugs).
+.PP
+Paul Hudak & Joseph H. Fasel.  A gentle introduction to Haskell.
+\fIACM SIGPLAN Notices\fP, 27(5), May 1992.
+.PP
+S. Peyton Jones (editor).
+\fIHaskell 98 Language and Libraries: The Revised Report\fP.
+December 2002.
+.PP
+Manuel Chakravarty et al.
+.IR "Haskell 98 Foreign Function Interface 1.0",
+.IR "Addendum to the Haskell Report" ,
+September 2003.
+.SH AUTHOR
+Hugs 98: Mark Jones and others, June 1999.
+.PP
+Manual page: Jonathan Bowen, modified by Gary Leavens, and then
+(with apologies to the original authors) by Mark Jones.
+Updated for Hugs 98 by Antti-Juhani Kaijanaho and Ross Paterson.
+Updated for the March 2005 ffihugs changes by Joseph P. Skudlarek.

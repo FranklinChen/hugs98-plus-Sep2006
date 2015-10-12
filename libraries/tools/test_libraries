@@ -1,0 +1,95 @@
+#!/bin/sh
+
+# Test the status within Hugs of each module of the selected packages
+# from the hierarchical libraries.
+
+# ensure that letter ranges work
+LC_ALL=C
+export LC_ALL
+
+# This script contains paths relative to its own location, but should
+# be independent of the current directory.
+
+this_dir="`dirname $0`"
+hugs_root_dir="${this_dir:-.}/../.."
+
+packages=`cd $hugs_root_dir/packages; ls */*.cabal | sed 's:/.*::'`
+
+hugs="$hugs_root_dir/src/hugs"
+
+HUGSDIR=$hugs_root_dir/hugsdir
+export HUGSDIR
+
+HUGSFLAGS='-P{Hugs}/packages/*'
+export HUGSFLAGS
+
+case $# in
+1)	;;
+*)	echo "usage: $0 <packages directory>"
+	exit 1 ;;
+esac
+
+srcdir=$1
+if [ ! -d $srcdir ]; then
+	echo "Can't find directory '$1'"
+	exit 1
+fi
+
+tmpfile=/tmp/libs.$$
+trap 'rm -f $tmpfile+ $tmpfile-; exit 0' 0 1 2 3 15
+
+test_module() {
+	module=$1
+	# The +. flag ensures that ERRORs will be at the start of a line
+	$hugs +98 +. $module </dev/null >$tmpfile+
+	$hugs -98 +. $module </dev/null >$tmpfile-
+	if grep "^ERROR - Can't find module \"$module\"" $tmpfile- >/dev/null
+	then	echo "missing  $module"
+	elif grep ' ERROR: ' $tmpfile- >/dev/null
+	then	sed -n 's/\(.* ERROR\): \(.*\)/*\1*	'"$module"' (\2)/p' $tmpfile-
+	elif grep '^ERROR' $tmpfile- >/dev/null
+	then
+		module2=`grep '^ERROR ' $tmpfile- | sed -e 's:/packages/[^/]*/:/libraries/:' -e 's:.*"[^"]*/libraries/\([^".]*\)\.[a-z]*".*:\1:' -e 's:/:.:g'`
+		if [ "$module" != "$module2" ]
+		then	reason="imports $module2"
+		else	reason="`sed -n '/^ERROR / s/.* - //p' $tmpfile-`"
+		fi
+		echo "*ERROR*  $module ($reason)"
+	elif grep '^ERROR' $tmpfile+ >/dev/null
+	then
+		module2=`grep '^ERROR ' $tmpfile+ | sed -e 's:/packages/[^/]*/:/libraries/:' -e 's:.*"[^"]*/libraries/\([^".]*\)\.[a-z]*".*:\1:' -e 's:/:.:g'`
+		if [ "$module" != "$module2" ]
+		then	reason="imports $module2"
+		else
+			reason="`sed -n '/^ERROR / s/.* - //p' $tmpfile+`"
+			case "$reason" in
+			"Syntax error in data type declaration (unexpected \`.')")
+				reason='rank-2 datatypes' ;;
+			"Syntax error in type expression (unexpected \`.')")
+				reason='rank-2 types' ;;
+			"Haskell 98 does not support dependent parameters")
+				reason='functional dependencies' ;;
+			"Haskell 98 does not support multiple parameter classes")
+				reason='multi-parameter type classes' ;;
+			esac
+		fi
+		echo "hugs -98 $module ($reason)"
+	else	echo "hugs +98 $module"
+	fi
+}
+
+(
+	cd $srcdir
+	for package in $packages
+	do	find $package -follow -type f \( -name \*.hs  -o -name \*.lhs -o -name \*.y -o -name \*.ly -o -name \*.hsc -o -name \*.gc \) -print |
+			sed 's:^[^/]*/::
+				s/\..*//
+				s:/:.:g' |
+			sort
+	done
+) | grep -v '^Prelude$' | grep -v '^[GN]HC' |
+	grep -v '\.[a-z]' | grep -v '^[a-z]' |
+	while read module
+	do
+		test_module $module
+	done

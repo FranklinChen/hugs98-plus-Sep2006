@@ -1,0 +1,22 @@
+THISPKG	= QuickCheck
+SEARCH	= -package base
+
+SRCS	= \
+	Test/QuickCheck.hs \
+	Test/QuickCheck/Poly.hs Test/QuickCheck/Utils.hs \
+	Debug/QuickCheck.hs \
+	Debug/QuickCheck/Poly.hs Debug/QuickCheck/Utils.hs
+
+#	Test/QuickCheck/Batch.hs \
+#	Debug/QuickCheck/Batch.hs \
+
+
+# Here are the main rules.
+include ../Makefile.common
+
+# some extra rules
+
+# Here are any extra dependencies.
+
+# C-files dependencies.
+

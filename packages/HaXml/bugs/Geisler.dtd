@@ -1,0 +1,4 @@
+<!DOCTYPE Foo [
+<!ELEMENT Foo (Bar*)>
+<!ELEMENT Bar (#PCDATA)>
+]>

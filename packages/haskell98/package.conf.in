@@ -1,0 +1,55 @@
+name:		PACKAGE
+version:	VERSION
+license:	BSD3
+maintainer:	libraries@haskell.org
+exposed:	True
+
+exposed-modules:
+	Array,
+	Bits,
+	CError,
+	CForeign,
+	CPUTime,
+	CString,
+	CTypes,
+	Char,
+	Complex,
+	Directory,
+	ForeignPtr,
+	IO,
+	Int,
+	Ix,
+	List,
+	Locale,
+	MarshalAlloc,
+	MarshalArray,
+	MarshalError,
+	MarshalUtils,
+	Maybe,
+	Monad,
+	Ptr,
+	Random,
+	Ratio,
+	StablePtr,
+	Storable,
+	System,
+	Time,
+	Word
+
+hidden-modules:
+
+import-dirs:	IMPORT_DIR
+library-dirs:	LIB_DIR
+hs-libraries:   "HShaskell98"
+extra-libraries:
+
+include-dirs:
+includes:		
+depends:	base
+hugs-options:
+cc-options:
+ld-options:
+framework-dirs:
+frameworks:
+haddock-interfaces:	HADDOCK_IFACE
+haddock-html:		HTML_DIR

@@ -1,0 +1,9 @@
+<sect1 id="BSD">
+<title><literal>BSD</literal>: System database info
+<indexterm><primary>BSD</primary></indexterm>
+</title>
+
+  <para>This module has moved to <ulink url="../libraries/network/Network.BSD.html"><literal>Network.BSD</literal></ulink>
+  (package <literal>network</literal>) in the hierarchical
+  libraries.</para>
+</sect1>

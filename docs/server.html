@@ -1,0 +1,543 @@
+
+<title> The Hugs  </title>
+<body bgcolor="#ffffff">
+<h2>Using Hugs as a "Haskell Server"</h2>
+<font size=4> <blockquote>
+Alastair Reid<br>
+Reid Consulting (UK) Limited<br>
+alastair@reid-consulting-uk.ltd.uk<br>
+<a href="http://www.reid-consulting-uk.ltd.uk/alastair/">http://www.reid-consulting-uk.ltd.uk/alastair/</a><br>
+</blockquote></font>
+<a name="introduction"></a><p>
+<a name="sect1"></a>
+<h2>1<tt>&nbsp;&nbsp;</tt>Introduction</h2><p>
+[Warning: the Haskell server is still under development - you should
+ expect to see changes in the server API from one release of <B>Hugs </B> to
+ the next.]<p>
+<B>Hugs </B> is normally used as an interactive program.  However, there are
+situations in which you want to use <B>Hugs </B> as a non-interactive system.
+Examples include:<p>
+<UL><LI>
+ writing shell scripts in Haskell
+<LI>
+ writing cgi scripts in Haskell
+<LI>
+ writing Netscape plugins to let you embed Haskell code in HTML documents
+ (the same way that you might use Javascript or Java)
+</UL><p>
+For these purposes, we provide a "<B>Hugs </B> Server API" which provides
+access to some of <B>Hugs </B>' innards:<p>
+<UL><LI>
+ loading/compiling files
+<LI>
+ compiling expressions
+<LI>
+ constructing and evaluating "Graphs"
+</UL><p>
+This is not enough to implement the <B>Hugs </B> user interface, but it's good
+enough for all the applications listed above.  (We've done all three.)<a name="example"></a><p>
+<a name="sect2"></a>
+<h2>2<tt>&nbsp;&nbsp;</tt>Example</h2><p>
+Here's a complete example of how to use the <B>Hugs </B> server.  This 
+is a simplified version of the "runhugs" program which loads a 
+file, executes <tt>Main.main</tt> and returns the resulting exit code.
+(We've left out all error handling to keep things simple in this
+version.)<p>
+<tt><br>
+&nbsp;1&gt;&nbsp;#include&nbsp;"server.h"<br>
+&nbsp;2&gt;&nbsp;extern&nbsp;HugsServerAPI*&nbsp;initHugsServer&nbsp;Args((int,char**));<br>
+&nbsp;3&gt;&nbsp;<br>
+&nbsp;4&gt;&nbsp;static&nbsp;char*&nbsp;hugs_argv[]&nbsp;=&nbsp;{<br>
+&nbsp;5&gt;&nbsp;	"runhugs",&nbsp;&nbsp;&nbsp;/*&nbsp;program&nbsp;name&nbsp;*/<br>
+&nbsp;6&gt;&nbsp;	"+l"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;literate&nbsp;scripts&nbsp;as&nbsp;default&nbsp;*/<br>
+&nbsp;7&gt;&nbsp;};<br>
+&nbsp;8&gt;&nbsp;static&nbsp;int&nbsp;hugs_argc&nbsp;=&nbsp;sizeof&nbsp;hugs_argv&nbsp;/&nbsp;sizeof&nbsp;hugs_argv[0];<br>
+&nbsp;9&gt;&nbsp;<br>
+10&gt;&nbsp;main(&nbsp;int&nbsp;argc,&nbsp;char**&nbsp;argv)&nbsp;<br>
+11&gt;&nbsp;{&nbsp;&nbsp;<br>
+12&gt;&nbsp;&nbsp;&nbsp;HugsServerAPI*&nbsp;hugs&nbsp;=&nbsp;initHugsServer(hugs_argc,hugs_argv);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+13&gt;&nbsp;&nbsp;&nbsp;hugs-&gt;setOutputEnable(0);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+14&gt;&nbsp;&nbsp;&nbsp;argc--;&nbsp;argv++;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+15&gt;&nbsp;&nbsp;&nbsp;hugs-&gt;setHugsArgs(argc,argv);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+16&gt;&nbsp;&nbsp;&nbsp;hugs-&gt;loadFile(argv[0]);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+17&gt;&nbsp;&nbsp;&nbsp;hugs-&gt;lookupName("Main","main");&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+18&gt;&nbsp;&nbsp;&nbsp;exit(hugs-&gt;doIO());<br>
+19&gt;&nbsp;}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+</tt>  <p>
+Here's what each line does:<p>
+<DL><DT>
+1-2
+</DT>
+<DD> 
+  Include the server API (included in appendix <a href="server.html#server.c">A</a>)
+</DD><DT>
+4-8
+</DT>
+<DD>
+  Declare command line arguments used when initialising the server.
+  These should consist of the program name (<tt>argv[0]</tt>) and
+  a list of flags.  Unlike <B>Hugs </B> you should not include files
+  to load.
+</DD><DT>
+12
+</DT>
+<DD>
+  Initialise the server.  This returns a "virtual function table"
+  which is used to access all other functions in the server API.
+  (This is described in section <a href="server.html#initHugs">3</a>.)
+</DD><DT>
+13
+</DT>
+<DD>
+  Turn off output from the compiler. This does not affect output
+  produced by running Haskell code.
+</DD><DT>
+14
+</DT>
+<DD>
+  Forget the first argument on the command line.  On a Unix system,
+  this will be the name of the above C program.
+</DD><DT>
+15
+</DT>
+<DD>
+  Set the values seen by the Haskell functions <tt>System.getProgName
+</tt>  and <tt>System.getArgs</tt>.
+</DD><DT>
+16
+</DT>
+<DD>
+  Load and compile the file named on the command line.
+</DD><DT>
+17-18
+</DT>
+<DD>
+  Lookup the Haskell function <tt>Main.main</tt> (which should be defined
+  in the file we just loaded and should have type <tt>IO ()</tt>).
+  The value returned is used as an exit code.
+</DD></DL><a name="initHugs"></a><p>
+<a name="sect3"></a>
+<h2>3<tt>&nbsp;&nbsp;</tt>Initialising the server</h2><p>
+The "Hugs server" is initialised by calling <tt>initHugsServer<p>
+<br>
+&gt;&nbsp;HugsServerAPI*&nbsp;initHugsServer(<br>
+&gt;&nbsp;&nbsp;&nbsp;Int&nbsp;&nbsp;&nbsp;&nbsp;argc,<br>
+&gt;&nbsp;&nbsp;&nbsp;String&nbsp;argv[]&nbsp;&nbsp;&nbsp;/*&nbsp;command&nbsp;line&nbsp;flags&nbsp;(-P,&nbsp;etc)&nbsp;*/<br>
+&gt;&nbsp;&nbsp;&nbsp;);<br>
+<p>
+</tt>This loads the standard Prelude and the dynamic typing library (see
+section <a href="server.html#dynamic">8</a>) and processes any command line flags in argv.<p>
+If initialisation succeeds, it returns a "virtual function table"
+containing all the other server functions you can call.  That is it
+returns a non-null pointer to a struct of type <tt>HugsServerAPI</tt>.
+We'll go through these in detail in the rest of the document --- but
+here's the complete list:<p>
+<tt><br>
+&gt;&nbsp;typedef&nbsp;struct&nbsp;_HugsServerAPI&nbsp;{<br>
+&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;char*&nbsp;(*clearError&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;(void);<br>
+&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;&nbsp;(*setHugsArgs&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;(int,&nbsp;char**);<br>
+&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;&nbsp;&nbsp;(*getNumScripts&nbsp;&nbsp;)&nbsp;(void);<br>
+&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;&nbsp;(*reset&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;(int);<br>
+&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;&nbsp;(*setOutputEnable)&nbsp;(unsigned);<br>
+&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;&nbsp;(*changeDir&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;(char*);<br>
+&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;&nbsp;(*loadProject&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;(char*);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;obsolete&nbsp;*/<br>
+&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;&nbsp;(*loadFile&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;(char*);<br>
+&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HVal&nbsp;&nbsp;(*compileExpr&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;(char*,char*);<br>
+&gt;&nbsp;			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;&nbsp;(*lookupName&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;(char*,char*);&nbsp;/*&nbsp;push&nbsp;values&nbsp;onto&nbsp;stack*/<br>
+&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;&nbsp;(*mkInt&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;(int);<br>
+&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;&nbsp;(*mkString&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;(char*);<br>
+&gt;&nbsp;			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;&nbsp;(*apply&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;(void);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;manipulate&nbsp;top&nbsp;of&nbsp;stack&nbsp;*/<br>
+&gt;&nbsp;			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;&nbsp;&nbsp;(*evalInt&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;(void);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;evaluate&nbsp;top&nbsp;of&nbsp;stack&nbsp;&nbsp;&nbsp;*/<br>
+&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;char*&nbsp;(*evalString&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;(void);<br>
+&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;&nbsp;&nbsp;(*doIO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;(void);<br>
+&gt;&nbsp;			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HVal&nbsp;&nbsp;(*popHVal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;(void);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;pop&nbsp;stack&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/<br>
+&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;&nbsp;(*pushHVal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;(HVal);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;push&nbsp;back&nbsp;onto&nbsp;stack&nbsp;&nbsp;&nbsp;&nbsp;*/<br>
+&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;&nbsp;(*freeHVal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;(HVal);&nbsp;<br>
+&gt;&nbsp;}&nbsp;HugsServerAPI;<br>
+<p>
+</tt>In the rest of this document, we'll assume that you've put a pointer
+to the "virtual function table" in a variable called <tt>hugs</tt> and
+we'll write things like this<p>
+<tt><br>
+&gt;&nbsp;void&nbsp;&nbsp;hugs-&gt;loadFile&nbsp;&nbsp;&nbsp;&nbsp;(char*);<br>
+<p>
+</tt>to indicate the type of <tt>hugs-&gt;loadFile</tt>.<a name="loading files"></a><p>
+<a name="sect4"></a>
+<h2>4<tt>&nbsp;&nbsp;</tt>Loading files</h2><p>
+Loading files is easy enough.  Simply call
+<tt>hugs-&gt;loadFile(&lt;name&gt;)</tt>.<p>
+<tt><br>
+&gt;&nbsp;void&nbsp;&nbsp;hugs-&gt;loadFile&nbsp;&nbsp;&nbsp;&nbsp;(char*);<br>
+<p>
+</tt>Some programs need to be able to "unload" (or "forget") some of
+the Haskell files that have been loaded.  <B>Hugs </B> maintains a
+"stack" of all files it has loaded.  To unload some files, it pops
+files off the stack.  The server API provides two functions for
+modifying the stack of files: <tt>getNumScripts</tt> tells you how large
+the stack is; and <tt>reset</tt> sets the stack to the required size.<p>
+<tt><br>
+&gt;&nbsp;int&nbsp;&nbsp;&nbsp;hugs-&gt;getNumScripts&nbsp;(void);<br>
+&gt;&nbsp;void&nbsp;&nbsp;hugs-&gt;reset&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(int);<br>
+<p>
+</tt>Typically, one writes code like this to load and execute functions
+from a sequence of files.  Note that the standard Prelude and 
+the module <tt>MyLibraries</tt> is only loaded once.<p>
+<tt><br>
+&gt;&nbsp;HugsServerAPI*&nbsp;hugs&nbsp;=&nbsp;initHugsServer(hugs_argc,hugs_argv);<br>
+&gt;&nbsp;hugs-&gt;loadFile("MyLibraries");<br>
+&gt;&nbsp;int&nbsp;baseLevel&nbsp;=&nbsp;hugs-&gt;getNumScripts();<br>
+&gt;&nbsp;for(int&nbsp;i&nbsp;=&nbsp;1;&nbsp;i&nbsp;&lt;&nbsp;argc;&nbsp;++i)&nbsp;{<br>
+&gt;&nbsp;&nbsp;&nbsp;hugs-&gt;reset(baseLevel);<br>
+&gt;&nbsp;&nbsp;&nbsp;hugs-&gt;loadFile(argv[i]);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&gt;&nbsp;&nbsp;&nbsp;hugs-&gt;lookupName("Main","main");&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&gt;&nbsp;&nbsp;&nbsp;hugs-&gt;doIO();<br>
+&gt;&nbsp;}<br>
+<a name="evaluating"></a><p>
+</tt><a name="sect5"></a>
+<h2>5<tt>&nbsp;&nbsp;</tt>Executing Expressions</h2><p>
+In section <a href="server.html#example">2</a> we used <tt>lookupName</tt> to lookup
+<tt>"Main.main"</tt> and <tt>doIO</tt> to execute it.  As you've probably
+guessed, <tt>lookupName</tt> leaves a "pointer" to <tt>Main.main</tt> on
+the stack and <tt>doIO</tt> evaluates the object found on top of the stack.
+Here are some of the other operations which operate on the stack:<p>
+<tt><br>
+&gt;&nbsp;void&nbsp;&nbsp;hugs-&gt;mkInt&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(int);<br>
+&gt;&nbsp;int&nbsp;&nbsp;&nbsp;hugs-&gt;evalInt&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(void);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&gt;&nbsp;<br>
+&gt;&nbsp;void&nbsp;&nbsp;hugs-&gt;mkString&nbsp;&nbsp;&nbsp;&nbsp;(char*);<br>
+&gt;&nbsp;char*&nbsp;hugs-&gt;evalString&nbsp;&nbsp;(void);	&nbsp;<br>
+&gt;&nbsp;<br>
+&gt;&nbsp;void&nbsp;&nbsp;hugs-&gt;apply&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(void);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&gt;&nbsp;<br>
+&gt;&nbsp;void&nbsp;&nbsp;hugs-&gt;lookupName&nbsp;&nbsp;(char*,char*);<br>
+&gt;&nbsp;int&nbsp;&nbsp;&nbsp;hugs-&gt;doIO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(void);	&nbsp;<br>
+<p>
+</tt>The new functions are as follows:<p>
+<UL><LI>
+  <tt>mkInt</tt> pushes (a representation of) an <tt>int</tt> onto
+  the stack.
+  <tt>evalInt</tt> evaluates the <tt>Int</tt> on top of the stack.<p>
+<LI>
+  Similarily, <tt>mkString</tt> pushes (a representation of) a
+  C string onto the stack and
+  <tt>evalString</tt> evaluates the <tt>String</tt> on top of the stack.<p>
+<LI>
+  <tt>apply</tt> pops an argument and a function off the stack (in that
+  order) and applies the function to the argument.  A typical usage
+  is
+<tt><br>
+&gt;&nbsp;hugs-&gt;lookupName("Foo","ackerman");<br>
+&gt;&nbsp;hugs-&gt;mkInt(4);<br>
+&gt;&nbsp;hugs-&gt;apply();<br>
+&gt;&nbsp;hugs-&gt;mkInt(2);<br>
+&gt;&nbsp;hugs-&gt;apply();<br>
+<p>
+</tt>  Alternatively, you might define this macro
+<tt><br>
+&gt;&nbsp;#define&nbsp;ap(f,x)&nbsp;f;&nbsp;x;&nbsp;hugs-&gt;apply();<br>
+
+</tt>  and write this
+<tt><br>
+&gt;&nbsp;ap(ap(&nbsp;hugs-&gt;lookupName("Foo","factorial")<br>
+&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;hugs-&gt;mkInt(4))<br>
+&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;hugs-&gt;mkInt(2));<br>
+<p>
+</tt></UL><p>
+<p>
+<font color=red>ToDo: </font><font color=red><I>  The server API currently provides no way to push floats, chars, etc onto
+  the stack.  There's no real problem in adding this, but we haven't
+  needed it yet.<p>
+<p>
+</I></font><a name="sect6"></a>
+<h2>6<tt>&nbsp;&nbsp;</tt>Haskell Values</h2><p>
+It's sometimes useful to be able to store the result of a calculation
+for later use.  These operations allow you to pop Haskell Values
+off the stack, store them and later push them back onto the stack.<p>
+<tt><br>
+&gt;&nbsp;HVal&nbsp;&nbsp;hugs-&gt;popHVal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(void);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&gt;&nbsp;void&nbsp;&nbsp;hugs-&gt;pushHVal&nbsp;&nbsp;&nbsp;&nbsp;(HVal);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&gt;&nbsp;void&nbsp;&nbsp;hugs-&gt;freeHVal&nbsp;&nbsp;&nbsp;&nbsp;(HVal);&nbsp;<br>
+<p>
+</tt>"Haskell Values" remain valid if you load additional Haskell files
+and if you evaluate expressions but are invalidated by calling
+<tt>reset</tt>. <p>
+<I>Warning:   No check is performed to detect the use of invalid values; the
+  result is likely to be messy.<p>
+</I><a name="sect7"></a>
+<h2>7<tt>&nbsp;&nbsp;</tt>Compiling Expressions</h2><p>
+The functions described in section <a href="server.html#evaluating">5</a> let you evaluate
+almost any Haskell expression but are rather painful to use.  This
+version of the server provides a much more convenient function which
+lets you compile arbitrary Haskell expressions.<p>
+<tt><br>
+&gt;&nbsp;HVal&nbsp;&nbsp;hugs-&gt;compileExpr&nbsp;(char*,char*);<br>
+<p>
+</tt>The function <tt>compileExpr</tt> takes two arguments.  The first
+argument is the name of the module in which to evaluate the
+expression.  The choice of module determines which functions are in
+scope.  The second argument is the expression itself.<p>
+<I>Portability:   The current version of the server includes the full </I><B>Hugs </B><I> compiler
+  so that we can load the Prelude and other libraries.  Since the
+  compiler is included in the server, it is both cheap and easy to 
+  provide </I><tt>compileExpr</tt><I>.  In future versions of the server, we'd
+  like to be able to load precompiled versions of the Prelude and 
+  libraries and omit most of the </I><B>Hugs </B><I> compiler.  In such a system,
+  we would also omit </I><tt>compileExpr</tt><I> since it is possible to do
+  most of what </I><tt>compileExpr</tt><I> does using </I><tt>lookupName</tt><I> and
+  </I><tt>apply</tt><I>.<p>
+<p>
+</I><font color=red>ToDo: </font><font color=red><I>  </I></font><font color=red><tt>compileExpr</tt></font><font color=red><I> really ought to leave its result on the stack.<p>
+<a name="dynamic"></a><p>
+</I></font><a name="sect8"></a>
+<h2>8<tt>&nbsp;&nbsp;</tt>Dynamic Types</h2> <p>
+The evaluation mechanisms described above make it very easy to
+construct and attempt to evaluate ill-typed objects.  To avert
+catastrophe, the server typechecks very function application.
+The mechanisms used to perform this typecheck are not as flexible
+as the Haskell type system for two reasons:<p>
+<UL><LI>
+  Typechecking is restricted to a small set of base types and
+  type constructors.  If you need to use other types, you'll need
+  to define new instances of the <tt>Typeable</tt> class.  Use the
+  instances in appendix <a href="server.html#dynamic-defn">B</a> as examples of how to write
+  your own instances.
+  
+<LI>
+  Typechecking is restricted to <I>monomorphic</I> values.  Looking
+  up a polymorphic function will always result in an error.  There 
+  are two solutions:
+<UL><LI>
+  Add monomorphic instances of the functions to your code.  For example,
+  if you need to use <tt>Prelude.length</tt> at 3 different types, you 
+  might write a module containing these definitions
+<tt><br>
+&gt;&nbsp;length_Int&nbsp;::&nbsp;[Int]&nbsp;-&gt;&nbsp;Int<br>
+&gt;&nbsp;length_Int&nbsp;=&nbsp;length<br>
+&gt;&nbsp;<br>
+&gt;&nbsp;length_Ints&nbsp;::&nbsp;[[Int]]&nbsp;-&gt;&nbsp;Int<br>
+&gt;&nbsp;length_Ints&nbsp;=&nbsp;length<br>
+<p>
+</tt><LI>
+  Use <tt>compileExpr</tt> to lookup the values at different types
+<tt><br>
+&gt;&nbsp;HVal&nbsp;length_Int&nbsp;&nbsp;=&nbsp;hugs-&gt;compileExpr("Prelude","length&nbsp;::&nbsp;[Int]&nbsp;-&gt;&nbsp;Int");<br>
+&gt;&nbsp;HVal&nbsp;length_Ints&nbsp;=&nbsp;hugs-&gt;compileExpr("Prelude","length&nbsp;::&nbsp;[[Int]]&nbsp;-&gt;&nbsp;Int");<br>
+<p>
+</tt></UL>
+In practice, both are equally irritating.<p>
+</UL><p>
+<p>
+<font color=red>ToDo: </font><font color=red><I>  If we remove </I></font><font color=red><tt>compileExpr</tt></font><font color=red><I> we should probably improve the dynamic
+  typing.<p>
+<a name="errors"></a><p>
+</I></font><a name="sect9"></a>
+<h2>9<tt>&nbsp;&nbsp;</tt>Handling Errors</h2><p>
+So far, we have assumed that errors almost never occur.  In practice
+error-free execution is the norm: the standard prelude can't be found;
+filenames are wrong; programs contain syntax and type errors; modules
+don't define what they're supposed to; people look up polymorphic
+functions; Haskell code returns errors; etc.<p>
+The <B>Hugs </B> server is fairly robust: it tries to catch any errors and
+will not perform any further actions until the error is resolved.
+The function <tt>clearError</tt> is used to detect whether an error
+has occurred (since the last time <tt>clearError</tt> was called); to 
+obtain any compiler output associated with the error; and to reset 
+an "error flag".  <p>
+<tt><br>
+&gt;&nbsp;char*&nbsp;hugs-&gt;clearError&nbsp;(void);<br>
+<p>
+</tt>All other functions in the server API return immediately if the error
+flag is set --- this encourages programmers to call <tt>clearError
+</tt>frequently and prevents the server from being totally corrupted if
+<tt>clearError</tt> is not used.<p>
+The output returned by <tt>clearError</tt> depends on whether or not
+compiler output has been redirected to a buffer using the function
+<tt>setOutputEnable<p>
+<br>
+&gt;&nbsp;void&nbsp;hugs-&gt;setOutputEnable&nbsp;(unsigned);<br>
+<p>
+</tt>If compiler output has not been redirected, <tt>clearError</tt> produces
+a brief error message.  If compiler output has not been redirected,
+then <tt>clearError</tt> produces an error message followed by all the
+output that has been collected since the last time <tt>clearError
+</tt>was called.<p>
+Using these features, it's possible to write a more robust version of
+the runhugs program given in section <a href="server.html#example">2</a>.<p>
+<tt><br>
+&gt;&nbsp;static&nbsp;void&nbsp;check()&nbsp;{<br>
+&gt;&nbsp;&nbsp;&nbsp;char*&nbsp;err&nbsp;=&nbsp;hugs-&gt;clearError();<br>
+&gt;&nbsp;&nbsp;&nbsp;if&nbsp;(err)&nbsp;{<br>
+&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf(stderr,"Hugs&nbsp;Error:\n%s\n",err);<br>
+&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fflush(stderr);<br>
+&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exit(1);<br>
+&gt;&nbsp;&nbsp;&nbsp;}<br>
+&gt;&nbsp;}<br>
+&gt;&nbsp;<br>
+&gt;&nbsp;main(&nbsp;int&nbsp;argc,&nbsp;char**&nbsp;argv)&nbsp;<br>
+&gt;&nbsp;{&nbsp;&nbsp;<br>
+&gt;&nbsp;&nbsp;&nbsp;int&nbsp;exitCode;<br>
+&gt;&nbsp;&nbsp;&nbsp;HugsServerAPI*&nbsp;hugs&nbsp;=&nbsp;initHugsServer(hugs_argc,hugs_argv);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&gt;&nbsp;&nbsp;&nbsp;if&nbsp;(NULL&nbsp;==&nbsp;hugs)&nbsp;{<br>
+&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf(stderr,"Unable&nbsp;to&nbsp;initialise&nbsp;Hugs\n");<br>
+&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fflush(stderr);<br>
+&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exit(1);<br>
+&gt;&nbsp;&nbsp;&nbsp;}<br>
+&gt;&nbsp;&nbsp;&nbsp;hugs-&gt;setOutputEnable(0);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&gt;&nbsp;&nbsp;&nbsp;check();<br>
+&gt;&nbsp;&nbsp;&nbsp;argc--;&nbsp;argv++;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&gt;&nbsp;&nbsp;&nbsp;hugs-&gt;setHugsArgs(argc,argv);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&gt;&nbsp;&nbsp;&nbsp;if&nbsp;(argc&nbsp;&lt;&nbsp;1)&nbsp;{<br>
+&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf(stderr,"hugs&nbsp;standalone&nbsp;requires&nbsp;at&nbsp;least&nbsp;one&nbsp;argument\n");<br>
+&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fflush(stderr);<br>
+&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exit(1);<br>
+&gt;&nbsp;&nbsp;&nbsp;}<br>
+&gt;&nbsp;&nbsp;&nbsp;hugs-&gt;loadFile(argv[0]);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&gt;&nbsp;&nbsp;&nbsp;check();<br>
+&gt;&nbsp;&nbsp;&nbsp;hugs-&gt;lookupName("Main","main");&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&gt;&nbsp;&nbsp;&nbsp;exitCode&nbsp;=&nbsp;hugs-&gt;doIO();<br>
+&gt;&nbsp;&nbsp;&nbsp;check();<br>
+&gt;&nbsp;&nbsp;&nbsp;exit(exitCode);<br>
+&gt;&nbsp;}&nbsp;&nbsp;&nbsp;&nbsp;<br>
+<a name="server.c"></a><p>
+</tt><a name="sectA"></a>
+<h2>A<tt>&nbsp;&nbsp;server.h</tt></h2><p>
+This is the current contents of the file <tt>server.h</tt>.  This is
+the only file you need to include into programs that use the server.<p>
+<tt><br>
+/*&nbsp;--------------------------------------------------------------------------<br>
+&nbsp;*&nbsp;Definition&nbsp;of&nbsp;the&nbsp;Hugs&nbsp;server&nbsp;API<br>
+&nbsp;*<br>
+&nbsp;*&nbsp;Copyright&nbsp;(c)&nbsp;The&nbsp;University&nbsp;of&nbsp;Nottingham&nbsp;and&nbsp;Yale&nbsp;University,&nbsp;1994-1997.<br>
+&nbsp;*&nbsp;All&nbsp;rights&nbsp;reserved.&nbsp;See&nbsp;NOTICE&nbsp;for&nbsp;details&nbsp;and&nbsp;conditions&nbsp;of&nbsp;use&nbsp;etc...<br>
+&nbsp;*&nbsp;Hugs&nbsp;version&nbsp;1.4,&nbsp;April&nbsp;1997<br>
+&nbsp;*&nbsp;------------------------------------------------------------------------*/<br>
+<br>
+#ifndef&nbsp;Args<br>
+#&nbsp;if&nbsp;HAVE_PROTOTYPES<br>
+#&nbsp;&nbsp;define&nbsp;Args(x)&nbsp;x<br>
+#&nbsp;else<br>
+#&nbsp;&nbsp;define&nbsp;Args(x)&nbsp;()<br>
+#&nbsp;endif<br>
+#endif&nbsp;/*&nbsp;!defined&nbsp;Args&nbsp;*/<br>
+<br>
+typedef&nbsp;int&nbsp;HVal;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;Haskell&nbsp;values&nbsp;are&nbsp;represented&nbsp;by&nbsp;stable&nbsp;pointers&nbsp;*/<br>
+<br>
+typedef&nbsp;struct&nbsp;_HugsServerAPI&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;char*&nbsp;(*clearError&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;Args((void));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;&nbsp;(*setHugsArgs&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;Args((int,&nbsp;char**));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;&nbsp;&nbsp;(*getNumScripts&nbsp;&nbsp;)&nbsp;Args((void));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;&nbsp;(*reset&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;Args((int));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;&nbsp;(*setOutputEnable)&nbsp;Args((unsigned));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;&nbsp;(*changeDir&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;Args((char*));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;&nbsp;(*loadProject&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;Args((char*));&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;obsolete&nbsp;*/<br>
+&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;&nbsp;(*loadFile&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;Args((char*));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;HVal&nbsp;&nbsp;(*compileExpr&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;Args((char*,char*));<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;&nbsp;(*lookupName&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;Args((char*,char*));&nbsp;/*&nbsp;push&nbsp;values&nbsp;onto&nbsp;stack*/<br>
+&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;&nbsp;(*mkInt&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;Args((int));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;&nbsp;(*mkString&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;Args((char*));<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;&nbsp;(*apply&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;Args((void));&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;manipulate&nbsp;top&nbsp;of&nbsp;stack&nbsp;*/<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;&nbsp;&nbsp;(*evalInt&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;Args((void));&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;evaluate&nbsp;top&nbsp;of&nbsp;stack&nbsp;&nbsp;&nbsp;*/<br>
+&nbsp;&nbsp;&nbsp;&nbsp;char*&nbsp;(*evalString&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;Args((void));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;&nbsp;&nbsp;(*doIO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;Args((void));<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;HVal&nbsp;&nbsp;(*popHVal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;Args((void));&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;pop&nbsp;stack&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/<br>
+&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;&nbsp;(*pushHVal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;Args((HVal));&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*&nbsp;push&nbsp;back&nbsp;onto&nbsp;stack&nbsp;&nbsp;&nbsp;&nbsp;*/<br>
+&nbsp;&nbsp;&nbsp;&nbsp;void&nbsp;&nbsp;(*freeHVal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;Args((HVal));&nbsp;<br>
+}&nbsp;HugsServerAPI;<br>
+<br>
+/*&nbsp;type&nbsp;of&nbsp;"initHugsServer"&nbsp;function&nbsp;*/<br>
+typedef&nbsp;HugsServerAPI&nbsp;*(*HugsServerInitFun)&nbsp;Args((int,&nbsp;char**));<br>
+<br>
+/*&nbsp;------------------------------------------------------------------------*/<br>
+<br>
+<a name="dynamic-defn"></a><p>
+</tt><a name="sectB"></a>
+<h2>B<tt>&nbsp;&nbsp;</tt>The <tt>Dynamic</tt> module</h2><p>
+<tt><br>
+module&nbsp;Dynamic<br>
+&nbsp;&nbsp;&nbsp;(&nbsp;Typeable(typeOf),<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;Dynamic,&nbsp;toDynamic,&nbsp;fromDynamic,&nbsp;dynApply,<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;fromDyn,&nbsp;dynApp,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;intToDyn,&nbsp;fromDynInt,&nbsp;strToDyn,&nbsp;fromDynStr,<br>
+&nbsp;&nbsp;&nbsp;,&nbsp;Tycon(..),&nbsp;Type(..)<br>
+&nbsp;&nbsp;&nbsp;)&nbsp;where<br>
+<br>
+----------------------------------------------------------------<br>
+--&nbsp;Dynamics<br>
+----------------------------------------------------------------<br>
+<br>
+data&nbsp;Dynamic&nbsp;=&nbsp;...<br>
+<br>
+--&nbsp;The&nbsp;core&nbsp;functions<br>
+toDynamic&nbsp;&nbsp;&nbsp;::&nbsp;Typeable&nbsp;a&nbsp;=&gt;&nbsp;a&nbsp;-&gt;&nbsp;Dynamic<br>
+fromDynamic&nbsp;::&nbsp;Typeable&nbsp;a&nbsp;=&gt;&nbsp;Dynamic&nbsp;-&gt;&nbsp;Maybe&nbsp;a<br>
+dynApply&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;Dynamic&nbsp;-&gt;&nbsp;Dynamic&nbsp;-&gt;&nbsp;Maybe&nbsp;Dynamic<br>
+<br>
+--&nbsp;special&nbsp;cases<br>
+fromDyn&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;Typeable&nbsp;a&nbsp;=&gt;&nbsp;Dynamic&nbsp;-&gt;&nbsp;a<br>
+intToDyn&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;Int&nbsp;&nbsp;&nbsp;&nbsp;-&gt;&nbsp;Dynamic<br>
+strToDyn&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;String&nbsp;-&gt;&nbsp;Dynamic<br>
+fromDynInt&nbsp;&nbsp;::&nbsp;Dynamic&nbsp;-&gt;&nbsp;Int<br>
+fromDynStr&nbsp;&nbsp;::&nbsp;Dynamic&nbsp;-&gt;&nbsp;String<br>
+runDyn&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;Dynamic&nbsp;-&gt;&nbsp;IO&nbsp;()<br>
+dynApp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;::&nbsp;Dynamic&nbsp;-&gt;&nbsp;Dynamic&nbsp;-&gt;&nbsp;Dynamic<br>
+<br>
+----------------------------------------------------------------<br>
+--&nbsp;Types<br>
+----------------------------------------------------------------<br>
+<br>
+data&nbsp;Tycon&nbsp;=&nbsp;Tycon&nbsp;String&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deriving&nbsp;Eq<br>
+data&nbsp;Type&nbsp;&nbsp;=&nbsp;App&nbsp;Tycon&nbsp;[Type]&nbsp;deriving&nbsp;Eq<br>
+<br>
+unitTC&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;Tycon&nbsp;"()"<br>
+intTC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;Tycon&nbsp;"Int"<br>
+integerTC&nbsp;=&nbsp;Tycon&nbsp;"Integer"<br>
+floatTC&nbsp;&nbsp;&nbsp;=&nbsp;Tycon&nbsp;"Float"<br>
+doubleTC&nbsp;&nbsp;=&nbsp;Tycon&nbsp;"Double"<br>
+charTC&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;Tycon&nbsp;"Char"<br>
+ioTC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;Tycon&nbsp;"IO"<br>
+funTC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;Tycon&nbsp;"-&gt;"<br>
+listTC&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;Tycon&nbsp;"[]"<br>
+tup2TC&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;Tycon&nbsp;"(,)"<br>
+<br>
+class&nbsp;Typeable&nbsp;a&nbsp;where&nbsp;typeOf&nbsp;::&nbsp;a&nbsp;-&gt;&nbsp;Type<br>
+<br>
+--&nbsp;Constant&nbsp;Tycons&nbsp;are&nbsp;easy<br>
+<br>
+instance&nbsp;Typeable&nbsp;()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;where&nbsp;typeOf&nbsp;x&nbsp;=&nbsp;App&nbsp;unitTC&nbsp;&nbsp;&nbsp;&nbsp;[]<br>
+instance&nbsp;Typeable&nbsp;Int&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;where&nbsp;typeOf&nbsp;x&nbsp;=&nbsp;App&nbsp;intTC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[]<br>
+instance&nbsp;Typeable&nbsp;Integer&nbsp;where&nbsp;typeOf&nbsp;x&nbsp;=&nbsp;App&nbsp;integerTC&nbsp;[]<br>
+instance&nbsp;Typeable&nbsp;Float&nbsp;&nbsp;&nbsp;where&nbsp;typeOf&nbsp;x&nbsp;=&nbsp;App&nbsp;floatTC&nbsp;&nbsp;&nbsp;[]<br>
+instance&nbsp;Typeable&nbsp;Double&nbsp;&nbsp;where&nbsp;typeOf&nbsp;x&nbsp;=&nbsp;App&nbsp;doubleTC&nbsp;&nbsp;[]<br>
+instance&nbsp;Typeable&nbsp;Char&nbsp;&nbsp;&nbsp;&nbsp;where&nbsp;typeOf&nbsp;x&nbsp;=&nbsp;App&nbsp;charTC&nbsp;&nbsp;&nbsp;&nbsp;[]<br>
+<br>
+--&nbsp;Non-constant&nbsp;Tycons&nbsp;require&nbsp;sneakiness<br>
+<br>
+instance&nbsp;Typeable&nbsp;a&nbsp;=&gt;&nbsp;Typeable&nbsp;(IO&nbsp;a)&nbsp;where&nbsp;<br>
+&nbsp;&nbsp;typeOf&nbsp;m&nbsp;=&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;unsafePerformIO&nbsp;m&nbsp;of&nbsp;{&nbsp;r&nbsp;-&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;App&nbsp;ioTC&nbsp;&nbsp;[typeOf&nbsp;r]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<br>
+instance&nbsp;(Typeable&nbsp;a,&nbsp;Typeable&nbsp;b)&nbsp;=&gt;&nbsp;Typeable&nbsp;(a&nbsp;-&gt;&nbsp;b)&nbsp;where<br>
+&nbsp;&nbsp;typeOf&nbsp;f&nbsp;=&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;We&nbsp;use&nbsp;case&nbsp;to&nbsp;bind&nbsp;arg&nbsp;and&nbsp;result&nbsp;to&nbsp;avoid&nbsp;excess&nbsp;polymorphism<br>
+&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;undefined&nbsp;of&nbsp;{&nbsp;arg&nbsp;-&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;case&nbsp;f&nbsp;arg&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of&nbsp;{&nbsp;result&nbsp;-&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;App&nbsp;funTC&nbsp;[typeOf&nbsp;arg,&nbsp;typeOf&nbsp;result]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}}<br>
+<br>
+instance&nbsp;Typeable&nbsp;a&nbsp;=&gt;&nbsp;Typeable&nbsp;[a]&nbsp;where<br>
+&nbsp;&nbsp;typeOf&nbsp;xs&nbsp;=&nbsp;App&nbsp;listTC&nbsp;[typeOf&nbsp;(head&nbsp;xs)]<br>
+<br>
+instance&nbsp;(Typeable&nbsp;a,&nbsp;Typeable&nbsp;b)&nbsp;=&gt;&nbsp;Typeable&nbsp;(a,b)&nbsp;where<br>
+&nbsp;&nbsp;typeOf&nbsp;p&nbsp;=&nbsp;App&nbsp;tup2TC&nbsp;[typeOf&nbsp;(fst&nbsp;p),&nbsp;typeOf&nbsp;(snd&nbsp;p)]<br>
+<p>
+</tt>

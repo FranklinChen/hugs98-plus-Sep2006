@@ -1,0 +1,47 @@
+Please send bug reports to
+
+    <hugs-bugs@haskell.org>
+
+General questions about using Hugs should be sent to
+
+    <hugs-users@haskell.org>
+
+========================================================================
+
+                              Credits
+
+========================================================================
+
+Original author:
+
+    Mark Jones
+
+Primary developers:
+
+    Sigbjorn Finne
+    Jeff Lewis
+    Johan Nordlander
+    Sven Panne
+    Ross Paterson
+    Alastair Reid
+
+Valuable contributions:
+
+    Hans Aberg
+    Pablo Azero
+    Levent Erkok
+    Pepe Gallardo
+    Andy Gill
+    Thomas Nordin
+    Jeremy Shute
+    Richard Watson
+
+========================================================================
+
+The development of Hugs has been supported, in part and at different 
+times, by the Yale Haskell Group at Yale University, by the Pacific
+Software Research Center (PacSoft) at the OGI School of
+Science & Engineering at OHSU, by Galois Connections, Inc., and by
+Reid Consulting (UK) Limited.
+
+========================================================================

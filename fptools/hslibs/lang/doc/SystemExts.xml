@@ -1,0 +1,110 @@
+<sect1 id="sec-SystemExts">
+<title><literal>SystemExts</literal>
+<indexterm>
+  <primary>SystemExts</primary>
+  <secondary>library</secondary>
+</indexterm>
+</title>
+
+<para>
+The <literal>SystemExts</literal> module contains functionality
+that goes beyond what the Haskell 98 module <literal>System</literal>
+provides. That is, functionality that provides access to the
+underlying OS' facilities in an OS-independent manner.
+</para>
+
+<para>
+Notice that <literal>SystemExts</literal> shares the goal of
+<literal>System</literal>. That is, it aims to provide
+functionality that's supported by all platforms. 
+So, if you're looking to do serious system programming for a particular
+(family) of platforms, you really want to check out the libraries
+provided for the platform in question as well. e.g., The
+<literal>Posix</literal> library for
+<literal>POSIX.1</literal>-conforming
+platforms, the <literal>Win32</literal> library for Win32 platforms.
+</para>
+
+<para>
+<literal>SystemExts</literal> exports the following:
+</para>
+
+<para>
+<programlisting>
+rawSystem      :: String -&#62; IO ExitCode
+withArgs       :: [String] -&#62; IO a -&#62; IO a
+withProgName   :: String -&#62; IO a -&#62; IO a
+getEnvironment :: IO [(String, String)]
+</programlisting>
+
+<indexterm>
+  <primary><literal>rawSystem</literal></primary>
+  <secondary>execute system commands sans command shell</secondary>
+</indexterm>
+<indexterm>
+  <primary><literal>withArgs</literal></primary>
+  <secondary>change command-line arguments</secondary>
+</indexterm>
+<indexterm>
+  <primary><literal>withProgName</literal></primary>
+  <secondary>change program name</secondary>
+</indexterm>
+</para>
+
+<para>
+Notes:
+
+<itemizedlist>
+<listitem>
+<para>
+<function>rawSystem</function> provides the exact same
+behaviour as <function>System.system</function>, except
+that the system command isn't invoked via a shell / command
+interpreter. 
+</para>
+
+<para>
+Not involving your platform's shell / command interpreter is quicker
+if you don't need its functionality, and it avoids running into
+limitations imposed by the shell / command interpreter. For instance,
+Win32 command interpreters place a limit on the length of the
+command they can execute (~4k), which sometimes gets in the way
+of what you want to do.
+</para>
+</listitem>
+<listitem>
+<para>
+The <function>withArgs</function> action lets you change the value
+returned by <function>System.getArgs</function> while executing an
+IO action.
+</para>
+<para>
+When the action has finished executing (or if it raises an exception),
+the argument vector of <function>System.getArgs</function> is restored.
+</para>
+</listitem>
+
+<listitem>
+<para>
+The <function>withProgName</function> action lets you change the
+program name string returned by <function>System.getProgName</function>
+while executing an IO action.
+</para>
+<para>
+As <function>withArgs</function>, when the action has finished
+executing (or if it raises an exception), the program name string
+<function>System.getArgs</function> is restored.
+</para>
+</listitem>
+
+<listitem>
+<para>
+The <function>getEnvironment</function> action returns all the
+environment values present in your process' environment block. 
+</para>
+</listitem>
+
+</itemizedlist>
+</para>
+
+</sect1>

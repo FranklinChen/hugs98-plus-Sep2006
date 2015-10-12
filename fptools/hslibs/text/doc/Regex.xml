@@ -1,0 +1,9 @@
+<sect1 id="Regex">
+<title><literal>Regex</literal>: The low-level regex matching interface
+</title>
+
+  <para>The <literal>Regex</literal> library has been removed.  Please
+  use <ulink
+  url="../libraries/base/Text.Regex.html"><literal>Text.Regex</literal></ulink>
+  in the <literal>base</literal> package.</para>
+</sect1>

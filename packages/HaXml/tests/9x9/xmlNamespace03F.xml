@@ -1,0 +1,11 @@
+<!DOCTYPE doc  [
+<!ELEMENT doc (#PCDATA)>
+<!ENTITY egbase "http://id.example.org/">
+<!ENTITY egns "http://id.example.org/namespace">
+<!ENTITY egns1 "&egbase;namespace">
+<!ATTLIST doc eg:a1 CDATA "v1">
+<!ATTLIST doc eg:a2 CDATA "v2">
+]>
+<doc xmlns:eg="http://id.example.org/namespace"
+  ><eg:inner eg:a2="a2"
+    ><eg:deeper eg:a3="a3"/></eg:inner></doc>

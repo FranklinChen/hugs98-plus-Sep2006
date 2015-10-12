@@ -1,0 +1,14 @@
+<!DOCTYPE doc [
+<!ELEMENT doc (#PCDATA)>
+<!ENTITY egbase "http://id.example.org/">
+<!ENTITY egns   "http://id.example.org/namespace">
+<!ENTITY egns1  "&egbase;namespace">
+<!ATTLIST doc eg:a1 CDATA "v1">
+<!ATTLIST doc eg:a2 CDATA "v2">
+]>
+
+<!-- Namespace08.xml: inner override -->
+<eg:doc xmlns:eg="&egbase;namespace">
+  <eg:inner xmlns:eg="&egbase;ns1" eg:a2="">
+  </eg:inner>
+</eg:doc>

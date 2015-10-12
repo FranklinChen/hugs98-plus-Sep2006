@@ -1,0 +1,150 @@
+#! /bin/sh
+
+# Simulate a Haskell compiler using Hugs
+# (used to interface to the test suite)
+
+# For best results, you also need to modify Hugs.Prelude, using
+# prelude.patch (also in hugs98/tools).
+
+out_file=
+compile_only=false
+extra_opts='-k'
+haskell98=true
+use_cpp=false
+cpp='cpp -P -traditional -D__HUGS__'
+cpp_flags=
+
+# flags that also occur in source files
+handle_flag() {
+	case $1 in
+	-cpp)
+		use_cpp=true ;;
+	-[DI]*)
+		cpp_flags="$cpp_flags $1" ;;
+	-fglasgow-exts)
+		haskell98=false ;;
+	-fimplicit-params)
+		haskell98=false ;;
+	-fallow-overlapping-instances)
+		haskell98=false
+		extra_opts="$extra_opts +o" ;;
+	-fallow-undecidable-instances)
+		haskell98=false
+		extra_opts="$extra_opts +O" ;;
+	esac
+}
+
+cc_args=
+
+while [ $# -gt 0 ]
+do
+	case "$1" in
+	-o)	shift
+		out_file="$1" ;;
+	-[Cc])	compile_only=true ;;
+	-package)
+		shift ;;
+	+RTS)	shift
+		while [ $# -gt 0 && $1 != -RTS ]
+		do	shift
+		done ;;
+	--make)	;;
+	-[dvOW]*) ;;
+	-[lL]*)	cc_args="$cc_args $1" ;;
+	-*)	handle_flag $1 ;;
+	*.o)	cc_args="$cc_args $1" ;;
+	*.c)	cc_args="$cc_args $1" ;;
+	*.hs|*.lhs)
+		sources="$sources $1" ;;
+	*)
+		if [ -f $1.hs ]
+		then	sources="$sources $1.hs"
+		elif [ -f $1.lhs ]
+		then	sources="$sources $1.lhs"
+		fi ;;
+	esac
+	shift
+done
+
+ffi_args="$cpp_flags $cc_args"
+
+for f in $sources; do
+	src_opts=`egrep '^>*{-# OPTIONS(_GHC)? ' $f | sed -e 's/.*{-# OPTIONS[_A-Z]* //' -e 's/ #-}//'`
+	for flag in $src_opts
+	do	handle_flag $flag
+	done
+done
+
+if $haskell98
+then	extra_opts="+98 $extra_opts"
+else	extra_opts="-98 $extra_opts"
+fi
+
+for f in $sources; do
+	if grep '^foreign ' $f >/dev/null; then
+		if test -L $f; then	# ffihugs doesn't work with symlinks
+			mv $f $f.save
+			cp $f.save $f
+		fi
+		if $use_cpp; then
+			ffihugs -F"$cpp $cpp_flags" $extra_opts $f $ffi_args || exit 1
+		else
+			ffihugs $extra_opts $f $ffi_args || exit 1
+		fi
+	fi
+	if $use_cpp; then
+		if hugs -F"$cpp $cpp_flags" $extra_opts $f </dev/null | sed -n '10,$p' | fgrep -v 'Type :? for help' | fgrep -v '[Leaving Hugs]' | grep . >&2
+		then	exit 1
+		fi
+	else
+		if hugs $extra_opts $f </dev/null | sed -n '10,$p' | fgrep -v 'Type :? for help' | fgrep -v '[Leaving Hugs]' | grep . >&2
+		then	exit 1
+		fi
+	fi
+
+	stem=`echo $f | sed 's/\.l*hs$//'`
+
+	# Generate empty "object" file
+
+	if $compile_only && [ -n "$out_file" ]
+	then	echo >$out_file
+	else	echo >$stem.o
+	fi
+
+	# Generate "interface" file containing the name of the source
+	# file, if the source file was a Main module, otherwise nothing,
+	# we can "link" these.
+
+	if grep 'module[ 	][ 	]*Main' $f >/dev/null ||
+	   ( !  grep 'module[ 	][ 	]*[A-Z]' $f >/dev/null &&
+		grep -w main $f >/dev/null )
+	then	main_file="$f"
+	else	main_file=''
+	fi
+	case "$main_file" in
+	/*)	;;
+	?*)	main_file="`pwd`/$main_file" ;;
+	esac
+	echo $main_file >$stem.hi
+	interfaces="$interfaces $stem.hi"
+done
+
+# If not -c, generate an "executable" that invokes runhugs on the file
+# containing the Main module, whose name will be in one of the .hi files.
+
+if ! $compile_only
+then
+	main_file=`cat $interfaces | grep . | sed 1q`
+	case "$main_file" in
+	?*)
+		: ${out_file:=a.out}
+		(
+			echo '#! /bin/sh'
+			if $use_cpp
+			then	echo runhugs "-F'$cpp $cpp_flags 2>/dev/null'" $extra_opts $main_file '"$@"'
+			else	echo runhugs $extra_opts $main_file '"$@"'
+			fi
+		) >$out_file
+		chmod 755 $out_file ;;
+	esac
+fi

@@ -1,0 +1,7 @@
+<sect1 id="sec-Word">
+<title><literal>Word</literal><indexterm><primary>Word</primary></indexterm>
+</title>
+
+  <para>This module has moved to <ulink url="../libraries/base/Data.Word.html"><literal>Data.Word</literal></ulink> in the
+  hierarchical libraries.</para>
+</sect1>

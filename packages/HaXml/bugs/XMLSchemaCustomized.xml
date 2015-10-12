@@ -1,0 +1,494 @@
+<!DOCTYPE xmlSchema [
+<!-- DTD for XML Schemas: Part 1: Structures
+     Public Identifier: "-//W3C//DTD XMLSCHEMA 200102//EN"
+     Official Location: http://www.w3.org/2001/XMLSchema.dtd -->
+<!-- $Id: XMLSchemaCustomized.xml,v 1.1 2003/10/28 11:28:47 malcolm Exp $ -->
+<!-- Note this DTD is NOT normative, or even definitive. -->           <!--d-->
+<!-- prose copy in the structures REC is the definitive version -->    <!--d-->
+<!-- (which shouldn't differ from this one except for this -->         <!--d-->
+<!-- comment and entity expansions, but just in case) -->              <!--d-->
+<!-- With the exception of cases with multiple namespace
+     prefixes for the XML Schema namespace, any XML document which is
+     not valid per this DTD given redefinitions in its internal subset of the
+     'p' and 's' parameter entities below appropriate to its namespace
+     declaration of the XML Schema namespace is almost certainly not
+     a valid schema. -->
+
+<!-- The simpleType element and its constituent parts
+     are defined in XML Schema: Part 2: Datatypes -->
+<!ENTITY % xs-datatypes PUBLIC 'datatypes' 'datatypes.dtd' >
+
+<!-- can be overriden in the internal subset of a
+                         schema document to establish a different
+                         namespace prefix -->
+<!-- if %p is defined (e.g. as foo:) then you must
+                         also define %s as the suffix for the appropriate
+                         namespace declaration (e.g. :foo) -->
+<!-- Define all the element names, with optional prefix -->
+<!-- annotation elements -->
+<!-- Customisation entities for the ATTLIST of each element type.
+     Define one of these if your schema takes advantage of the
+     anyAttribute='##other' in the schema for schemas -->
+
+<!-- #all or space-separated list drawn from derivationChoice -->
+<!-- #all or space-separated list drawn from
+                      derivationChoice + 'substitution' -->
+
+<!-- This is used in part2 -->
+<!-- xs-datatypes; per hand hier eingefügt - ek. -->
+<!--
+        DTD for XML Schemas: Part 2: Datatypes
+        $Id: XMLSchemaCustomized.xml,v 1.1 2003/10/28 11:28:47 malcolm Exp $
+        Note this DTD is NOT normative, or even definitive. - - the
+        prose copy in the datatypes REC is the definitive version
+        (which shouldn't differ from this one except for this comment
+        and entity expansions, but just in case)
+  -->
+
+<!--
+        This DTD cannot be used on its own, it is intended
+        only for incorporation in XMLSchema.dtd, q.v.
+  -->
+
+<!-- Define all the element names, with optional prefix -->
+<!--
+        Customisation entities for the ATTLIST of each element
+        type. Define one of these if your schema takes advantage
+        of the anyAttribute='##other' in the schema for schemas
+  -->
+
+<!-- Define some entities for informative use as attribute
+        types -->
+<!--
+        #all or space-separated list drawn from derivationChoice
+  -->
+
+<!--
+        Note that the use of 'facet' below is less restrictive
+        than is really intended:  There should in fact be no
+        more than one of each of minInclusive, minExclusive,
+        maxInclusive, maxExclusive, totalDigits, fractionDigits,
+        length, maxLength, minLength within datatype,
+        and the min- and max- variants of Inclusive and Exclusive
+        are mutually exclusive. On the other hand,  pattern and
+        enumeration may repeat.
+  -->
+<!ELEMENT xs:simpleType
+        ((xs:annotation)?, (xs:restriction | xs:list | xs:union))>
+<!ATTLIST xs:simpleType
+    name      NMTOKEN #IMPLIED
+    final     CDATA #IMPLIED
+    id        ID       #IMPLIED
+    >
+<!-- name is required at top level -->
+<!ELEMENT xs:restriction ((xs:annotation)?,
+                         (((xs:all | xs:choice | xs:sequence | xs:group)?) |
+                          ((xs:simpleType)?,((xs:minInclusive | xs:minExclusive) | (xs:maxInclusive | xs:maxExclusive) | xs:totalDigits | xs:fractionDigits | xs:pattern | xs:enumeration | xs:whiteSpace | xs:length |
+   xs:maxLength | xs:minLength)*)),
+                         (((xs:attribute| xs:attributeGroup)*,(xs:anyAttribute)?)))>
+<!ATTLIST xs:restriction
+    base      NMTOKEN                  #IMPLIED
+    id        ID       #IMPLIED
+    >
+<!--
+        base and simpleType child are mutually exclusive,
+        one is required.
+
+        restriction is shared between simpleType and
+        simpleContent and complexContent (in XMLSchema.xsd).
+        restriction1 is for the latter cases, when this
+        is restricting a complex type, as is attrDecls.
+  -->
+<!ELEMENT xs:list ((xs:annotation)?,(xs:simpleType)?)>
+<!ATTLIST xs:list
+    itemType      NMTOKEN             #IMPLIED
+    id        ID       #IMPLIED
+    >
+<!--
+        itemType and simpleType child are mutually exclusive,
+        one is required
+  -->
+<!ELEMENT xs:union ((xs:annotation)?,(xs:simpleType)*)>
+<!ATTLIST xs:union
+    id            ID       #IMPLIED
+    memberTypes   NMTOKENS            #IMPLIED
+    >
+<!--
+        At least one item in memberTypes or one simpleType
+        child is required
+  -->
+
+<!ELEMENT xs:maxExclusive (xs:annotation)?>
+<!ATTLIST xs:maxExclusive
+        value CDATA #REQUIRED
+        id ID #IMPLIED
+        fixed (true|false) #IMPLIED
+        >
+<!ELEMENT xs:minExclusive (xs:annotation)?>
+<!ATTLIST xs:minExclusive
+        value CDATA #REQUIRED
+        id ID #IMPLIED
+        fixed (true|false) #IMPLIED
+        >
+
+<!ELEMENT xs:maxInclusive (xs:annotation)?>
+<!ATTLIST xs:maxInclusive
+        value CDATA #REQUIRED
+        id ID #IMPLIED
+        fixed (true|false) #IMPLIED
+        >
+<!ELEMENT xs:minInclusive (xs:annotation)?>
+<!ATTLIST xs:minInclusive
+        value CDATA #REQUIRED
+        id ID #IMPLIED
+        fixed (true|false) #IMPLIED
+        >
+
+<!ELEMENT xs:totalDigits (xs:annotation)?>
+<!ATTLIST xs:totalDigits
+        value CDATA #REQUIRED
+        id ID #IMPLIED
+        fixed (true|false) #IMPLIED
+        >
+<!ELEMENT xs:fractionDigits (xs:annotation)?>
+<!ATTLIST xs:fractionDigits
+        value CDATA #REQUIRED
+        id ID #IMPLIED
+        fixed (true|false) #IMPLIED
+        >
+
+<!ELEMENT xs:length (xs:annotation)?>
+<!ATTLIST xs:length
+        value CDATA #REQUIRED
+        id ID #IMPLIED
+        fixed (true|false) #IMPLIED
+        >
+<!ELEMENT xs:minLength (xs:annotation)?>
+<!ATTLIST xs:minLength
+        value CDATA #REQUIRED
+        id ID #IMPLIED
+        fixed (true|false) #IMPLIED
+        >
+<!ELEMENT xs:maxLength (xs:annotation)?>
+<!ATTLIST xs:maxLength
+        value CDATA #REQUIRED
+        id ID #IMPLIED
+        fixed (true|false) #IMPLIED
+        >
+
+<!-- This one can be repeated -->
+<!ELEMENT xs:enumeration (xs:annotation)?>
+<!ATTLIST xs:enumeration
+        value CDATA #REQUIRED
+        id ID #IMPLIED
+        >
+
+<!ELEMENT xs:whiteSpace (xs:annotation)?>
+<!ATTLIST xs:whiteSpace
+        value CDATA #REQUIRED
+        id ID #IMPLIED
+        fixed (true|false) #IMPLIED
+        >
+
+<!-- This one can be repeated -->
+<!ELEMENT xs:pattern (xs:annotation)?>
+<!ATTLIST xs:pattern
+        value CDATA #REQUIRED
+        id ID #IMPLIED
+        >
+
+
+<!-- the duplication below is to produce an unambiguous content model
+     which allows annotation everywhere -->
+<!ELEMENT xs:schema ((xs:include | xs:import | xs:redefine | xs:annotation)*,
+                    ((xs:simpleType | xs:complexType
+                      | xs:element | xs:attribute
+                      | xs:attributeGroup | xs:group
+                      | xs:notation ),
+                     (xs:annotation)*)* )>
+<!ATTLIST xs:schema
+   targetNamespace      CDATA               #IMPLIED
+   version              CDATA                  #IMPLIED
+   xmlns:xs                CDATA               #FIXED 'http://www.w3.org/2001/XMLSchema'
+   xmlns                CDATA                  #IMPLIED
+   finalDefault         CDATA ''
+   blockDefault         CDATA             ''
+   id                   ID                     #IMPLIED
+   elementFormDefault   (qualified|unqualified)           'unqualified'
+   attributeFormDefault (qualified|unqualified)           'unqualified'
+   xml:lang             CDATA                  #IMPLIED
+   >
+<!-- Note the xmlns declaration is NOT in the Schema for Schemas,
+     because at the Infoset level where schemas operate,
+     xmlns(:prefix) is NOT an attribute! -->
+<!-- The declaration of xmlns is a convenience for schema authors -->
+ 
+<!-- The id attribute here and below is for use in external references
+     from non-schemas using simple fragment identifiers.
+     It is NOT used for schema-to-schema reference, internal or
+     external. -->
+
+<!-- a type is a named content type specification which allows attribute
+     declarations-->
+<!-- -->
+
+<!ELEMENT xs:complexType ((xs:annotation)?,
+                         (xs:simpleContent|xs:complexContent|
+                          ((xs:all | xs:choice | xs:sequence | xs:group)?, ((xs:attribute| xs:attributeGroup)*,(xs:anyAttribute)?))))>
+
+<!ATTLIST xs:complexType
+          name      NMTOKEN                        #IMPLIED
+          id        ID                              #IMPLIED
+          abstract  (true|false)                       #IMPLIED
+          final     CDATA          #IMPLIED
+          block     CDATA          #IMPLIED
+          mixed (true|false) 'false'
+          >
+
+<!-- particleAndAttrs is shorthand for a root type -->
+<!-- mixed is disallowed if simpleContent, overriden if complexContent
+     has one too. -->
+
+<!-- If anyAttribute appears in one or more referenced attributeGroups
+     and/or explicitly, the intersection of the permissions is used -->
+
+<!ELEMENT xs:complexContent ((xs:annotation)?, (xs:restriction|xs:extension))>
+<!ATTLIST xs:complexContent
+          mixed (true|false) #IMPLIED
+          id    ID           #IMPLIED
+          >
+
+<!-- restriction should use the branch defined above, not the simple
+     one from part2; extension should use the full model  -->
+
+<!ELEMENT xs:simpleContent ((xs:annotation)?, (xs:restriction|xs:extension))>
+<!ATTLIST xs:simpleContent
+          id    ID           #IMPLIED
+          >
+
+<!-- restriction should use the simple branch from part2, not the 
+     one defined above; extension should have no particle  -->
+
+<!ELEMENT xs:extension ((xs:annotation)?, (((xs:all | xs:choice | xs:sequence | xs:group)?, ((xs:attribute| xs:attributeGroup)*,(xs:anyAttribute)?))))>
+<!ATTLIST xs:extension
+          base  NMTOKEN      #REQUIRED
+          id    ID           #IMPLIED
+          >
+
+<!-- an element is declared by either:
+ a name and a type (either nested or referenced via the type attribute)
+ or a ref to an existing element declaration -->
+
+<!ELEMENT xs:element ((xs:annotation)?, (xs:complexType| xs:simpleType)?,
+                     (xs:unique | xs:key | xs:keyref)*)>
+<!-- simpleType or complexType only if no type|ref attribute -->
+<!-- ref not allowed at top level -->
+<!ATTLIST xs:element
+            name               NMTOKEN               #IMPLIED
+            id                 ID                     #IMPLIED
+            ref                NMTOKEN                #IMPLIED
+            type               NMTOKEN                #IMPLIED
+            minOccurs          NMTOKEN   #IMPLIED
+            maxOccurs          CDATA                  #IMPLIED
+            nillable           (true|false)              #IMPLIED
+            substitutionGroup  NMTOKEN                #IMPLIED
+            abstract           (true|false)              #IMPLIED
+            final              CDATA #IMPLIED
+            block              CDATA             #IMPLIED
+            default            CDATA                  #IMPLIED
+            fixed              CDATA                  #IMPLIED
+            form               (qualified|unqualified)           #IMPLIED
+            >
+<!-- type and ref are mutually exclusive.
+     name and ref are mutually exclusive, one is required -->
+<!-- In the absence of type AND ref, type defaults to type of
+     substitutionGroup, if any, else the ur-type, i.e. unconstrained -->
+<!-- default and fixed are mutually exclusive -->
+
+<!ELEMENT xs:group ((xs:annotation)?,(xs:all | xs:choice | xs:sequence)?)>
+<!ATTLIST xs:group 
+          name        NMTOKEN               #IMPLIED
+          ref         NMTOKEN                #IMPLIED
+          minOccurs   NMTOKEN   #IMPLIED
+          maxOccurs   CDATA                  #IMPLIED
+          id          ID                     #IMPLIED
+          >
+
+<!ELEMENT xs:all ((xs:annotation)?, (xs:element)*)>
+<!ATTLIST xs:all
+          minOccurs   (1)                    #IMPLIED
+          maxOccurs   (1)                    #IMPLIED
+          id          ID                     #IMPLIED
+          >
+
+<!ELEMENT xs:choice ((xs:annotation)?, (xs:element| xs:group| xs:choice | xs:sequence | xs:any)*)>
+<!ATTLIST xs:choice
+          minOccurs   NMTOKEN   #IMPLIED
+          maxOccurs   CDATA                  #IMPLIED
+          id          ID                     #IMPLIED
+          >
+
+<!ELEMENT xs:sequence ((xs:annotation)?, (xs:element| xs:group| xs:choice | xs:sequence | xs:any)*)>
+<!ATTLIST xs:sequence
+          minOccurs   NMTOKEN   #IMPLIED
+          maxOccurs   CDATA                  #IMPLIED
+          id          ID                     #IMPLIED
+          >
+
+<!-- an anonymous grouping in a model, or
+     a top-level named group definition, or a reference to same -->
+
+<!-- Note that if order is 'all', group is not allowed inside.
+     If order is 'all' THIS group must be alone (or referenced alone) at
+     the top level of a content model -->
+<!-- If order is 'all', minOccurs==maxOccurs==1 on element/any inside -->
+<!-- Should allow minOccurs=0 inside order='all' . . . -->
+
+<!ELEMENT xs:any (xs:annotation)?>
+<!ATTLIST xs:any
+            namespace       CDATA                  '##any'
+            processContents (skip|lax|strict)      'strict'
+            minOccurs       NMTOKEN   '1'
+            maxOccurs       CDATA                  '1'
+            id              ID                     #IMPLIED
+            >
+
+<!-- namespace is interpreted as follows:
+                  ##any      - - any non-conflicting WFXML at all
+
+                  ##other    - - any non-conflicting WFXML from namespace other
+                                  than targetNamespace
+
+                  ##local    - - any unqualified non-conflicting WFXML/attribute
+                  one or     - - any non-conflicting WFXML from
+                  more URI        the listed namespaces
+                  references
+
+                  ##targetNamespace ##local may appear in the above list,
+                    with the obvious meaning -->
+
+<!ELEMENT xs:anyAttribute (xs:annotation)?>
+<!ATTLIST xs:anyAttribute
+            namespace       CDATA              '##any'
+            processContents (skip|lax|strict)  'strict'
+            id              ID                 #IMPLIED
+            >
+<!-- namespace is interpreted as for 'any' above -->
+
+<!-- simpleType only if no type|ref attribute -->
+<!-- ref not allowed at top level, name iff at top level -->
+<!ELEMENT xs:attribute ((xs:annotation)?, (xs:simpleType)?)>
+<!ATTLIST xs:attribute
+          name      NMTOKEN      #IMPLIED
+          id        ID            #IMPLIED
+          ref       NMTOKEN       #IMPLIED
+          type      NMTOKEN       #IMPLIED
+          use       (prohibited|optional|required) #IMPLIED
+          default   CDATA         #IMPLIED
+          fixed     CDATA         #IMPLIED
+          form      (qualified|unqualified)  #IMPLIED
+          >
+<!-- type and ref are mutually exclusive.
+     name and ref are mutually exclusive, one is required -->
+<!-- default for use is optional when nested, none otherwise -->
+<!-- default and fixed are mutually exclusive -->
+<!-- type attr and simpleType content are mutually exclusive -->
+
+<!-- an attributeGroup is a named collection of attribute decls, or a
+     reference thereto -->
+<!ELEMENT xs:attributeGroup ((xs:annotation)?,
+                       (xs:attribute | xs:attributeGroup)*,
+                       (xs:anyAttribute)?) >
+<!ATTLIST xs:attributeGroup
+                 name       NMTOKEN       #IMPLIED
+                 id         ID             #IMPLIED
+                 ref        NMTOKEN        #IMPLIED
+                 >
+
+<!-- ref iff no content, no name.  ref iff not top level -->
+
+<!-- better reference mechanisms -->
+<!ELEMENT xs:unique ((xs:annotation)?, xs:selector, (xs:field)+)>
+<!ATTLIST xs:unique
+          name     NMTOKEN       #REQUIRED
+	  id       ID             #IMPLIED
+	  >
+
+<!ELEMENT xs:key    ((xs:annotation)?, xs:selector, (xs:field)+)>
+<!ATTLIST xs:key
+          name     NMTOKEN       #REQUIRED
+	  id       ID             #IMPLIED
+	  >
+
+<!ELEMENT xs:keyref ((xs:annotation)?, xs:selector, (xs:field)+)>
+<!ATTLIST xs:keyref
+          name     NMTOKEN       #REQUIRED
+	  refer    NMTOKEN        #REQUIRED
+	  id       ID             #IMPLIED
+	  >
+
+<!ELEMENT xs:selector ((xs:annotation)?)>
+<!ATTLIST xs:selector
+          xpath CDATA #REQUIRED
+          id    ID          #IMPLIED
+          >
+<!ELEMENT xs:field ((xs:annotation)?)>
+<!ATTLIST xs:field
+          xpath CDATA #REQUIRED
+          id    ID          #IMPLIED
+          >
+
+<!-- Schema combination mechanisms -->
+<!ELEMENT xs:include (xs:annotation)?>
+<!ATTLIST xs:include
+          schemaLocation CDATA #REQUIRED
+          id             ID       #IMPLIED
+          >
+
+<!ELEMENT xs:import (xs:annotation)?>
+<!ATTLIST xs:import
+          namespace      CDATA #IMPLIED
+          schemaLocation CDATA #IMPLIED
+          id             ID       #IMPLIED
+          >
+
+<!ELEMENT xs:redefine (xs:annotation | xs:simpleType | xs:complexType |
+                      xs:attributeGroup | xs:group)*>
+<!ATTLIST xs:redefine
+          schemaLocation CDATA #REQUIRED
+          id             ID       #IMPLIED
+          >
+
+<!ELEMENT xs:notation (xs:annotation)?>
+<!ATTLIST xs:notation
+	  name        NMTOKEN    #REQUIRED
+	  id          ID          #IMPLIED
+	  public      CDATA       #REQUIRED
+	  system      CDATA    #IMPLIED
+	  >
+
+<!-- Annotation is either application information or documentation -->
+<!-- By having these here they are available for datatypes as well
+     as all the structures elements -->
+
+<!ELEMENT xs:annotation (xs:appinfo | xs:documentation)*>
+<!ATTLIST xs:annotation >
+
+<!-- User must define annotation elements in internal subset for this
+     to work -->
+<!ELEMENT xs:appinfo (#PCDATA)*>   <!-- too restrictive --> <!-- (#PCDATA)* ersetzt ANY - ek. -->
+<!ATTLIST xs:appinfo
+          source     CDATA      #IMPLIED
+          id         ID         #IMPLIED
+          >
+<!ELEMENT xs:documentation (#PCDATA)*>   <!-- too restrictive --> <!-- (#PCDATA)* ersetzt ANY - ek. -->
+<!ATTLIST xs:documentation
+          source     CDATA   #IMPLIED
+          id         ID         #IMPLIED
+          xml:lang   CDATA      #IMPLIED
+          >
+
+]>
+<xmlSchema/>
+
+

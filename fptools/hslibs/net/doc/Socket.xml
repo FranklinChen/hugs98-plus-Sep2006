@@ -1,0 +1,15 @@
+<sect1 id="Socket">
+  <title><literal>Socket</literal>: The high-level networking interface</title>
+  <indexterm><primary>Socket</primary></indexterm>
+
+  <para>This module has moved to <ulink url="../libraries/network/Network.html"><literal>Network</literal></ulink>
+  (package <literal>network</literal>) in the hierarchical
+  libraries.</para>
+
+</sect1>
+
+<!-- Emacs stuff: 
+    ;;; Local Variables: ***
+    ;;; mode:.xml ***
+    ;;;.xml-parent-document: ("../../doc/hslibs.xml" "book" "chapter" "sect1") ***
+    ;;; End: *** -->

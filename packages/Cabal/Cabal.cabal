@@ -1,0 +1,58 @@
+Name: Cabal
+Version: 1.1.5.9.2
+Copyright: 2003-2006, Isaac Jones
+-- Util dependency removed.  This may break ghc 6.2 builds :( Will
+-- have to figure something out for ghc 6.2
+Build-Depends: base
+License: BSD3
+License-File: LICENSE
+Author: Isaac Jones <ijones@syntaxpolice.org>
+Maintainer: Isaac Jones <ijones@syntaxpolice.org>
+Homepage: http://www.haskell.org/cabal/
+Synopsis: A framework for packaging Haskell software
+Description:
+        The Haskell Common Architecture for Building Applications and
+        Libraries: a framework defining a common interface for authors to more
+        easily build their Haskell applications in a portable way.
+        .
+        The Haskell Cabal is meant to be a part of a larger infrastructure
+        for distributing, organizing, and cataloging Haskell libraries
+        and tools.
+Category: Distribution
+Exposed-Modules:
+        Distribution.Compat.ReadP,
+        Distribution.Compiler,
+        Distribution.Extension,
+        Distribution.InstalledPackageInfo,
+        Distribution.License,
+        Distribution.Make,
+        Distribution.Program,
+        Distribution.Package,
+        Distribution.PackageDescription,
+        Distribution.ParseUtils,
+        Distribution.PreProcess,
+        Distribution.PreProcess.Unlit,
+        Distribution.Setup,
+        Distribution.Simple,
+        Distribution.Simple.Build,
+        Distribution.Simple.Configure,
+        Distribution.Simple.GHC,
+        Distribution.Simple.GHCPackageConfig,
+        Distribution.Simple.Hugs,
+        Distribution.Simple.Install,
+        Distribution.Simple.JHC,
+        Distribution.Simple.LocalBuildInfo,
+        Distribution.Simple.NHC,
+        Distribution.Simple.Register,
+        Distribution.Simple.SrcDist,
+        Distribution.Simple.Utils,
+        Distribution.Version,
+	Language.Haskell.Extension
+Other-Modules:
+        Distribution.GetOpt,
+	Distribution.Compat.Map,
+        Distribution.Compat.Directory,
+        Distribution.Compat.Exception,
+        Distribution.Compat.FilePath,
+        Distribution.Compat.RawSystem
+Extensions: CPP

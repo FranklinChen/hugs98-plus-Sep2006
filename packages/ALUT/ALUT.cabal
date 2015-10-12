@@ -1,0 +1,35 @@
+name:		ALUT
+version:	2.0
+license:	BSD3
+license-file:	LICENSE
+maintainer:	Sven Panne <sven.panne@aedion.de>
+homepage:	http://www.openal.org/
+category:	Sound
+synopsis:	A binding for the OpenAL Utility Toolkit
+description:
+	A Haskell binding for the OpenAL Utility Toolkit, which makes
+	managing of OpenAL contexts, loading sounds in various formats
+	and creating waveforms very easy. For more information about the
+	C library on which this binding is based, please see:
+	<http://www.openal.org/openal_webstf/specs/alut.html>.
+extra-source-files:
+	config.guess config.sub install-sh
+	configure.ac configure config.mk.in ALUT.buildinfo.in
+	include/HsALUTConfig.h.in include/HsALUT.h.in
+extra-tmp-files:
+	config.log config.status autom4te.cache
+	config.mk ALUT.buildinfo include/HsALUTConfig.h include/HsALUT.h
+exposed-modules:
+	Sound.ALUT,
+	Sound.ALUT.Initialization,
+	Sound.ALUT.Loaders,
+	Sound.ALUT.Sleep,
+	Sound.ALUT.Version
+other-modules:
+	Sound.ALUT.Config,
+	Sound.ALUT.Constants,
+	Sound.ALUT.Errors
+include-dirs:	include
+install-includes: HsALUT.h
+build-depends:	base, OpenGL, OpenAL
+extensions:	CPP, ForeignFunctionInterface

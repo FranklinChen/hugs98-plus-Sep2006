@@ -1,0 +1,24 @@
+THISPKG	= haskell-src
+SEARCH	=
+EXTRA_H_FLAGS = -K6M
+# NOTE: 200M is ridiculous, but otherwise there is a segfault with CFG=p
+# for Language/Haskell/Parser.hs. More investigation is needed here...
+EXTRA_HBC_FLAGS = -H220M -A4M
+
+SRCS	= \
+	Language/Haskell/Lexer.hs Language/Haskell/ParseMonad.hs \
+	Language/Haskell/ParseUtils.hs Language/Haskell/Parser.hs \
+	Language/Haskell/Pretty.hs Language/Haskell/Syntax.hs
+
+
+# Here are the main rules.
+include ../Makefile.common
+
+# some extra rules
+Language/Haskell/Parser.hs: Language/Haskell/Parser.ly
+	happy $<
+
+# Here are any extra dependencies.
+
+# C-files dependencies.
+

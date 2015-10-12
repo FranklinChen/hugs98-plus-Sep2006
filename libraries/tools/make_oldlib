@@ -1,0 +1,310 @@
+#!/bin/sh
+
+# Compatibility with lib/exts:
+
+# This script generates:
+# $2/oldlib:
+#	compatibility stubs for old Hugs libraries
+#
+# Usage:
+#
+#   ./make_oldlib <fptools directory> <build directory>
+#
+# NOTE: This script expects to be run in the top-level hugs98 directory,
+# and contains paths relative to there.
+
+hs_src=$1/hslibs
+if [ ! -d $hs_src ]; then
+	echo "Can't find hslibs in directory '$1'" >&2
+	exit 1
+fi
+
+compat="$2/oldlib"
+
+# Create a compatibility stub for a Hugs extension module
+
+stub() {
+	case $# in
+	0)	echo "usage: stub module [module ...]" >&2
+		exit 1 ;;
+	esac
+
+	stub_module=$1
+	shift
+	echo "Stub $stub_module -> $*"
+	(
+		echo "module $stub_module("
+		for real
+		do	echo "	module $real,"
+		done
+		echo '    ) where'
+		echo
+		for real
+		do	echo "import $real"
+		done
+	) >$compat/$stub_module.hs
+}
+
+# Copy the Hugs version to the compatibility lib
+
+libexts() {
+	case $# in
+	1)	;;
+	*)	echo "usage: libexts module" >&2
+		exit 1 ;;
+	esac
+
+	name="`ls lib/exts/$1.*hs`"
+	echo "Copy `basename $name`"
+	sed 's/import Prelude/import Hugs.Prelude/' $name >$compat/`basename $name`
+}
+
+libhugs() {
+	case $# in
+	1)	;;
+	*)	echo "usage: libhugs module" >&2
+		exit 1 ;;
+	esac
+
+	name="`ls lib/hugs/$1.*hs`"
+	echo "Copy `basename $name`"
+	sed 's/import Prelude/import Hugs.Prelude/' $name >$compat/`basename $name`
+}
+
+# Convert the hslibs version to the compatibility lib
+
+hslibs() {
+	case $# in
+	2)	;;
+	*)	echo "usage: hslibs dir file" >&2
+		exit 1 ;;
+	esac
+
+	echo "Copy $2"
+	cp $hs_src/$1/$2 $compat/$2
+}
+
+mkdir -p $compat
+
+# Hugs-only modules
+
+  stub ConcBase		Hugs.ConcBase
+  stub Memo		Hugs.Memo	# hslibs module is different
+  stub Observe		Hugs.Observe	# hslibs module is different
+
+# Stuff from hslibs (many of these are stubs)
+
+  hslibs concurrent CVar.lhs		# superseded by MVars
+  hslibs concurrent Chan.lhs		# -> Control.Concurrent.Chan
+  hslibs concurrent Channel.lhs		# -> Control.Concurrent.Chan
+  hslibs concurrent ChannelVar.lhs	# superseded by MVars
+  hslibs concurrent Concurrent.lhs	# -> Control.Concurrent
+  hslibs concurrent MVar.lhs		# -> Control.Concurrent.MVar
+# hslibs concurrent Merge.lhs		# needs pre-emptive concurrency
+  hslibs concurrent Parallel.lhs	# -> Control.Parallel
+  hslibs concurrent QSem.lhs		# -> Control.Concurrent.QSem
+  hslibs concurrent QSemN.lhs		# -> Control.Concurrent.QSemN
+  hslibs concurrent SampleVar.lhs	# -> Control.Concurrent.SampleVar
+  hslibs concurrent Semaphore.lhs	# -> Control.Concurrent.QSem Control.Concurrent.QSemN
+# hslibs concurrent Strategies.lhs
+
+  cp $hs_src/data/edison/COPYRIGHT $compat/COPYRIGHT.edison
+  hslibs data/edison/Assoc Assoc.hs
+  hslibs data/edison/Assoc AssocDefaults.hs
+  hslibs data/edison/Assoc AssocList.hs
+  hslibs data/edison/Assoc PatriciaLoMap.hs
+  hslibs data/edison EdisonPrelude.hs
+  hslibs data/edison/Coll Collection.hs
+  hslibs data/edison/Coll CollectionDefaults.hs
+  hslibs data/edison/Coll CollectionUtils.hs
+  hslibs data/edison/Coll LazyPairingHeap.hs
+  hslibs data/edison/Coll LeftistHeap.hs
+  hslibs data/edison/Coll MinHeap.hs
+  hslibs data/edison/Coll SkewHeap.hs
+  hslibs data/edison/Coll SplayHeap.hs
+  hslibs data/edison/Coll TestOrdBag.hs
+  hslibs data/edison/Coll TestOrdSet.hs
+  hslibs data/edison/Coll UnbalancedSet.hs
+  hslibs data/edison/Seq BankersQueue.hs
+  hslibs data/edison/Seq BinaryRandList.hs
+  hslibs data/edison/Seq BraunSeq.hs
+  hslibs data/edison/Seq JoinList.hs
+  hslibs data/edison/Seq ListSeq.hs
+  hslibs data/edison/Seq MyersStack.hs
+  hslibs data/edison/Seq RandList.hs
+  hslibs data/edison/Seq RevSeq.hs
+  hslibs data/edison/Seq Sequence.hs
+  hslibs data/edison/Seq SequenceDefaults.hs
+  hslibs data/edison/Seq SimpleQueue.hs
+  hslibs data/edison/Seq SizedSeq.hs
+  hslibs data/edison/Seq TestSeq.hs
+
+  hslibs hssource HsLexer.hs		# -> Language.Haskell.Lexer
+  hslibs hssource HsParseMonad.hs	# -> Language.Haskell.ParseMonad
+  hslibs hssource HsParseUtils.hs	# -> Language.Haskell.ParseUtils
+  hslibs hssource HsParser.hs		# -> Language.Haskell.Parser
+  hslibs hssource HsPretty.hs		# -> Language.Haskell.Pretty
+  hslibs hssource HsSyn.hs		# -> Language.Haskell.Syntax
+
+# hslibs lang Addr.lhs			# deprecated
+ libexts Addr
+  hslibs lang ArrayBase.hs		# -> Data.Array.Base
+  hslibs lang Arrow.hs			# -> Control.Arrow
+# hslibs lang ByteArray.lhs		# deprecated
+# hslibs lang CTypesISO.hs		# uses C preprocessor
+  hslibs lang DiffArray.hs		# -> Data.Array.Diff
+# hslibs lang DirectoryExts.hs
+  hslibs lang Dynamic.hs		# -> Data.Dynamic
+  hslibs lang Exception.hs		# -> Control.Exception
+# hslibs lang ForeignObj.lhs		# deprecated
+ libexts ForeignObj			# uses Hugs primitives
+# hslibs lang Generics.hs		# -> Data.Generics
+# hslibs lang GlaExts.lhs		# deprecated
+  hslibs lang IArray.hs			# -> Data.Array.IArray
+# hslibs lang IOExts.hs
+  stub IOExts		Hugs.IOExts Hugs.IORef Hugs.IOArray System.IO.Unsafe Debug.Trace
+  hslibs lang IORef.hs			# -> Data.IORef
+# hslibs lang LazyST.hs
+  stub LazyST		Data.STRef.Lazy Control.Monad.ST.Lazy Hugs.LazyST
+# hslibs lang MArray.hs			# lots of GHC stuff (and obsolete)
+# hslibs lang MutableArray.lhs		# deprecated
+  hslibs lang NativeInfo.hs		# -> System.Info
+# hslibs lang NumExts.lhs		# uses C preprocessor
+  hslibs lang PackedString.lhs		# -> Data.PackedString
+# hslibs lang PrelByteArr.lhs		# GHC-specific
+# hslibs lang ST.hs			# GHC-specific
+  stub ST		Data.STRef.Strict Data.Array.ST Control.Monad.ST Hugs.ST
+  hslibs lang ShowFunctions.hs		# -> Text.Show.Functions
+  hslibs lang Stable.hs			# -> Foreign.StablePtr System.Mem.StableName
+  hslibs lang StableName.hs		# -> System.Mem.StableName
+  hslibs lang StorableArray.hs		# -> Data.Array.Storable
+# hslibs lang SystemExts.lhs		# GHC-specific
+# hslibs lang TimeExts.lhs
+  hslibs lang Weak.hs			# -> System.Mem.Weak
+
+  hslibs lang/monads MonadCont.lhs	# -> Control.Monad.Cont
+  hslibs lang/monads MonadEither.lhs	# -> Control.Monad.Error
+  hslibs lang/monads MonadError.lhs	# -> Control.Monad.Error
+  hslibs lang/monads MonadFix.lhs	# -> Control.Monad.Fix
+  hslibs lang/monads MonadIdentity.lhs	# -> Control.Monad.Identity
+  hslibs lang/monads MonadList.lhs	# -> Control.Monad.List
+  hslibs lang/monads MonadRWS.lhs	# -> Control.Monad.RWS
+  hslibs lang/monads MonadReader.lhs	# -> Control.Monad.Reader
+  hslibs lang/monads MonadState.lhs	# -> Control.Monad.State
+  hslibs lang/monads MonadTrans.lhs	# -> Control.Monad.Trans
+  hslibs lang/monads MonadWriter.lhs	# -> Control.Monad.Writer
+  hslibs lang/monads Monoid.lhs		# -> Data.Monoid
+
+  hslibs net BSD.hs			# -> Network.BSD
+  hslibs net CGI.lhs			# -> Network.CGI
+  hslibs net Socket.lhs			# -> Network.Socket
+  hslibs net SocketPrim.hs		# -> Network.Socket
+  hslibs net URI.hs			# -> Network.URI
+
+# hslibs posix DL.hs
+# hslibs posix DLPrim.hsc
+# hslibs posix POpen.hs
+# hslibs posix Posix.lhs
+  hslibs posix PosixDB.lhs
+# hslibs posix PosixErr.lhs
+  hslibs posix PosixFiles.lhs
+  hslibs posix PosixIO.lhs
+# hslibs posix PosixProcEnv.lhs		# uses C preprocessor
+# hslibs posix PosixProcPrim.lhs
+  hslibs posix PosixTTY.lhs
+# hslibs posix PosixUtil.lhs
+
+  hslibs text Pretty.lhs		# -> Text.PrettyPrint.HughesPJ
+  hslibs text RegexString.lhs		# -> Text.Regex
+
+  hslibs text/html Html.lhs		# -> Text.Html
+  hslibs text/html HtmlBlockTable.lhs	# -> Text.Html.BlockTable
+
+  hslibs text/parsec Parsec.hs		# -> Text.ParserCombinators.Parsec
+  hslibs text/parsec ParsecChar.hs	# -> Text.ParserCombinators.Parsec.Char
+  hslibs text/parsec ParsecCombinator.hs # -> Text.ParserCombinators.Parsec.Combinator
+  hslibs text/parsec ParsecError.hs	# -> Text.ParserCombinators.Parsec.Error
+  hslibs text/parsec ParsecExpr.hs	# -> Text.ParserCombinators.Parsec.Expr
+  hslibs text/parsec ParsecLanguage.hs	# -> Text.ParserCombinators.Parsec.Language
+  hslibs text/parsec ParsecPerm.hs	# -> Text.ParserCombinators.Parsec.Perm
+  hslibs text/parsec ParsecPos.hs	# -> Text.ParserCombinators.Parsec.Pos
+  hslibs text/parsec ParsecPrim.hs	# -> Text.ParserCombinators.Parsec.Prim
+  hslibs text/parsec ParsecToken.hs	# -> Text.ParserCombinators.Parsec.Token
+
+  hslibs util GetOpt.lhs		# -> System.Console.GetOpt
+# hslibs util Memo.lhs			# Hugs module is different
+# hslibs util Observe.lhs		# Hugs module is different
+# hslibs util Readline.hs		# -> System.Console.Readline
+# hslibs util Select.lhs
+  hslibs util Unique.lhs		# -> Data.Unique
+
+  hslibs util/check QuickCheck.hs	# -> Debug.QuickCheck
+# hslibs util/check QuickCheckBatch.hs	# -> Debug.QuickCheck.Batch
+  hslibs util/check QuickCheckPoly.hs	# -> Debug.QuickCheck.Poly
+  hslibs util/check QuickCheckUtils.hs	# -> Debug.QuickCheck.Utils
+
+# Compatibility with lib/hugs:
+
+  libhugs AnsiInteract
+  libhugs AnsiScreen
+     stub CVHAssert		Hugs.CVHAssert
+     stub GenericPrint		Hugs.GenericPrint
+     stub HugsInternals		Hugs.Internals
+  libhugs HugsLibs				# only useful for testing
+     stub IOExtensions		Hugs.IOExts
+  libhugs Interact
+  libhugs ListUtils
+  libhugs Number
+  libhugs ParseLib
+     stub Quote			Hugs.Quote	# only hugs supports here docs
+  libhugs StdLibs				# only useful for testing
+     stub Trace			Debug.Trace
+     stub Trex			Hugs.Trex	# only hugs supports Trex
+
+# Graphics library
+
+     stub SOEGraphics		Graphics.SOE
+     stub GraphicsCore		Graphics.HGL.Core
+     stub GraphicsUtils		Graphics.HGL
+
+# Win32 library
+
+case "$Win32" in
+Win32)
+
+     stub Win32			Graphics.Win32 System.Win32
+
+     stub GDITypes		Graphics.Win32.GDI.Types
+     stub Win32Bitmap		Graphics.Win32.GDI.Bitmap
+     stub Win32Brush		Graphics.Win32.GDI.Brush
+     stub Win32Clip		Graphics.Win32.GDI.Clip
+     stub Win32Font		Graphics.Win32.GDI.Font
+     stub Win32Graphics2D	Graphics.Win32.GDI.Graphics2D
+     stub Win32HDC		Graphics.Win32.GDI.HDC
+     stub Win32Palette		Graphics.Win32.GDI.Palette
+     stub Win32Path		Graphics.Win32.GDI.Path
+     stub Win32Pen		Graphics.Win32.GDI.Pen
+     stub Win32Region		Graphics.Win32.GDI.Region
+
+     stub Win32Control		Graphics.Win32.Control
+     stub Win32Dialogue		Graphics.Win32.Dialogue
+     stub Win32Icon		Graphics.Win32.Icon
+     stub Win32Key		Graphics.Win32.Key
+     stub Win32Menu		Graphics.Win32.Menu
+     stub Win32Misc		Graphics.Win32.Misc
+     stub Win32Resource		Graphics.Win32.Resource
+     stub Win32Window		Graphics.Win32.Window
+     stub Win32WinMessage	Graphics.Win32.Message
+
+     stub Win32DLL		System.Win32.DLL
+     stub Win32File		System.Win32.File
+     stub Win32MM		System.Win32.Mem
+     stub Win32NLS		System.Win32.NLS
+     stub Win32Process		System.Win32.Process
+     stub Win32Registry		System.Win32.Registry
+#    stub Win32Spawn
+     stub Win32SystemInfo	System.Win32.Info
+     stub Win32Types		System.Win32.Types
+
+     ;;
+esac

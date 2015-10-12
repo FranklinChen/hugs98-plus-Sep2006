@@ -1,0 +1,11 @@
+<?xml version='1.0' ?>
+<!DOCTYPE doc  [
+<!ENTITY example "<p>An ampersand may be escaped 
+numerically (&#38;#38;) or with a general entity
+(&amp;amp;).</p>">
+]>
+<doc
+  ><p
+    >An ampersand may be escaped 
+numerically (&#38;#38;) or with a general entity
+(&#38;amp;).</p></doc>

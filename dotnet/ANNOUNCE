@@ -1,0 +1,33 @@
+			   Hugs98 for .NET
+
+A new version of Hugs98 for .NET is now available, sporting the
+following:
+
+ * A version of the popular Haskell interpreter, 
+   Hugs98 (http://haskell.org/hugs), targetted at the Microsoft
+   .NET platform. 
+ * .NET interop integrated via the Haskell FFI.
+ * Support for wrapping up Haskell functions as .NET classes /
+   delegators, providing any .NET language with the ability
+   to call and use Haskell.
+
+The distribution comes with documentation and examples demonstrating
+how to access and interact with .NET -- all available via the
+Hugs98.NET homepage:
+
+		  http://galois.com/~sof/hugs98.net/
+
+Feedback, contributions, suggestions for improvements, bug reports etc. 
+are most welcome -- please e-mail these to the author: sof@galois.com
+
+-----------------------------------------------------------------------
+ The Hugs 98 system is Copyright (c) Mark P Jones, Alastair Reid, the
+ Yale Haskell Group, and the Oregon Graduate Institute of Science and
+ Technology, 1994-2003, All rights reserved.  It is distributed as
+ free software under the license in the file "License", which is
+ included in the distribution.
+
+ The .NET extension is Copyright (c) Sigbjorn Finne, 2002-2003, All 
+ rights reserved. It is distributed as free software under the license 
+ in the file "License.net", which is included in the distribution.
+-----------------------------------------------------------------------

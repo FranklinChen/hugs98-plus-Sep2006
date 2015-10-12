@@ -1,0 +1,8 @@
+
+<sect1 id="FiniteMap">
+<title>The <literal>FiniteMap</literal> type
+</title>
+
+  <para>This module has moved to <ulink url="../libraries/base/Data.FiniteMap.html"><literal>Data.FiniteMap</literal></ulink> in the
+  hierarchical libraries.</para>
+</sect1>

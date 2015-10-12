@@ -1,0 +1,109 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.K.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENG)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_UK
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+dlgInstall DIALOGEX 0, 0, 308, 193
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_CENTER | WS_POPUP | 
+    WS_CAPTION | WS_SYSMENU
+CAPTION "WinHugs Uninstaller"
+FONT 8, "MS Shell Dlg", 400, 0, 0x0
+BEGIN
+    CONTROL         "",barTop,"Static",SS_ETCHEDHORZ,0,33,313,1
+    LTEXT           "Do you want to uninstall WinHugs?\n\nIf you need to reinstall WinHugs, see http://www.haskell.org/hugs",
+                    lblWelcome,7,42,257,36
+    CONTROL         "Progress2",prgBar,"msctls_progress32",NOT WS_VISIBLE,7,
+                    54,294,12
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,-1,164,311,1
+    LTEXT           "Windows Uninstaller © Neil Mitchell 1999-2005",
+                    IDC_STATIC,7,176,163,10,WS_DISABLED
+    LTEXT           "Initialisating",lblMessage,7,42,294,9,NOT WS_VISIBLE
+    CONTROL         1003,IDC_STATIC,"Static",SS_BITMAP | SS_REALSIZEIMAGE,
+                    280,7,21,20
+    DEFPUSHBUTTON   "Uninstall",IDOK,251,172,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,191,172,50,14
+    LISTBOX         lstItems,7,54,294,95,LBS_NOINTEGRALHEIGHT | NOT 
+                    WS_VISIBLE | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Delete modified files?",chkDeleteModified,"Button",
+                    BS_AUTOCHECKBOX | NOT WS_VISIBLE | WS_TABSTOP,7,152,239,
+                    9
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// RT_MANIFEST
+//
+
+1                       RT_MANIFEST             "WinHugs-Uninstaller.manifest"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+bmpLogo                 BITMAP                  "logo.bmp"
+#endif    // English (U.K.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

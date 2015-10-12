@@ -1,0 +1,6 @@
+<!DOCTYPE doc [
+<!ENTITY   rights "All rights reserved" >
+<!ENTITY   book   "La Peste: Albert Camus,
+&#xA9; 1947; Editions Gallimard. &rights;" >
+]>
+<doc>&#40;&book;&#41;</doc>

@@ -1,0 +1,15 @@
+# install ghc >= 6.0
+# install HSX11 >= 1.00
+tar zxvf HSHGL-3.00.tar.gz
+cd HSHGL-3.00
+
+cd fptools
+./configure --with-greencard
+make
+cd ..
+
+make boot
+make all
+make install  # may require su root
+make -Cexamples
+

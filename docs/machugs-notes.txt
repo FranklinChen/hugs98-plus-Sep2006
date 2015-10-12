@@ -1,0 +1,18 @@
+Hugs 98 for MacOS
+=================
+
+The MacOS version of Hugs 98 can be configured by placing a file named 
+"Hugs Preferences" in the same same folder as the Hugs 98 application.
+This file may contain an arbitrary sequence of options and filenames,
+as they would have appeared on a Unix shell command line.
+
+Remember to adjust the overall memory allocation to Hugs 98 in the
+Finder if the heap size assignment is increased extensively.
+
+The following interpreter commands are not yet implemented:
+
+  :!  (shell escape)
+  :e  (editor escape)
+
+Please reports bugs to hugs-bugs@haskell.org.
+

@@ -1,0 +1,16 @@
+<!DOCTYPE doc [
+<!ELEMENT doc (#PCDATA)>
+<!ENTITY egbase "http://id.example.org/">
+<!ENTITY egns   "http://id.example.org/namespace">
+<!ENTITY egns1  "&egbase;namespace">
+<!ATTLIST doc eg:a1 CDATA "v1">
+<!ATTLIST doc eg:a2 CDATA "v2">
+]>
+
+<!-- Namespace06.xml: namespace decl uses entity ref with entity ref -->
+<eg:doc xmlns:eg="&egns1;">
+  <eg:inner eg:a2="a2">
+    <eg:deeper eg:a3="a3" />
+  </eg:inner>
+</eg:doc>
+

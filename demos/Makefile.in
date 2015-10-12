@@ -1,0 +1,38 @@
+# @configure_input@
+# Makefile (just install) for Hugs demo programs
+# (this should be a POSIX 1003.2-1992 Makefile)
+
+# These variables determine where various parts of the Hugs system are
+# installed.  (They are ignored in Windows or DOS.)
+# Binaries are installed in $(bindir); libraries go in $(hugsdir)/libraries
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
+bindir		= @bindir@
+libdir		= @libdir@
+datarootdir	= @datarootdir@
+datadir		= @datadir@
+mandir          = @mandir@
+hugsdir		= @hugsdir@
+
+RM		= @RM@
+
+INSTALL		= ../install-sh
+INSTALL_DATA	= /bin/cp
+
+all:
+
+install: all
+	$(INSTALL) -d $(DESTDIR)$(hugsdir)/demos
+	$(INSTALL) -d $(DESTDIR)$(hugsdir)/demos/prolog
+	$(INSTALL_DATA) ../demos/*.*           $(DESTDIR)$(hugsdir)/demos
+	$(INSTALL_DATA) ../demos/prolog/*.*    $(DESTDIR)$(hugsdir)/demos/prolog
+	$(INSTALL_DATA) ../demos/prolog/readme $(DESTDIR)$(hugsdir)/demos/prolog
+	$(INSTALL_DATA) ../demos/prolog/stdlib $(DESTDIR)$(hugsdir)/demos/prolog
+
+clean:
+	$(RM) *~
+
+distclean: clean
+	$(RM) Makefile
+
+veryclean: distclean

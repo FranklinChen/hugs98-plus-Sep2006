@@ -1,0 +1,35 @@
+name:		PACKAGE
+version:	VERSION
+license:	BSD3
+maintainer:	daan@cs.uu.nl
+exposed:	True
+
+exposed-modules:
+	Text.ParserCombinators.Parsec.Error,
+	Text.ParserCombinators.Parsec.Char,
+	Text.ParserCombinators.Parsec.Combinator,
+	Text.ParserCombinators.Parsec.Expr,
+	Text.ParserCombinators.Parsec.Language,
+	Text.ParserCombinators.Parsec.Perm,
+	Text.ParserCombinators.Parsec.Pos,
+	Text.ParserCombinators.Parsec.Prim,
+	Text.ParserCombinators.Parsec.Token,
+	Text.ParserCombinators.Parsec
+
+hidden-modules:
+
+import-dirs:	IMPORT_DIR
+library-dirs:	LIB_DIR
+hs-libraries:   "HSparsec"
+extra-libraries:
+
+include-dirs:
+includes:		
+depends:	base
+hugs-options:
+cc-options:
+ld-options:
+framework-dirs:
+frameworks:
+haddock-interfaces:	HADDOCK_IFACE
+haddock-html:		HTML_DIR

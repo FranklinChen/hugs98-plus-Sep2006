@@ -1,0 +1,55 @@
+name:		OpenAL
+version:	1.3
+license:	BSD3
+license-file:	LICENSE
+maintainer:	Sven Panne <sven.panne@aedion.de>
+category:	Sound
+synopsis:	A binding to the OpenAL cross-platform 3D audio API
+description:
+	A Haskell binding for the OpenAL cross-platform 3D audio API,
+	appropriate for use with gaming applications and many other
+	types of audio applications.  For more information about OpenAL,
+	please see: <http://www.openal.org/>.
+extra-source-files:
+	config.guess config.sub install-sh
+	configure.ac configure config.mk.in OpenAL.buildinfo.in
+	include/HsOpenALConfig.h.in include/HsOpenAL.h.in
+extra-tmp-files:
+	config.log config.status autom4te.cache
+	config.mk OpenAL.buildinfo include/HsOpenALConfig.h include/HsOpenAL.h
+exposed-modules:
+	Sound.OpenAL,
+	Sound.OpenAL.AL,
+	Sound.OpenAL.AL.ALboolean,
+	Sound.OpenAL.AL.Attenuation,
+	Sound.OpenAL.AL.BasicTypes,
+	Sound.OpenAL.AL.Buffer,
+	Sound.OpenAL.AL.BufferInternal,
+	Sound.OpenAL.AL.Doppler,
+	Sound.OpenAL.AL.Errors,
+	Sound.OpenAL.AL.Extensions,
+	Sound.OpenAL.AL.Format,
+	Sound.OpenAL.AL.Listener,
+	Sound.OpenAL.AL.Source,
+	Sound.OpenAL.AL.StringQueries,
+	Sound.OpenAL.ALC,
+	Sound.OpenAL.ALC.BasicTypes,
+	Sound.OpenAL.ALC.Capture,
+	Sound.OpenAL.ALC.Context,
+	Sound.OpenAL.ALC.Device,
+	Sound.OpenAL.ALC.Errors,
+	Sound.OpenAL.ALC.Extensions
+other-modules:
+	Sound.OpenAL.AL.PeekPoke,
+	Sound.OpenAL.AL.QueryUtils,
+	Sound.OpenAL.AL.SourceState,
+	Sound.OpenAL.AL.String,
+	Sound.OpenAL.ALC.ALCboolean,
+	Sound.OpenAL.ALC.QueryUtils,
+	Sound.OpenAL.ALC.String,
+	Sound.OpenAL.Config,
+	Sound.OpenAL.Constants
+include-dirs:	include
+install-includes: HsOpenAL.h
+build-depends:	base, OpenGL
+extensions:	CPP, ForeignFunctionInterface

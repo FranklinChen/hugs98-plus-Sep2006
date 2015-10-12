@@ -1,0 +1,725 @@
+\documentstyle[11pt]{article}
+
+% copied from the Haskore tutorial
+\textheight=8.5in
+\textwidth=6.5in
+\topmargin=-.3in
+\oddsidemargin=0in
+\evensidemargin=0in
+\parskip=6pt plus2pt minus2pt
+
+% and some of my own personal preferences
+\parindent=0in
+
+\newcommand{\var}[1]{{\tt #1\/}}    % variables
+\newcommand{\fun}[1]{{\tt #1\/}}    % functions
+\newcommand{\expr}[1]{{\tt #1\/}}   % expressions
+\newcommand{\type}[1]{{\tt #1\/}}   % types
+\newcommand{\class}[1]{{\tt #1\/}}  % classes
+\newcommand{\module}[1]{{\tt #1\/}} % modules
+
+\newcommand{\tva}{$\alpha$} % type variables
+\newcommand{\tvb}{$\beta $}
+\newcommand{\tvc}{$\gamma$}
+
+\newcommand{\arrow}{$\enspace\to\enspace$} % type constructors
+
+\newcommand{\Hugs}{{\bf Hugs\/}}
+\newcommand{\GHC}{{\bf GHC\/}}
+\newcommand{\Haskell}{{\bf Haskell\/}}
+
+\newcommand{\cexpr}[1]{{\tt #1\/}}   % C expressions
+\newcommand{\ctype}[1]{{\tt #1\/}}   % C types
+\newcommand{\cvar}[1]{{\tt #1\/}}    % C variables
+\newcommand{\cfun}[1]{{\tt #1\/}}    % C functions
+\newcommand{\cfile}[1]{{\tt #1\/}}   % C files (.c, .h, etc)
+
+\newenvironment{aside}{%
+  \medbreak
+  \noindent
+  {\bf Aside: }
+  \begingroup
+    \sl
+    \begin{indent}  % why doesn't this do what I expect?
+}{%
+    \end{indent}
+  \endgroup
+  \par
+  {\bf End aside.}
+  \medbreak
+}
+
+\newenvironment{note}{%
+  \medbreak
+  \noindent
+  {\bf Note: }
+  \begingroup
+    \sl
+    \begin{indent}  % why doesn't this do what I expect?
+}{%
+    \end{indent}
+  \endgroup
+  \par
+  {\bf End note.}
+  \medbreak
+}
+
+\newcommand{\Portability}[1]{\par{{\bf Portability Note:} \sl #1}\par}
+\newcommand{\Warning}[1]{\par{{\bf Warning:} \sl #1}\par}
+
+% These are used for reminders, communication between authors, etc.
+% There should be no calls to these guys in the final document.
+
+\newcommand{\HeyPaul}[1]{\par{{\bf Hey Paul:} \sl #1}\par}
+\newcommand{\ToDo}[1]{\par{{\bf ToDo:} \sl #1}\par}
+
+\newenvironment{outline}{%
+  \medbreak
+  \noindent
+  {\bf Outline: }
+  \begingroup
+    \nobreak
+    \sl
+}{%
+  \endgroup
+  \nobreak
+  {\bf End outline.}
+  \medbreak
+}
+
+% Here's how you create figures
+%
+% \begin{figure*}
+% \centerline{
+% Foo
+% }
+% \caption{...}
+% \label{...}
+% \end{figure*}
+
+\begin{document}
+
+\title{%
+  Using \Hugs{} as a ``Haskell server''
+}
+
+\author{Alastair Reid\\
+Reid Consulting (UK) Limited\\
+{\tt alastair@reid-consulting-uk.ltd.uk}\\
+{\tt http://www.reid-consulting-uk.ltd.uk/alastair/}}
+
+\date{22 June, 2002}
+
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}\label{introduction}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+[Warning: the Haskell server is still under development - you should
+ expect to see changes in the server API from one release of \Hugs{} to
+ the next.]
+
+\Hugs{} is normally used as an interactive program.  However, there are
+situations in which you want to use \Hugs{} as a non-interactive system.
+Examples include:
+
+\begin{itemize}
+\item
+ writing shell scripts in Haskell
+\item
+ writing cgi scripts in Haskell
+\item
+ writing Netscape plugins to let you embed Haskell code in HTML documents
+ (the same way that you might use Javascript or Java)
+\end{itemize}
+
+For these purposes, we provide a "\Hugs{} Server API" which provides
+access to some of \Hugs{}' innards:
+
+\begin{itemize}
+\item
+ loading/compiling files
+\item
+ compiling expressions
+\item
+ constructing and evaluating ``Graphs''
+\end{itemize}
+
+This is not enough to implement the \Hugs{} user interface, but it's good
+enough for all the applications listed above.  (We've done all three.)
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Example}\label{example}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Here's a complete example of how to use the \Hugs{} server.  This 
+is a simplified version of the ``runhugs'' program which loads a 
+file, executes \fun{Main.main} and returns the resulting exit code.
+(We've left out all error handling to keep things simple in this
+version.)
+
+\begin{verbatim}
+ 1> #include "server.h"
+ 2> extern HugsServerAPI* initHugsServer Args((int,char**));
+ 3> 
+ 4> static char* hugs_argv[] = {
+ 5> 	"runhugs",   /* program name */
+ 6> 	"+l"         /* literate scripts as default */
+ 7> };
+ 8> static int hugs_argc = sizeof hugs_argv / sizeof hugs_argv[0];
+ 9> 
+10> main( int argc, char** argv) 
+11> {  
+12>   HugsServerAPI* hugs = initHugsServer(hugs_argc,hugs_argv);     
+13>   hugs->setOutputEnable(0);                                      
+14>   argc--; argv++;                                                
+15>   hugs->setHugsArgs(argc,argv);                                  
+16>   hugs->loadFile(argv[0]);                                       
+17>   hugs->lookupName("Main","main");                               
+18>   exit(hugs->doIO());
+19> }             
+\end{verbatim}  
+
+Here's what each line does:
+
+\begin{description}
+\item[1-2] 
+  Include the server API (included in appendix~\ref{server.c})
+\item[4-8]
+  Declare command line arguments used when initialising the server.
+  These should consist of the program name (\cexpr{argv[0]}) and
+  a list of flags.  Unlike \Hugs{} you should not include files
+  to load.
+\item[12]
+  Initialise the server.  This returns a ``virtual function table''
+  which is used to access all other functions in the server API.
+  (This is described in section~\ref{initHugs}.)
+\item[13]
+  Turn off output from the compiler. This does not affect output
+  produced by running Haskell code.
+\item[14]
+  Forget the first argument on the command line.  On a Unix system,
+  this will be the name of the above C program.
+\item[15]
+  Set the values seen by the Haskell functions \fun{System.getProgName}
+  and \fun{System.getArgs}.
+\item[16]
+  Load and compile the file named on the command line.
+\item[17-18]
+  Lookup the Haskell function \fun{Main.main} (which should be defined
+  in the file we just loaded and should have type \type{IO ()}).
+  The value returned is used as an exit code.
+\end{description}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Initialising the server}\label{initHugs}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The ``Hugs server'' is initialised by calling \cfun{initHugsServer}
+
+\begin{verbatim}
+> HugsServerAPI* initHugsServer(
+>   Int    argc,
+>   String argv[]   /* command line flags (-P, etc) */
+>   );
+\end{verbatim}
+
+This loads the standard Prelude and the dynamic typing library (see
+section~\ref{dynamic}) and processes any command line flags in argv.
+
+If initialisation succeeds, it returns a ``virtual function table''
+containing all the other server functions you can call.  That is it
+returns a non-null pointer to a struct of type \ctype{HugsServerAPI}.
+We'll go through these in detail in the rest of the document --- but
+here's the complete list:
+
+\begin{verbatim}
+> typedef struct _HugsServerAPI {
+>     char* (*clearError     ) (void);
+>     void  (*setHugsArgs    ) (int, char**);
+>     int   (*getNumScripts  ) (void);
+>     void  (*reset          ) (int);
+>     void  (*setOutputEnable) (unsigned);
+>     void  (*changeDir      ) (char*);
+>     void  (*loadProject    ) (char*);     /* obsolete */
+>     void  (*loadFile       ) (char*);
+>     HVal  (*compileExpr    ) (char*,char*);
+> 			       
+>     void  (*lookupName     ) (char*,char*); /* push values onto stack*/
+>     void  (*mkInt          ) (int);
+>     void  (*mkString       ) (char*);
+> 			       
+>     void  (*apply          ) (void);      /* manipulate top of stack */
+> 			       
+>     int   (*evalInt        ) (void);      /* evaluate top of stack   */
+>     char* (*evalString     ) (void);
+>     int   (*doIO           ) (void);
+> 			       
+>     HVal  (*popHVal        ) (void);      /* pop stack               */
+>     void  (*pushHVal       ) (HVal);      /* push back onto stack    */
+>     void  (*freeHVal       ) (HVal); 
+> } HugsServerAPI;
+\end{verbatim}
+
+In the rest of this document, we'll assume that you've put a pointer
+to the ``virtual function table'' in a variable called \cvar{hugs} and
+we'll write things like this
+
+\begin{verbatim}
+> void  hugs->loadFile    (char*);
+\end{verbatim}
+
+to indicate the type of \cfun{hugs->loadFile}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Loading files}\label{loading files}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Loading files is easy enough.  Simply call
+\cexpr{hugs->loadFile(<name>)}.
+
+\begin{verbatim}
+> void  hugs->loadFile    (char*);
+\end{verbatim}
+
+Some programs need to be able to ``unload'' (or ``forget'') some of
+the Haskell files that have been loaded.  \Hugs{} maintains a
+``stack'' of all files it has loaded.  To unload some files, it pops
+files off the stack.  The server API provides two functions for
+modifying the stack of files: \cfun{getNumScripts} tells you how large
+the stack is; and \cfun{reset} sets the stack to the required size.
+
+\begin{verbatim}
+> int   hugs->getNumScripts (void);
+> void  hugs->reset         (int);
+\end{verbatim}
+
+Typically, one writes code like this to load and execute functions
+from a sequence of files.  Note that the standard Prelude and 
+the module \module{MyLibraries} is only loaded once.
+
+\begin{verbatim}
+> HugsServerAPI* hugs = initHugsServer(hugs_argc,hugs_argv);
+> hugs->loadFile("MyLibraries");
+> int baseLevel = hugs->getNumScripts();
+> for(int i = 1; i < argc; ++i) {
+>   hugs->reset(baseLevel);
+>   hugs->loadFile(argv[i]);                                       
+>   hugs->lookupName("Main","main");                               
+>   hugs->doIO();
+> }
+\end{verbatim}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Executing Expressions}\label{evaluating}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+In section~\ref{example} we used \cfun{lookupName} to lookup
+\cexpr{"Main.main"} and \cfun{doIO} to execute it.  As you've probably
+guessed, \cfun{lookupName} leaves a ``pointer'' to \fun{Main.main} on
+the stack and \cfun{doIO} evaluates the object found on top of the stack.
+Here are some of the other operations which operate on the stack:
+
+\begin{verbatim}
+> void  hugs->mkInt       (int);
+> int   hugs->evalInt     (void);     
+> 
+> void  hugs->mkString    (char*);
+> char* hugs->evalString  (void);	 
+> 
+> void  hugs->apply       (void);     
+> 
+> void  hugs->lookupName  (char*,char*);
+> int   hugs->doIO        (void);	 
+\end{verbatim}
+
+The new functions are as follows:
+
+\begin{itemize}
+\item
+  \cfun{mkInt} pushes (a representation of) an \ctype{int} onto
+  the stack.
+  \cfun{evalInt} evaluates the \type{Int} on top of the stack.
+
+\item
+  Similarily, \cfun{mkString} pushes (a representation of) a
+  C string onto the stack and
+  \cfun{evalString} evaluates the \type{String} on top of the stack.
+
+\item
+  \cfun{apply} pops an argument and a function off the stack (in that
+  order) and applies the function to the argument.  A typical usage
+  is
+\begin{verbatim}
+> hugs->lookupName("Foo","ackerman");
+> hugs->mkInt(4);
+> hugs->apply();
+> hugs->mkInt(2);
+> hugs->apply();
+\end{verbatim}
+
+  Alternatively, you might define this macro
+\begin{verbatim}
+> #define ap(f,x) f; x; hugs->apply();
+\end{verbatim}
+  and write this
+\begin{verbatim}
+> ap(ap( hugs->lookupName("Foo","factorial")
+>      , hugs->mkInt(4))
+>      , hugs->mkInt(2));
+\end{verbatim}
+
+\end{itemize}
+
+\ToDo{%
+  The server API currently provides no way to push floats, chars, etc onto
+  the stack.  There's no real problem in adding this, but we haven't
+  needed it yet.%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Haskell Values}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+It's sometimes useful to be able to store the result of a calculation
+for later use.  These operations allow you to pop Haskell Values
+off the stack, store them and later push them back onto the stack.
+
+\begin{verbatim}
+> HVal  hugs->popHVal     (void);     
+> void  hugs->pushHVal    (HVal);     
+> void  hugs->freeHVal    (HVal); 
+\end{verbatim}
+
+``Haskell Values'' remain valid if you load additional Haskell files
+and if you evaluate expressions but are invalidated by calling
+\cfun{reset}. 
+
+\Warning{%
+  No check is performed to detect the use of invalid values; the
+  result is likely to be messy.%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Compiling Expressions}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The functions described in section~\ref{evaluating} let you evaluate
+almost any Haskell expression but are rather painful to use.  This
+version of the server provides a much more convenient function which
+lets you compile arbitrary Haskell expressions.
+
+\begin{verbatim}
+> HVal  hugs->compileExpr (char*,char*);
+\end{verbatim}
+
+The function \cfun{compileExpr} takes two arguments.  The first
+argument is the name of the module in which to evaluate the
+expression.  The choice of module determines which functions are in
+scope.  The second argument is the expression itself.
+
+\Portability{%
+  The current version of the server includes the full \Hugs{} compiler
+  so that we can load the Prelude and other libraries.  Since the
+  compiler is included in the server, it is both cheap and easy to 
+  provide \cfun{compileExpr}.  In future versions of the server, we'd
+  like to be able to load precompiled versions of the Prelude and 
+  libraries and omit most of the \Hugs{} compiler.  In such a system,
+  we would also omit \cfun{compileExpr} since it is possible to do
+  most of what \cfun{compileExpr} does using \cfun{lookupName} and
+  \cfun{apply}.%
+}
+
+\ToDo{%
+  \cfun{compileExpr} really ought to leave its result on the stack.%
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Dynamic Types}\label{dynamic} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The evaluation mechanisms described above make it very easy to
+construct and attempt to evaluate ill-typed objects.  To avert
+catastrophe, the server typechecks every function application.
+The mechanisms used to perform this typecheck are not as flexible
+as the Haskell type system for two reasons:
+
+\begin{itemize}
+\item
+  Typechecking is restricted to a small set of base types and
+  type constructors.  If you need to use other types, you'll need
+  to define new instances of the \class{Typeable} class.  Use the
+  instances in appendix~\ref{dynamic-defn} as examples of how to write
+  your own instances.
+  
+\item
+  Typechecking is restricted to {\em monomorphic\/} values.  Looking
+  up a polymorphic function will always result in an error.  There 
+  are two solutions:
+\begin{itemize}
+\item
+  Add monomorphic instances of the functions to your code.  For example,
+  if you need to use \fun{Prelude.length} at 3 different types, you 
+  might write a module containing these definitions
+\begin{verbatim}
+> length_Int :: [Int] -> Int
+> length_Int = length
+> 
+> length_Ints :: [[Int]] -> Int
+> length_Ints = length
+\end{verbatim}
+
+\item
+  Use \cfun{compileExpr} to lookup the values at different types
+\begin{verbatim}
+> HVal length_Int  = hugs->compileExpr("Prelude","length :: [Int] -> Int");
+> HVal length_Ints = hugs->compileExpr("Prelude","length :: [[Int]] -> Int");
+\end{verbatim}
+
+\end{itemize}
+In practice, both are equally irritating.
+
+\end{itemize}
+
+\ToDo{%
+  If we remove \cfun{compileExpr} we should probably improve the dynamic
+  typing.%
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Handling Errors}\label{errors}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+So far, we have assumed that errors almost never occur.  In practice
+error-free execution is the exception rather than the rule: the
+standard prelude can't be found; filenames are wrong; programs contain
+syntax and type errors; modules don't define what they're supposed to;
+people look up polymorphic functions; Haskell code returns errors;
+etc.
+
+The \Hugs{} server is fairly robust: it tries to catch any errors and
+will not perform any further actions until the error is resolved.
+The function \cfun{clearError} is used to detect whether an error
+has occurred (since the last time \cfun{clearError} was called); to 
+obtain any compiler output associated with the error; and to reset 
+an ``error flag''.  
+
+\begin{verbatim}
+> char* hugs->clearError (void);
+\end{verbatim}
+
+All other functions in the server API return immediately if the error
+flag is set --- this encourages programmers to call \cfun{clearError}
+frequently and prevents the server from being totally corrupted if
+\cfun{clearError} is not used.
+
+The output returned by \cfun{clearError} depends on whether or not
+compiler output has been redirected to a buffer using the function
+\cfun{setOutputEnable}
+
+\begin{verbatim}
+> void hugs->setOutputEnable (unsigned);
+\end{verbatim}
+
+If compiler output has not been redirected, \cfun{clearError} produces
+a brief error message.  If compiler output has not been redirected,
+then \cfun{clearError} produces an error message followed by all the
+output that has been collected since the last time \cfun{clearError}
+was called.
+
+Using these features, it's possible to write a more robust version of
+the runhugs program given in section~\ref{example}.
+
+\begin{verbatim}
+> static void check() {
+>   char* err = hugs->clearError();
+>   if (err) {
+>     fprintf(stderr,"Hugs Error:\n%s\n",err);
+>     fflush(stderr);
+>     exit(1);
+>   }
+> }
+> 
+> main( int argc, char** argv) 
+> {  
+>   int exitCode;
+>   HugsServerAPI* hugs = initHugsServer(hugs_argc,hugs_argv);     
+>   if (NULL == hugs) {
+>     fprintf(stderr,"Unable to initialise Hugs\n");
+>     fflush(stderr);
+>     exit(1);
+>   }
+>   hugs->setOutputEnable(0);                                      
+>   check();
+>   argc--; argv++;                                                
+>   hugs->setHugsArgs(argc,argv);                                  
+>   if (argc < 1) {
+>     fprintf(stderr,"hugs standalone requires at least one argument\n");
+>     fflush(stderr);
+>     exit(1);
+>   }
+>   hugs->loadFile(argv[0]);                                       
+>   check();
+>   hugs->lookupName("Main","main");                               
+>   exitCode = hugs->doIO();
+>   check();
+>   exit(exitCode);
+> }    
+\end{verbatim}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\appendix
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{\cfile{server.h}}\label{server.c}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+This is the current contents of the file \cfile{server.h}.  This is
+the only file you need to include into programs that use the server.
+
+\begin{verbatim}
+/* --------------------------------------------------------------------------
+ * Definition of the Hugs server API
+ *
+ * The Hugs 98 system is Copyright (c) Mark P Jones, Alastair Reid, the
+ * Yale Haskell Group, and the OGI School of Science & Engineering at OHSU,
+ * 1994-2003, All rights reserved.  It is distributed as free software under
+ * the license in the file "License", which is included in the distribution.
+ *
+ * ------------------------------------------------------------------------*/
+
+#ifndef Args
+# if HAVE_PROTOTYPES
+#  define Args(x) x
+# else
+#  define Args(x) ()
+# endif
+#endif /* !defined Args */
+
+typedef int HVal;     /* Haskell values are represented by stable pointers */
+
+typedef struct _HugsServerAPI {
+    char* (*clearError     ) Args((void));
+    void  (*setHugsArgs    ) Args((int, char**));
+    int   (*getNumScripts  ) Args((void));
+    void  (*reset          ) Args((int));
+    void  (*setOutputEnable) Args((unsigned));
+    void  (*changeDir      ) Args((char*));
+    void  (*loadProject    ) Args((char*));     /* obsolete */
+    void  (*loadFile       ) Args((char*));
+    HVal  (*compileExpr    ) Args((char*,char*));
+
+    void  (*lookupName     ) Args((char*,char*)); /* push values onto stack*/
+    void  (*mkInt          ) Args((int));
+    void  (*mkString       ) Args((char*));
+
+    void  (*apply          ) Args((void));      /* manipulate top of stack */
+
+    int   (*evalInt        ) Args((void));      /* evaluate top of stack   */
+    char* (*evalString     ) Args((void));
+    int   (*doIO           ) Args((void));
+
+    HVal  (*popHVal        ) Args((void));      /* pop stack               */
+    void  (*pushHVal       ) Args((HVal));      /* push back onto stack    */
+    void  (*freeHVal       ) Args((HVal)); 
+} HugsServerAPI;
+
+/* type of "initHugsServer" function */
+typedef HugsServerAPI *(*HugsServerInitFun) Args((int, char**));
+
+/* ------------------------------------------------------------------------*/
+
+\end{verbatim}
+
+
+\section{The \module{Dynamic} module}\label{dynamic-defn}
+
+\begin{verbatim}
+module Dynamic
+   ( Typeable(typeOf),
+   , Dynamic, toDynamic, fromDynamic, dynApply,
+   , fromDyn, dynApp,                          
+   , intToDyn, fromDynInt, strToDyn, fromDynStr,
+   , Tycon(..), Type(..)
+   ) where
+
+----------------------------------------------------------------
+-- Dynamics
+----------------------------------------------------------------
+
+data Dynamic = ...
+
+-- The core functions
+toDynamic   :: Typeable a => a -> Dynamic
+fromDynamic :: Typeable a => Dynamic -> Maybe a
+dynApply    :: Dynamic -> Dynamic -> Maybe Dynamic
+
+-- special cases
+fromDyn     :: Typeable a => Dynamic -> a
+intToDyn    :: Int    -> Dynamic
+strToDyn    :: String -> Dynamic
+fromDynInt  :: Dynamic -> Int
+fromDynStr  :: Dynamic -> String
+runDyn      :: Dynamic -> IO ()
+dynApp      :: Dynamic -> Dynamic -> Dynamic
+
+----------------------------------------------------------------
+-- Types
+----------------------------------------------------------------
+
+data Tycon = Tycon String     deriving Eq
+data Type  = App Tycon [Type] deriving Eq
+
+unitTC    = Tycon "()"
+intTC     = Tycon "Int"
+integerTC = Tycon "Integer"
+floatTC   = Tycon "Float"
+doubleTC  = Tycon "Double"
+charTC    = Tycon "Char"
+ioTC      = Tycon "IO"
+funTC     = Tycon "->"
+listTC    = Tycon "[]"
+tup2TC    = Tycon "(,)"
+
+class Typeable a where typeOf :: a -> Type
+
+-- Constant Tycons are easy
+
+instance Typeable ()      where typeOf x = App unitTC    []
+instance Typeable Int     where typeOf x = App intTC     []
+instance Typeable Integer where typeOf x = App integerTC []
+instance Typeable Float   where typeOf x = App floatTC   []
+instance Typeable Double  where typeOf x = App doubleTC  []
+instance Typeable Char    where typeOf x = App charTC    []
+
+-- Non-constant Tycons require sneakiness
+
+instance Typeable a => Typeable (IO a) where 
+  typeOf m = 
+    case unsafePerformIO m of { r ->
+    App ioTC  [typeOf r]
+    }
+
+instance (Typeable a, Typeable b) => Typeable (a -> b) where
+  typeOf f = 
+    -- We use case to bind arg and result to avoid excess polymorphism
+    case undefined of { arg ->
+    case f arg     of { result ->
+    App funTC [typeOf arg, typeOf result]
+    }}
+
+instance Typeable a => Typeable [a] where
+  typeOf xs = App listTC [typeOf (head xs)]
+
+instance (Typeable a, Typeable b) => Typeable (a,b) where
+  typeOf p = App tup2TC [typeOf (fst p), typeOf (snd p)]
+\end{verbatim}
+
+\end{document}

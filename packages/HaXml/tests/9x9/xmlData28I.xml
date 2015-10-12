@@ -1,0 +1,14 @@
+<?xml version='1.0' ?>
+<!DOCTYPE test  [
+<!ELEMENT test (#PCDATA|inner)* >
+<!ELEMENT inner (#PCDATA) >
+<!ENTITY t1 "t2=&t2;...">
+<!ENTITY t2 "t3=&t3;...">
+<!ENTITY t3 "t1=&t1;...">
+]>
+<!-- Recursive entity substitution in text -->
+<test>
+  <inner>
+  Some text: &t3;.
+  </inner>
+</test>

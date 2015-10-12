@@ -1,0 +1,166 @@
+<!-- GDXL (0.1) Document Type Definition April 3rd, 2002 
+
+  copyright by 
+    ralf welter
+    department of computer science iii
+    university of technology, aachen
+    52072 Aachen
+    welter@i3.informatik.rwth-aachen.de
+    
+-->
+
+<!ELEMENT gdxl (sequencematch*, graphdelta*, xlinkdelta?) >
+<!ATTLIST gdxl
+    sourcedoc CDATA	#IMPLIED
+    targetdoc CDATA	#IMPLIED
+>
+
+<!ELEMENT typedelta (xlinkdelta?, hrefdelta?)>
+
+<!ELEMENT xlinkdelta EMPTY>
+<!ATTLIST xlinkdelta
+    oldxlink CDATA #REQUIRED
+    newxlink CDATA #REQUIRED
+>
+<!ELEMENT hrefdelta EMPTY>
+<!ATTLIST hrefdelta
+    hrefmode (absolute | local | relative) #REQUIRED
+    newlink  CDATA #REQUIRED
+    oldlink  CDATA #REQUIRED
+>
+
+<!ELEMENT sequencematch EMPTY>
+<!ATTLIST sequencematch 
+    length	CDATA "1"
+    oldstart	CDATA #REQUIRED
+    newstart	CDATA #REQUIRED
+>
+
+<!ELEMENT graphdelta (typedelta?, attributedelta, 
+                        nodedelta*, edgedelta*, reldelta*, 
+                        iddelta?, roledelta?, (booldelta | skip), booldelta?,
+                        edgemodedelta?)>
+
+<!ELEMENT iddelta EMPTY>
+<!ATTLIST iddelta
+    oldid	ID	#REQUIRED
+    newid	ID	#REQUIRED
+>
+
+<!ELEMENT roledelta EMPTY>
+<!ATTLIST roledelta
+    oldrole	NMTOKEN	#REQUIRED
+    newrole	NMTOKEN	#REQUIRED
+>
+
+<!ELEMENT booldelta EMPTY>
+<!ATTLIST booldelta
+    oldbool	( true | false ) #REQUIRED
+    newbool	( true | false ) #REQUIRED
+>
+<!ELEMENT skip EMPTY>
+
+<!ELEMENT edgemodedelta EMPTY>
+<!ATTLIST edgemodedelta
+    oldem	( directed | undirected | 
+                    defaultdirected | defaultundirected) #REQUIRED
+    newem	( directed | undirected | 
+                    defaultdirected | defaultundirected) #REQUIRED
+>
+
+<!ELEMENT nodedelta (typedelta?, attributedelta, sequencematch*, graphdelta*, iddelta?)>
+
+<!ELEMENT edgedelta (typedelta?, attributedelta, sequencematch*, graphdelta*
+                        , iddelta?, (iddelta | skip), iddelta?
+                        , (orderingdelta | skip), orderingdelta?
+                        , booldelta?)
+>
+
+<!ELEMENT orderingdelta EMPTY>
+<!ATTLIST orderingdelta
+    oldorder CDATA #REQUIRED
+    neworder CDATA #REQUIRED
+>
+
+<!ELEMENT reldelta (typedelta?, attributedelta, (sequencematch*, (graphdelta* | skip))
+                        , sequencematch*, relenddelta*
+                        , iddelta?, booldelta?
+                        )
+>
+
+<!ELEMENT relenddelta (attributedelta, iddelta?, roledelta?, directiondelta?
+                        , (orderingdelta | skip), orderingdelta?)
+>
+<!ELEMENT directiondelta EMPTY>
+<!ATTLIST directiondelta
+    olddirection (in | out | none) #IMPLIED
+    newdirection (in | out | none) #IMPLIED
+>
+
+
+<!ELEMENT attributedelta (reduce | change | extend)*>
+
+<!ELEMENT reduce attrdelta*>
+<!ATTLIST reduce
+    newname	NMTOKEN #IMPLIED
+>
+
+<!ELEMENT extend attrdelta*>
+<!ATTLIST extend
+    oldname	NMTOKEN #IMPLIED
+>
+
+<!ELEMENT attrdelta (typedelta?, attributedelta?, iddelta?, kinddelta?, valuedelta?)>
+<!ATTLIST attrdelta
+    name	NMTOKEN	#REQUIRED
+>
+
+<!ELEMENT change (namedelta?, typedelta?, attributedelta?, iddelta?, kinddelta?, valuedelta?)>
+<!ELEMENT kinddelta EMPTY>
+<!ATTLIST kinddelta 
+    oldkind	NMTOKEN #IMPLIED
+    newkind	NMTOKEN #IMPLIED
+>
+
+<!ELEMENT valuedelta (newvalue | locdelta 
+                        | booldelta | intdelta | floatdelta | stringdelta 
+                        | altdelta | graphdelta)
+>
+<!ELEMENT newvalue (value, value)>
+<!ELEMENT value (locdelta | booldelta | intdelta | floatdelta | stringdelta 
+                        | altdelta | graphdelta)
+>
+<!ELEMENT locdelta (typedelta?, hrefdelta?)>
+<!ELEMENT intdelta EMPTY>
+<!ATTLIST intdelta
+    oldint CDATA #REQUIRED
+    newint CDATA #REQUIRED
+>
+<!ELEMENT floatdelta EMPTY>
+<!ATTLIST floatdelta
+    oldfloat CDATA #REQUIRED
+    newfloat CDATA #REQUIRED
+>
+<!ELEMENT stringdelta EMPTY>
+<!ATTLIST stringdelta
+    oldstring CDATA #REQUIRED
+    newstring CDATA #REQUIRED
+>
+<!ELEMENT namedelta EMPTY>
+<!ATTLIST namedelta
+    oldname CDATA #REQUIRED
+    newname CDATA #REQUIRED
+>
+
+<!ELEMENT altdelta (altchange?, sequencematch*, (valuedelta | accumdelta)*)>
+
+<!ELEMENT altchange EMPTY >
+<!ATTLIST altchange
+    oldalt	NMTOKEN #REQUIRED
+    newalt	NMTOKEN #REQUIRED
+>
+
+<!ELEMENT accumdelta (sequencematch*, valuedelta*)>
+<!ATTLIST accumdelta 
+    accumkind	(unch | seq2set | seq2bag | set2seq | set2bag | bag2seq | bag2set) "unch"
+>

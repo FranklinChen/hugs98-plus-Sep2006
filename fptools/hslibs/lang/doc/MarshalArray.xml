@@ -1,0 +1,11 @@
+<sect1 id="sec-MarshalArray">
+  <title><literal>MarshalArray</literal></title>
+  <indexterm><primary><literal>MarshalArray</literal></primary></indexterm>
+
+  <para>This module has moved to <ulink url="../libraries/base/Foreign.Marshal.Array.html"><literal>Foreign.Marshal.Array</literal></ulink> in the
+  hierarchical libraries.</para>
+</sect1>
+
+<!-- Emacs stuff: ;;; Local Variables: *** ;;; mode:.xml *** ;;;
+sgml-parent-document: ("../../doc/hslibs.xml" "book" "chapter"
+"sect1") *** ;;; End: *** -->

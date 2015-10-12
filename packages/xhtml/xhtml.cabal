@@ -1,0 +1,33 @@
+Name: xhtml
+Version: 2006.9.13
+Copyright: Bjorn Bringert 2004-2006, Andy Gill, and the Oregon Graduate 
+           Institute of Science and Technology, 1999-2001
+Maintainer: bjorn@bringert.net
+Author: Bjorn Bringert
+Homepage: http://www.cs.chalmers.se/~bringert/darcs/haskell-xhtml/doc/
+License: BSD3
+License-file: LICENSE
+build-depends: haskell98, base
+Extensions: 
+Synopsis: A Haskell XHTML combinator library
+Description:
+ This is a version of the standard Text.Html
+ modified to produce XHTML 1.0.
+Exposed-Modules: 
+  Text.XHtml, 
+  Text.XHtml.Frameset,
+  Text.XHtml.Strict,
+  Text.XHtml.Transitional,
+  Text.XHtml.Debug,
+  Text.XHtml.Table
+Other-modules:
+  Text.XHtml.Strict.Attributes,
+  Text.XHtml.Strict.Elements,
+  Text.XHtml.Frameset.Attributes,
+  Text.XHtml.Frameset.Elements,
+  Text.XHtml.Transitional.Attributes,
+  Text.XHtml.Transitional.Elements,
+  Text.XHtml.BlockTable,
+  Text.XHtml.Extras,
+  Text.XHtml.Internals
+ghc-options: -O2 -W

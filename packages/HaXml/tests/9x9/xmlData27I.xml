@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<!DOCTYPE test [
+<!ELEMENT test (#PCDATA) >
+<!ENTITY t1 "t1" >
+<!ENTITY t2 "t2" >
+]>
+<test att1="&lt;&t1;&amp;&t2;&gt;" att2="&#60;&t1;&#38;&t2;&#62;">
+att1="&lt;&t1;&amp;&t2;&gt;"
+att2="&#60;&t1;&#38;&t2;&#62;"
+</test>

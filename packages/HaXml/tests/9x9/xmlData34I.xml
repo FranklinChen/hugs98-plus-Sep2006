@@ -1,0 +1,15 @@
+<!DOCTYPE test [
+<!ELEMENT test (#PCDATA) >
+<!ENTITY xx 'xyzzy' >
+<!ENTITY yy 'xx;/bar' >
+<!ENTITY zz '&xx;/bar' >
+]>
+<test tricky1="foo/#38;&yy;" tricky2="foo/&zz;" />
+
+<!-- I think the result should be:
+<test tricky1="foo/&xx;/bar" tricky2="foo/xyzzy/bar" />
+
+because in the 'tricky1' case, only the substituted text for &yy; is 
+reprocessed, not the entire attribute after subsitution of &yy;
+?
+-->

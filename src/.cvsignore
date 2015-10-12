@@ -1,0 +1,11 @@
+*.exp
+*.lib
+Makefile
+config.h
+config.h.in
+ffihugs
+hugs
+options.h
+parser.c
+platform.h
+runhugs

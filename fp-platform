@@ -1,0 +1,36 @@
+#! /bin/sh
+
+# canonicalize platform names (approximately as GHC does)
+
+for platform
+do
+	cpu="`echo $platform | sed 's/^\([^-]*\)-\([^-]*\)-\([^-]*\).*/\1/'`"
+	vendor="`echo $platform | sed 's/^\([^-]*\)-\([^-]*\)-\([^-]*\).*/\2/'`"
+	os="`echo $platform | sed 's/^\([^-]*\)-\([^-]*\)-\([^-]*\).*/\3/'`"
+
+	case "$cpu" in
+	i[3456]86*) cpu=i386 ;;
+	esac
+
+	case "$os" in
+	aix*) os=aix ;;
+	cygwin*) os=cygwin32 ;;
+	darwin*) os=darwin ;;
+	freebsd2*) os=freebsd2 ;;
+	freebsd*) os=freebsd ;;
+	hpux*) os=hpux ;;
+	irix*) os=irix ;;
+	linuxaout*) os=linuxaout ;;
+	linux*) os=linux ;;
+	mingw32*) os=mingw32 ;;
+	netbsd*) os=netbsd ;;
+	openbsd*) os=openbsd ;;
+	osf[12]*) os=osf1 ;;
+	osf*) os=osf3 ;;
+	solaris2*) os=solaris2 ;;
+	sunos4*) os=sunos4 ;;
+	ultrix*) os=ultrix ;;
+	esac
+
+	echo "$cpu-$vendor-$os"
+done

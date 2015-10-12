@@ -1,0 +1,7 @@
+<sect1 id="sec-glaexts">
+<title><literal>GlaExts</literal></title>
+
+  <para>This module has moved to <ulink url="../libraries/base/GHC.Exts.html"><literal>GHC.Exts</literal></ulink> in the
+  hierarchical libraries.</para>
+
+</sect1>

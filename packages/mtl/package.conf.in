@@ -1,0 +1,33 @@
+name:		PACKAGE
+version:	VERSION
+license:	BSD3
+maintainer:	libraries@haskell.org
+exposed:	True
+
+exposed-modules:
+	Control.Monad.Error,
+	Control.Monad.Cont,
+	Control.Monad.Identity,
+	Control.Monad.List,
+	Control.Monad.RWS,
+	Control.Monad.Reader,
+	Control.Monad.State,
+	Control.Monad.Trans,
+	Control.Monad.Writer
+
+hidden-modules:
+
+import-dirs:	IMPORT_DIR
+library-dirs:	LIB_DIR
+hs-libraries:   "HSmtl"
+extra-libraries:
+include-dirs:
+includes:		
+depends:	 base
+hugs-options:
+cc-options:
+ld-options:
+framework-dirs:
+frameworks:
+haddock-interfaces:	HADDOCK_IFACE
+haddock-html:		HTML_DIR

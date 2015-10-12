@@ -1,0 +1,119 @@
+.bg3    {
+         font: 10pt/12pt "Arial Times";
+         font-style: "plain";
+         font-weight: light;
+         color: #000000;
+         text-align: center;
+         background: FFFFFF
+        }
+
+.title  {
+         font: 10pt/12pt "Times";
+         font-style: "plain";
+         font-weight: light;
+         color: #000000;
+         text-align: center;
+         background: FFFFFF;
+        }
+
+body {
+        margin-left: 3%;
+        margin-right: 3%;
+        padding-right; 5%;
+        color: black;
+        background: #fafafa;
+        font-size: 12pt/14pt;
+        font-family: "Arial Narrow", serif;
+}
+pre { background: #f6f6f6;
+      padding-left: 2%;
+    }
+
+h1 {
+        border-style: solid;
+        font-size: 22pt;
+        font-family: verdana, "Arial", serif;
+        background: #fbf6fd;
+        border-color: #bbbbbb;
+        border-width: 1px;
+        text-align: left;
+        padding-left: 2%;
+        padding-top: 2px;
+        padding-bottom: 2px;
+   }
+
+H2 {font-family: "verdana";
+    font-size: 10pt;
+    font-weight: light;
+    background: #fbf6fd;
+    padding-left: 1%;
+    border-style: solid;
+    border-color: #bbbbbb;
+    border-width: 1px;
+    }
+
+H3 {font: 8pt/10pt "verdana";
+    font-weight: light;
+    background: #fbf6fd;
+    padding-left: 1%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-style: solid;
+    border-color: #bbbbbb;
+    border-width: 1px;
+    }
+
+H4 {font-family: "verdana"; font-size: 10pt; font-weight: bold}
+
+H5 {font: 8pt/10pt "verdana"; font-weight: light}
+
+H6 { font-family: "Verdana, Arial, Helvetica"
+   ; line-height: 100%
+   ; font-size: 10pt
+   ; font-weight: light
+   }
+
+CODE {font-family: "Courier, Monaco"}
+
+a:link          {  background: transparent;
+                color: #0000FF; }
+
+a:active        { color: #FFCC99; }
+
+a:visited       {  color: #800080; }
+
+h1              { font-size: 145%;
+                margin-bottom: .5em; }
+
+h2              { font-size: 125%;
+                margin-top: 1.5em;
+                margin-bottom: .5em;  }
+
+h3              { font-size: 110%;
+                margin-top: 1.2em;
+                margin-bottom: .5em;  }
+
+.foo            { margin-left: 3em;
+                  padding-top: 3em;
+                  align: right;
+                  margin-right: 0.4em;
+                }
+
+.mblock         { margin-left: 5em;
+                  align: left;
+                  margin-right: 0.4em;
+                }
+.software       { margin-right: 3em;
+                }
+.pub-list-entry { padding: 4pt;
+                }
+.bar            { align-left: left;
+                  padding-top: 0.8em;
+                  margin-left: 0em;
+                }
+.indent         { align-left: left;
+                  margin-left: 4.5em;
+                }
+
+p               { margin-top:10pt; margin-bottom: 0pt;  }
+

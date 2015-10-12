@@ -1,0 +1,81 @@
+An overview of Hugs configuration
+=================================
+
+[This is out of date]
+
+We use GNU's autoconf to determine the configuration of the target platform.
+
+See docs/building/unix.txt for Unix instructions and Hugs-specific
+configure options.  See docs/building/config.txt for general configure
+options.
+
+[Note: all configuration scripts should be run from the directory containing
+ the script - but I'll use full paths when discussing scripts so that you
+ can find them.]
+
+Windows/DOS
+~~~~~~~~~~~
+
+On Windows/DOS, you can only run the configuration scripts if you have
+the cygnus tools installed (version 16beta; version 17 seems to have a
+bug that crashes the configure script).  Even if you have the tools
+installed, the configuration script won't run directly because:
+
+1) The configure script uses Unix features like /dev/null that don't
+   exist on DOS.
+2) The configure script assumes that C compilers follow Unix traditions
+   when interpreting their command arguments.  All DOS compilers we've tried
+   use radically different syntax for their command line arguments.
+
+To overcome these problems, the files
+
+  src/{msc,bcc32,bcc16,win32,win16,djgpp2}/config.sh
+
+contain scripts which make the configure scripts run (through a
+combination of patching the configure script, override default values,
+etc).  [The djgpp2 script crashes near the end - however, the results
+it prints up to that point are useful for creating configuration files
+by hand.]
+
+In fact, we rarely run these scripts directly.  Instead, we run
+
+  src/unix/mkconfigs
+
+which runs all the scripts with appropriate arguments and makes copies
+of the generated files (Makefile, config.h and options.h) in
+appropriate subdirectories.  These copies are for the benefit of
+people who can't run the configure scripts directly.  They cannot be
+expected to match all machines perfectly (since the configuration
+script only checked what was happening on my machine) - but they
+chould be pretty close and they are well commented.  (I don't think
+it's possible to do any better - without writing a version of autoconf
+which works on all DOS machines.) The prebuilt copies are stored in
+subdirectories of src and can be installed by running one of
+
+  src/{msc,bcc32,bcc16,win32,win16,djgpp2}/config.bat
+
+(If you're running bash, "cmd <config.bat" does the right thing.)
+
+Macintosh
+~~~~~~~~~
+
+<todo>
+
+
+Modifying the configure script
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you're modifying Hugs or porting it to a new platform, you might
+need to extend the configure script.  The steps are:
+
+1) Get a recent copy of autoconf.  (We use version 2.57.)
+2) Read the autoconf documentation. 
+   (If all you need to do is test whether /usr/include/sys/foo.h
+   exists - you can probably figure it out without reading the docs.)
+3) Edit src/unix/configure.in in whatever way you like.
+4) Run src/unix/mkconfig.
+   This uses autoconf to generate src/unix/configure and 
+   it uses autoheader to generate src/config.h.in
+   (You need version 2.13 of autoheader for this -- more recent
+   versions don't work.)
+5) Send patches to hugs-bugs@haskell.org (please).

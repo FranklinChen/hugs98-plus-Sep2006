@@ -1,0 +1,33 @@
+--- ../HaXml-1.02/tools/DtdToTypeDefPP.hs	Wed May 30 14:21:31 2001
++++ tools/DtdToTypeDefPP.hs	Fri Jul 13 15:22:52 2001
+@@ -298,7 +298,8 @@
+              mkFrAux aux frattr cs $$
+              text "fromElem rest = (Nothing, rest)"
+            $$
+-             vcat (map (mkToMult n topat toattr) cs)
++             if aux then vcat (map (mkToAux mixattrs) cs)
++             else vcat (map (mkToMult n topat toattr) cs)
+            )
+     $$
+     mkInstanceAttrs Extended n fs
+@@ -491,13 +492,13 @@
+                   (Defined m) -> text "Just" <+> v
+         in parens (hcat (intersperse comma (zipWith sp sts vs++[rest])))
+ 
+---mkToAux :: Bool -> (Name,[StructType]) -> Doc
+---mkToAux mixattrs (n,sts) =
+---    let vs = nameSupply sts
+---        attrs = if mixattrs then text "as" else empty
+---    in
+---    text "toElem" <+> parens (mkCpat n attrs vs) <+> text "=" <+>
+---    mkToElem sts vs
++mkToAux :: Bool -> (Name,[StructType]) -> Doc
++mkToAux mixattrs (n,sts) =
++    let vs = nameSupply sts
++        attrs = if mixattrs then text "as" else empty
++    in
++    text "toElem" <+> parens (mkCpat n attrs vs) <+> text "=" <+>
++    mkToElem sts vs
+ 
+ mkToMult :: Name -> Doc -> Doc -> (Name,[StructType]) -> Doc
+ mkToMult tag attrpat attrexp (n,sts) =

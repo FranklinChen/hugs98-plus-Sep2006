@@ -1,0 +1,2440 @@
+<chapter id="sec-posix"><title>The <literal>posix</literal> package: POSIX support</title>
+
+<para>
+<indexterm><primary>Posix library</primary></indexterm>
+<indexterm><primary>libraries, Posix</primary></indexterm>
+</para>
+
+<para>
+The <literal>Posix</literal> interface gives you access to the set of OS
+services standardised by POSIX 1003.1b (or the <emphasis>IEEE Portable
+Operating System Interface for Computing Environments</emphasis> - IEEE Std.
+1003.1). The interface is accessed by <literal>import Posix</literal> and
+adding <option>-package posix</option> on your command-line.
+</para>
+
+<para>
+The Posix package is <emphasis>not</emphasis> supported under
+Windows. We've looked into various ways of providing support, and
+other than using Cygwin, none is particularly attractive. If you want
+Posix support under Windows, try building GHC for Cygwin; we don't
+currently do this, but it is mostly supported.
+</para>
+  
+<sect1 id="Posix-data-types">
+<title>Posix data types
+</title>
+
+<para>
+<indexterm><primary>Posix, data types</primary></indexterm>
+</para>
+
+<para>
+
+<programlisting>
+data ByteCount  -- instances of : Eq Ord Num Real Integral Ix Enum Show
+</programlisting>
+
+</para>
+
+<para>
+A <literal>ByteCount</literal> is a primitive of type <literal>unsigned</literal>. At a minimum,
+an conforming implementation must support values in the range
+<literal>[0, UINT&lowbar;MAX]</literal>.
+</para>
+
+<para>
+
+<programlisting>
+data ClockTick  -- instances of : Eq Ord Num Real Integral Ix Enum Show
+</programlisting>
+
+</para>
+
+<para>
+A <literal>ClockTick</literal> is a primitive of type <literal>clock&lowbar;t</literal>, which
+is used to measure intervals of time in fractions of a second.  The 
+resolution is determined by <literal>getSysVar ClockTick</literal>.
+</para>
+
+<para>
+
+<programlisting>
+data DeviceID  -- instances of : Eq Ord Num Real Integral Ix Enum Show
+</programlisting>
+
+</para>
+
+<para>
+A <literal>DeviceID</literal> is a primitive of type <literal>dev&lowbar;t</literal>.  It must
+be an arithmetic type.
+</para>
+
+<para>
+
+<programlisting>
+data EpochTime -- instances of : Eq Ord Num Real Integral Ix Enum Show
+</programlisting>
+
+</para>
+
+<para>
+A <literal>EpochTime</literal> is a primitive of type <literal>time&lowbar;t</literal>, which is
+used to measure seconds since the Epoch.  At a minimum, the implementation 
+must support values in the range <literal>[0, INT&lowbar;MAX]</literal>.
+</para>
+
+<para>
+
+<programlisting>
+data FileID -- instances of : Eq Ord Num Real Integral Ix Enum Show
+</programlisting>
+
+</para>
+
+<para>
+A <literal>FileID</literal> is a primitive of type <literal>ino&lowbar;t</literal>.  It must
+be an arithmetic type.
+</para>
+
+<para>
+
+<programlisting>
+data FileMode -- instance of : Eq
+</programlisting>
+
+</para>
+
+<para>
+A <literal>FileMode</literal> is a primitive of type <literal>mode&lowbar;t</literal>.
+It must be an arithmetic type.
+</para>
+
+<para>
+
+<programlisting>
+data FileOffset -- instances of : Eq Ord Num Real Integral Ix Enum Show
+</programlisting>
+
+</para>
+
+<para>
+A <literal>FileOffset</literal> is a primitive of type <literal>off&lowbar;t</literal>.  It must
+be an arithmetic type.
+</para>
+
+<para>
+
+<programlisting>
+data GroupID -- instances of : Eq Ord Num Real Integral Ix Enum Show
+</programlisting>
+
+</para>
+
+<para>
+A <literal>GroupID</literal> is a primitive of type <literal>gid&lowbar;t</literal>.  It must
+be an arithmetic type.
+
+<programlisting>
+data Limit -- instances of : Eq Ord Num Real Integral Ix Enum Show
+</programlisting>
+
+</para>
+
+<para>
+A <literal>Limit</literal> is a primitive of type <literal>long</literal>.
+At a minimum, the implementation must support values in the range 
+<literal>[LONG&lowbar;MIN, LONG&lowbar;MAX]</literal>.
+</para>
+
+<para>
+
+<programlisting>
+data LinkCount -- instances of : Eq Ord Num Real Integral Ix Enum Show
+</programlisting>
+
+</para>
+
+<para>
+A <literal>LinkCount</literal> is a primitive of type <literal>nlink&lowbar;t</literal>.  It must
+be an arithmetic type.
+</para>
+
+<para>
+
+<programlisting>
+data ProcessID -- instances of : Eq Ord Num Real Integral Ix Enum Show
+type ProcessGroupID = ProcessID
+</programlisting>
+
+</para>
+
+<para>
+A <literal>ProcessID</literal> is a primitive of type <literal>pid&lowbar;t</literal>.  It
+must be a signed arithmetic type.
+
+<programlisting>
+data UserID -- instances of : Eq Ord Num Real Integral Ix Enum Show
+</programlisting>
+
+</para>
+
+<para>
+A <literal>UserID</literal> is a primitive of type <literal>uid&lowbar;t</literal>.  It
+must be an arithmetic type.
+</para>
+
+<para>
+
+<programlisting>
+data DirStream
+</programlisting>
+
+A <literal>DirStream</literal> is a primitive of type <literal>DIR *</literal>.
+</para>
+
+<para>
+
+<programlisting>
+data FileStatus
+</programlisting>
+
+A <literal>FileStatus</literal> is a primitive of type <literal>struct stat</literal>.
+</para>
+
+<para>
+
+<programlisting>
+data GroupEntry
+</programlisting>
+
+</para>
+
+<para>
+A <literal>GroupEntry</literal> is a primitive of type <literal>struct group</literal>.
+
+<programlisting>
+data ProcessTimes
+</programlisting>
+
+</para>
+
+<para>
+<literal>ProcessTimes</literal> is a primitive structure containing a
+<literal>clock&lowbar;t</literal> and a <literal>struct tms</literal>.
+</para>
+
+<para>
+
+<programlisting>
+data SignalSet
+</programlisting>
+
+</para>
+
+<para>
+An <literal>SignalSet</literal> is a primitive of type <literal>sigset&lowbar;t</literal>.
+</para>
+
+<para>
+
+<programlisting>
+data SystemID
+</programlisting>
+
+</para>
+
+<para>
+A <literal>SystemID</literal> is a primitive of type <literal>struct utsname</literal>.
+</para>
+
+<para>
+
+<programlisting>
+data TerminalAttributes
+</programlisting>
+
+<literal>TerminalAttributes</literal> is a primitive of type <literal>struct termios</literal>.
+</para>
+
+<para>
+
+<programlisting>
+data UserEntry
+</programlisting>
+
+</para>
+
+<para>
+A <literal>UserEntry</literal> is a primitive of type <literal>struct passwd</literal>.
+</para>
+
+<para>
+
+<programlisting>
+data BaudRate = B0 | B50 | B75 | B110 | B134 | B150 | B200 | B300 | B600
+              | B1200 | B1800 | B2400 | B4800 | B9600 | B19200 | B38400
+              deriving (Eq, Show)
+
+data Fd 
+
+instance Eq Fd 
+instance Show Fd
+
+intToFd :: Int -&#62; Fd -- use with care.
+fdToInt :: Fd -> Int     -- ditto.
+
+data FdOption = AppendOnWrite
+              | CloseOnExec
+              | NonBlockingRead
+
+data ControlCharacter = EndOfFile
+                      | EndOfLine
+                      | Erase
+                      | Interrupt
+                      | Kill
+                      | Quit
+                      | Suspend
+                      | Start
+                      | Stop
+
+type ErrorCode = Int
+
+type FileLock = (LockRequest, SeekMode, FileOffset, FileOffset)
+--                            whence    start       length
+
+data FlowAction = SuspendOutput | RestartOutput | TransmitStop | TransmitStart
+
+data Handler = Default | Ignore | Catch (IO ())
+
+data LockRequest = ReadLock | WriteLock | Unlock
+                 deriving (Eq, Show)
+
+data OpenMode = ReadOnly | WriteOnly | ReadWrite
+
+data PathVar = LinkLimit
+             | InputLineLimit
+             | InputQueueLimit
+             | FileNameLimit
+             | PathNameLimit
+             | PipeBufferLimit
+             | SetOwnerAndGroupIsRestricted
+             | FileNamesAreNotTruncated
+
+data QueueSelector = InputQueue | OutputQueue | BothQueues
+
+type Signal = Int
+
+data SysVar = ArgumentLimit
+            | ChildLimit
+            | ClockTick
+            | GroupLimit
+            | OpenFileLimit
+            | PosixVersion
+            | HasSavedIDs
+            | HasJobControl
+
+data TerminalMode = InterruptOnBreak       -- BRKINT
+                | MapCRtoLF                -- ICRNL
+                | IgnoreBreak              -- IGNBRK
+                | IgnoreCR                 -- IGNCR
+                | IgnoreParityErrors       -- IGNPAR
+                | MapLFtoCR                -- INLCR
+                | CheckParity              -- INPCK
+                | StripHighBit             -- ISTRIP
+                | StartStopInput           -- IXOFF
+                | StartStopOutput          -- IXON
+                | MarkParityErrors         -- PARMRK
+                | ProcessOutput            -- OPOST
+                | LocalMode                -- CLOCAL
+                | ReadEnable               -- CREAD
+                | TwoStopBits              -- CSTOPB
+                | HangupOnClose            -- HUPCL
+                | EnableParity             -- PARENB
+                | OddParity                -- PARODD
+                | EnableEcho               -- ECHO
+                | EchoErase                -- ECHOE
+                | EchoKill                 -- ECHOK
+                | EchoLF                   -- ECHONL
+                | ProcessInput             -- ICANON
+                | ExtendedFunctions        -- IEXTEN
+                | KeyboardInterrupts       -- ISIG
+                | NoFlushOnInterrupt       -- NOFLSH
+                | BackgroundWriteInterrupt -- TOSTOP
+
+data TerminalState = Immediately | WhenDrained | WhenFlushed
+
+data ProcessStatus = Exited ExitCode 
+                   | Terminated Signal 
+                   | Stopped Signal
+                   deriving (Eq, Show)
+</programlisting>
+
+</para>
+
+</sect1>
+
+<sect1 id="Process-Primitives">
+<title>Posix Process Primitives
+</title>
+
+<para>
+
+<programlisting>
+forkProcess :: IO (Maybe ProcessID)
+</programlisting>
+
+</para>
+
+<para>
+<function>forkProcess</function> calls <function>fork</function>, returning
+<literal>Just pid</literal> to the parent, where <varname>pid</varname> is the
+ProcessID of the child, and returning <literal>Nothing</literal> to the
+child.
+</para>
+
+<para>
+
+<programlisting>
+executeFile :: FilePath                   -- Command
+            -&#62; Bool                       -- Search PATH?
+            -&#62; [String]                   -- Arguments
+            -&#62; Maybe [(String, String)]   -- Environment
+            -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>executeFile cmd args env</literal> calls one of the
+<function>execv*</function> family, depending on whether or not the current
+PATH is to be searched for the command, and whether or not an
+environment is provided to supersede the process's current
+environment.  The basename (leading directory names suppressed) of
+the command is passed to <function>execv*</function> as <varname>arg[0]</varname>;
+the argument list passed to <function>executeFile</function> therefore begins with <varname>arg[1]</varname>.
+</para>
+
+<para>
+
+<screen>
+Search PATH?    Supersede environ?      Call
+~~~~~~~~~~~~    ~~~~~~~~~~~~~~~~~~      ~~~~~~~
+False           False                   execv
+False           True                    execve
+True            False                   execvp
+True            True                    execvpe*
+</screen>
+
+</para>
+
+<para>
+Note that <function>execvpe</function> is not provided by the POSIX standard, and must
+be written by hand.  Care must be taken to ensure that the search path
+is extracted from the original environment, and not from the
+environment to be passed on to the new image.
+</para>
+
+<para>
+NOTE: In general, sharing open files between parent and child
+processes is potential bug farm, and should be avoided unless you
+really depend on this `feature' of POSIX' <function>fork()</function> semantics. Using
+Haskell, there's the extra complication that arguments to
+<function>executeFile</function> might come from files that are read lazily (using
+<function>hGetContents</function>, or some such.) If this is the case, then for your own
+sanity, please ensure that the arguments to <function>executeFile</function> have been
+fully evaluated before calling <function>forkProcess</function> (followed by
+<function>executeFile</function>.) Consider yourself warned :-)
+</para>
+
+<para>
+A successful <function>executeFile</function> overlays the current process image with 
+a new one, so it only returns on failure.
+</para>
+
+<para>
+
+<programlisting>
+runProcess :: FilePath                    -- Command
+           -&#62; [String]                    -- Arguments
+           -&#62; Maybe [(String, String)]    -- Environment (Nothing -&#62; Inherited)
+           -&#62; Maybe FilePath              -- Working directory (Nothing -&#62; inherited)
+           -&#62; Maybe Handle                -- stdin  (Nothing -&#62; inherited)
+           -&#62; Maybe Handle                -- stdout (Nothing -&#62; inherited)
+           -&#62; Maybe Handle                -- stderr (Nothing -&#62; inherited)
+           -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<function>runProcess</function> is our candidate for the high-level OS-independent
+primitive.
+</para>
+
+<para>
+<literal>runProcess cmd args env wd inhdl outhdl errhdl</literal> runs <command>cmd</command>
+(searching the current <literal>PATH</literal>) with arguments <literal>args</literal>.  If
+<literal>env</literal> is <literal>Just pairs</literal>, the command is executed with the
+environment specified by <literal>pairs</literal> of variables and values;
+otherwise, the command is executed with the current environment.  If
+<literal>wd</literal> is <literal>Just dir</literal>, the command is executed with working
+directory <literal>dir</literal>; otherwise, the command is executed in the current
+working directory.  If <literal>&lcub;in,out,err</literal>hdl&rcub; is <literal>Just handle</literal>, the
+command is executed with the <literal>Fd</literal> for <literal>std&lcub;in,out,err</literal>&rcub;
+attached to the specified <literal>handle</literal>; otherwise, the <literal>Fd</literal> for
+<literal>std&lcub;in,out,err</literal>&rcub; is left unchanged.
+</para>
+
+<para>
+
+<programlisting>
+getProcessStatus :: Bool              -- Block?
+                 -&#62; Bool              -- Stopped processes?
+                 -&#62; ProcessID 
+                 -&#62; IO (Maybe ProcessStatus)
+</programlisting>
+
+</para>
+
+<para>
+<literal>getProcessStatus blk stopped pid</literal> calls <function>waitpid</function>, returning
+<literal>Just tc</literal>, the <literal>ProcessStatus</literal> for process <literal>pid</literal> if it is
+available, <literal>Nothing</literal> otherwise.  If <literal>blk</literal> is <literal>False</literal>, then
+<literal>WNOHANG</literal> is set in the options for <function>waitpid</function>, otherwise not.
+If <literal>stopped</literal> is <literal>True</literal>, then <literal>WUNTRACED</literal> is set in the
+options for <function>waitpid</function>, otherwise not.
+</para>
+
+<para>
+
+<programlisting>
+getGroupProcessStatus :: Bool         -- Block?
+                      -&#62; Bool         -- Stopped processes?
+                      -&#62; ProcessGroupID 
+                      -&#62; IO (Maybe (ProcessID, ProcessStatus))
+</programlisting>
+
+</para>
+
+<para>
+<literal>getGroupProcessStatus blk stopped pgid</literal> calls <function>waitpid</function>,
+returning <literal>Just (pid, tc)</literal>, the <literal>ProcessID</literal> and
+<literal>ProcessStatus</literal> for any process in group <literal>pgid</literal> if one is
+available, <literal>Nothing</literal> otherwise.  If <literal>blk</literal> is <literal>False</literal>, then
+<literal>WNOHANG</literal> is set in the options for <function>waitpid</function>, otherwise not.
+If <literal>stopped</literal> is <literal>True</literal>, then <literal>WUNTRACED</literal> is set in the
+options for <function>waitpid</function>, otherwise not.
+</para>
+
+<para>
+
+<programlisting>
+getAnyProcessStatus :: Bool           -- Block?
+                    -&#62; Bool           -- Stopped processes?
+                    -&#62; IO (Maybe (ProcessID, ProcessStatus))
+</programlisting>
+
+</para>
+
+<para>
+<literal>getAnyProcessStatus blk stopped</literal> calls <function>waitpid</function>, returning
+<literal>Just (pid, tc)</literal>, the <literal>ProcessID</literal> and <literal>ProcessStatus</literal> for any
+child process if one is available, <literal>Nothing</literal> otherwise.  If
+<literal>blk</literal> is <literal>False</literal>, then <literal>WNOHANG</literal> is set in the options for
+<function>waitpid</function>, otherwise not.  If <literal>stopped</literal> is <literal>True</literal>, then
+<literal>WUNTRACED</literal> is set in the options for <function>waitpid</function>, otherwise not.
+</para>
+
+<para>
+
+<programlisting>
+exitImmediately :: ExitCode -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>exitImmediately status</literal> calls <function>&lowbar;exit</function> to terminate the process
+with the indicated exit <literal>status</literal>.
+The operation never returns.
+</para>
+
+<para>
+
+<programlisting>
+getEnvironment :: IO [(String, String)]
+</programlisting>
+
+</para>
+
+<para>
+<function>getEnvironment</function> parses the environment variable mapping provided by
+<literal>environ</literal>, returning <literal>(variable, value)</literal> pairs. 
+The operation never fails.
+</para>
+
+<para>
+
+<programlisting>
+setEnvironment :: [(String, String)] -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<function>setEnvironment</function> replaces the process environment with the provided
+mapping of <literal>(variable, value)</literal> pairs. 
+</para>
+
+<para>
+
+<programlisting>
+getEnvVar :: String -&#62; IO String
+</programlisting>
+
+</para>
+
+<para>
+<literal>getEnvVar var</literal> returns the value associated with variable <varname>var</varname> 
+in the current environment (identical functionality provided through
+standard Haskell library function <function>System.getEnv</function>).
+</para>
+
+<para>
+The operation may fail with:
+</para>
+
+<para>
+<variablelist>
+
+<varlistentry>
+<term><literal>NoSuchThing</literal></term>
+<listitem>
+<para>
+The variable has no mapping in the current environment.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</para>
+
+<para>
+
+<programlisting>
+setEnvVar :: String -&#62; String -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>setEnvVar var val</literal> sets the value associated with variable <varname>var</varname> 
+in the current environment to be <literal>val</literal>.  Any previous mapping is 
+superseded.
+</para>
+
+<para>
+
+<programlisting>
+removeEnvVar :: String -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>removeEnvVar var</literal> removes any value associated with variable <varname>var</varname> 
+in the current environment.  Deleting a variable for which there is no mapping
+does not generate an error.
+</para>
+
+<para>
+
+<programlisting>
+nullSignal :: Signal
+nullSignal = 0
+
+backgroundRead, sigTTIN        :: Signal
+backgroundWrite, sigTTOU       :: Signal
+continueProcess, sigCONT       :: Signal
+floatingPointException, sigFPE :: Signal
+illegalInstruction, sigILL     :: Signal
+internalAbort, sigABRT         :: Signal
+keyboardSignal, sigINT         :: Signal
+keyboardStop, sigTSTP          :: Signal
+keyboardTermination, sigQUIT   :: Signal
+killProcess, sigKILL           :: Signal
+lostConnection, sigHUP         :: Signal
+openEndedPipe, sigPIPE         :: Signal
+processStatusChanged, sigCHLD  :: Signal
+realTimeAlarm, sigALRM         :: Signal
+segmentationViolation, sigSEGV :: Signal
+softwareStop, sigSTOP          :: Signal
+softwareTermination, sigTERM   :: Signal
+userDefinedSignal1, sigUSR1    :: Signal
+userDefinedSignal2, sigUSR2    :: Signal
+
+signalProcess :: Signal -&#62; ProcessID -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>signalProcess int pid</literal> calls <function>kill</function> to signal 
+process <literal>pid</literal> with interrupt signal <literal>int</literal>.
+</para>
+
+<para>
+
+<programlisting>
+raiseSignal :: Signal -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>raiseSignal int</literal> calls <function>kill</function> to signal the current process
+with interrupt signal <literal>int</literal>. 
+</para>
+
+<para>
+
+<programlisting>
+signalProcessGroup :: Signal -&#62; ProcessGroupID -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>signalProcessGroup int pgid</literal> calls <function>kill</function> to signal 
+all processes in group <literal>pgid</literal> with interrupt signal <literal>int</literal>.
+</para>
+
+<para>
+
+<programlisting>
+setStoppedChildFlag :: Bool -&#62; IO Bool
+</programlisting>
+
+</para>
+
+<para>
+<literal>setStoppedChildFlag bool</literal> sets a flag which controls whether or
+not the <constant>NOCLDSTOP</constant> option will be used the next time a signal
+handler is installed for <constant>SIGCHLD</constant>.  If <literal>bool</literal> is <literal>True</literal> (the
+default), <constant>NOCLDSTOP</constant> will not be used; otherwise it will be.  The
+operation never fails.
+</para>
+
+<para>
+
+<programlisting>
+queryStoppedChildFlag :: IO Bool
+</programlisting>
+
+</para>
+
+<para>
+<function>queryStoppedChildFlag</function> queries the flag which
+controls whether or not the <constant>NOCLDSTOP</constant> option will be used
+the next time a signal handler is installed for <constant>SIGCHLD</constant>.
+If <constant>NOCLDSTOP</constant> will be used, it returns <literal>False</literal>; 
+otherwise (the default) it returns <literal>True</literal>.  
+The operation never fails.
+</para>
+
+<para>
+
+<programlisting>
+emptySignalSet :: SignalSet
+fullSignalSet  :: SignalSet
+addSignal      :: Signal -&#62; SignalSet -&#62; SignalSet
+deleteSignal   :: Signal -&#62; SignalSet -&#62; SignalSet
+inSignalSet    :: Signal -&#62; SignalSet -&#62; Bool
+
+installHandler :: Signal
+               -&#62; Handler 
+               -&#62; Maybe SignalSet       -- other signals to block
+               -&#62; IO Handler            -- old handler
+</programlisting>
+
+</para>
+
+<para>
+<literal>installHandler int handler iset</literal> calls <constant>sigaction</constant> to install an
+interrupt handler for signal <literal>int</literal>.  If <literal>handler</literal> is <literal>Default</literal>,
+<constant>SIG&lowbar;DFL</constant> is installed; if <literal>handler</literal> is <literal>Ignore</literal>, <constant>SIG&lowbar;IGN</constant> is
+installed; if <literal>handler</literal> is <literal>Catch action</literal>, a handler is installed
+which will invoke <literal>action</literal> in a new thread when (or shortly after) the
+signal is received.  See <xref linkend="sec-Concurrent"/> for details on how to communicate between
+threads.
+</para>
+
+<para>
+If <literal>iset</literal> is <literal>Just s</literal>, then the <varname>sa&lowbar;mask</varname> of the <literal>sigaction</literal> structure
+is set to <literal>s</literal>; otherwise it is cleared.  The previously installed
+signal handler for <literal>int</literal> is returned.
+</para>
+
+<para>
+
+<programlisting>
+getSignalMask :: IO SignalSet
+</programlisting>
+
+</para>
+
+<para>
+<function>getSignalMask</function> calls <function>sigprocmask</function> to determine the
+set of interrupts which are currently being blocked.
+</para>
+
+<para>
+
+<programlisting>
+setSignalMask :: SignalSet -&#62; IO SignalSet
+</programlisting>
+
+</para>
+
+<para>
+<literal>setSignalMask mask</literal> calls <function>sigprocmask</function> with
+<constant>SIG&lowbar;SETMASK</constant> to block all interrupts in <literal>mask</literal>.  The
+previous set of blocked interrupts is returned.
+</para>
+
+<para>
+
+<programlisting>
+blockSignals :: SignalSet -&#62; IO SignalSet
+</programlisting>
+
+</para>
+
+<para>
+<literal>setSignalMask mask</literal> calls <function>sigprocmask</function> with
+<constant>SIG&lowbar;BLOCK</constant> to add all interrupts in <literal>mask</literal> to the
+set of blocked interrupts.  The previous set of blocked interrupts is returned.
+</para>
+
+<para>
+
+<programlisting>
+unBlockSignals :: SignalSet -&#62; IO SignalSet
+</programlisting>
+
+</para>
+
+<para>
+<literal>setSignalMask mask</literal> calls <function>sigprocmask</function> with
+<constant>SIG&lowbar;UNBLOCK</constant> to remove all interrupts in <literal>mask</literal> from the
+set of blocked interrupts.  The previous set of blocked interrupts is returned.
+</para>
+
+<para>
+
+<programlisting>
+getPendingSignals :: IO SignalSet
+</programlisting>
+
+</para>
+
+<para>
+<function>getPendingSignals</function> calls <function>sigpending</function> to obtain
+the set of interrupts which have been received but are currently blocked.
+</para>
+
+<para>
+
+<programlisting>
+awaitSignal :: Maybe SignalSet -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>awaitSignal iset</literal> suspends execution until an interrupt is received.
+If <literal>iset</literal> is <literal>Just s</literal>, <function>awaitSignal</function> calls <function>sigsuspend</function>, installing
+<literal>s</literal> as the new signal mask before suspending execution; otherwise, it
+calls <function>pause</function>.  <function>awaitSignal</function> returns on receipt of a signal.  If you
+have installed any signal handlers with <function>installHandler</function>, it may be
+wise to call <function>yield</function> directly after <function>awaitSignal</function> to ensure that the
+signal handler runs as promptly.
+</para>
+
+<para>
+
+<programlisting>
+scheduleAlarm :: Int -&#62; IO Int
+</programlisting>
+
+</para>
+
+<para>
+<literal>scheduleAlarm i</literal> calls <function>alarm</function> to schedule a real time
+alarm at least <literal>i</literal> seconds in the future.
+</para>
+
+<para>
+
+<programlisting>
+sleep :: Int -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>sleep i</literal> calls <function>sleep</function> to suspend execution of the
+program until at least <literal>i</literal> seconds have elapsed or a signal is
+received.
+</para>
+
+</sect1>
+
+<sect1 id="Process-Environment">
+<title>Posix Process Environment
+</title>
+
+<para>
+<indexterm><primary>Posix, process environment</primary></indexterm>
+</para>
+
+<para>
+
+<programlisting>
+getProcessID :: IO ProcessID
+</programlisting>
+
+</para>
+
+<para>
+<function>getProcessID</function> calls <function>getpid</function> to obtain the <literal>ProcessID</literal> for
+the current process.
+</para>
+
+<para>
+
+<programlisting>
+getParentProcessID :: IO ProcessID
+</programlisting>
+
+</para>
+
+<para>
+<function>getProcessID</function> calls <function>getppid</function> to obtain the <literal>ProcessID</literal> for
+the parent of the current process.
+</para>
+
+<para>
+
+<programlisting>
+getRealUserID :: IO UserID
+</programlisting>
+
+</para>
+
+<para>
+<function>getRealUserID</function> calls <function>getuid</function> to obtain the real <literal>UserID</literal>
+associated with the current process.
+</para>
+
+<para>
+
+<programlisting>
+getEffectiveUserID :: IO UserID
+</programlisting>
+
+</para>
+
+<para>
+<function>getEffectiveUserID</function> calls <function>geteuid</function> to obtain the effective
+<literal>UserID</literal> associated with the current process.
+</para>
+
+<para>
+
+<programlisting>
+setUserID :: UserID -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>setUserID uid</literal> calls <function>setuid</function> to set the real, effective, and
+saved set-user-id associated with the current process to <literal>uid</literal>.
+</para>
+
+<para>
+
+<programlisting>
+getLoginName :: IO String
+</programlisting>
+
+</para>
+
+<para>
+<function>getLoginName</function> calls <function>getlogin</function> to obtain the login name
+associated with the current process.
+</para>
+
+<para>
+
+<programlisting>
+getRealGroupID :: IO GroupID
+</programlisting>
+
+</para>
+
+<para>
+<function>getRealGroupID</function> calls <function>getgid</function> to obtain the real <literal>GroupID</literal>
+associated with the current process.
+</para>
+
+<para>
+
+<programlisting>
+getEffectiveGroupID :: IO GroupID
+</programlisting>
+
+</para>
+
+<para>
+<function>getEffectiveGroupID</function> calls <function>getegid</function> to obtain the effective
+<literal>GroupID</literal> associated with the current process.
+</para>
+
+<para>
+
+<programlisting>
+setGroupID :: GroupID -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>setGroupID gid</literal> calls <function>setgid</function> to set the real, effective, and
+saved set-group-id associated with the current process to <literal>gid</literal>.
+</para>
+
+<para>
+
+<programlisting>
+getGroups :: IO [GroupID]
+</programlisting>
+
+</para>
+
+<para>
+<function>getGroups</function> calls <function>getgroups</function> to obtain the list of
+supplementary <literal>GroupID</literal>s associated with the current process.
+</para>
+
+<para>
+
+<programlisting>
+getEffectiveUserName :: IO String
+</programlisting>
+
+</para>
+
+<para>
+<function>getEffectiveUserName</function> calls <function>cuserid</function> to obtain a name
+associated with the effective <literal>UserID</literal> of the process.
+</para>
+
+<para>
+
+<programlisting>
+getProcessGroupID :: IO ProcessGroupID
+</programlisting>
+
+</para>
+
+<para>
+<function>getProcessGroupID</function> calls <function>getpgrp</function> to obtain the
+<literal>ProcessGroupID</literal> for the current process.
+</para>
+
+<para>
+
+<programlisting>
+createProcessGroup :: ProcessID -&#62; IO ProcessGroupID
+</programlisting>
+
+</para>
+
+<para>
+<literal>createProcessGroup pid</literal> calls <function>setpgid</function> to make
+process <literal>pid</literal> a new process group leader.
+</para>
+
+<para>
+
+<programlisting>
+joinProcessGroup :: ProcessGroupID -&#62; IO ProcessGroupID
+</programlisting>
+
+</para>
+
+<para>
+<literal>joinProcessGroup pgid</literal> calls <function>setpgid</function> to set the
+<literal>ProcessGroupID</literal> of the current process to <literal>pgid</literal>.
+</para>
+
+<para>
+
+<programlisting>
+setProcessGroupID :: ProcessID -&#62; ProcessGroupID -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>setProcessGroupID pid pgid</literal> calls <function>setpgid</function> to set the
+<literal>ProcessGroupID</literal> for process <literal>pid</literal> to <literal>pgid</literal>.
+</para>
+
+<para>
+
+<programlisting>
+createSession :: IO ProcessGroupID
+</programlisting>
+
+</para>
+
+<para>
+<function>createSession</function> calls <function>setsid</function> to create a new session
+with the current process as session leader.
+</para>
+
+<para>
+
+<programlisting>
+systemName :: SystemID -&#62; String
+nodeName :: SystemID -&#62; String
+release :: SystemID -&#62; String
+version :: SystemID -&#62; String
+machine :: SystemID -&#62; String
+
+getSystemID :: IO SystemID
+</programlisting>
+
+</para>
+
+<para>
+<function>getSystemID</function> calls <function>uname</function> to obtain information
+about the current operating system.
+</para>
+
+<para>
+
+<programlisting>
+&#62; epochTime :: IO EpochTime
+</programlisting>
+
+</para>
+
+<para>
+<function>epochTime</function> calls <function>time</function> to obtain the number of 
+seconds that have elapsed since the epoch (Jan 01 00:00:00 GMT 1970).
+</para>
+
+<para>
+
+<programlisting>
+elapsedTime     :: ProcessTimes -&#62; ClockTick
+userTime        :: ProcessTimes -&#62; ClockTick
+systemTime      :: ProcessTimes -&#62; ClockTick
+childUserTime   :: ProcessTimes -&#62; ClockTick
+childSystemTime :: ProcessTimes -&#62; ClockTick
+
+getProcessTimes :: IO ProcessTimes
+</programlisting>
+
+</para>
+
+<para>
+<function>getProcessTimes</function> calls <function>times</function> to obtain time-accounting
+information for the current process and its children.
+</para>
+
+<para>
+
+<programlisting>
+getControllingTerminalName :: IO FilePath
+</programlisting>
+
+</para>
+
+<para>
+<function>getControllingTerminalName</function> calls <function>ctermid</function> to obtain
+a name associated with the controlling terminal for the process.  If a
+controlling terminal exists,
+<function>getControllingTerminalName</function> returns the name of the
+controlling terminal.
+</para>
+
+<para>
+The operation may fail with:
+</para>
+
+<para>
+<variablelist>
+
+<varlistentry>
+<term><literal>NoSuchThing</literal></term>
+<listitem>
+<para>
+There is no controlling terminal, or its name cannot be determined.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><literal>SystemError</literal></term>
+<listitem>
+<para>
+Various other causes.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</para>
+
+<para>
+
+<programlisting>
+getTerminalName :: Fd -&#62; IO FilePath
+</programlisting>
+
+</para>
+
+<para>
+<literal>getTerminalName fd</literal> calls <function>ttyname</function> to obtain a name associated
+with the terminal for <literal>Fd</literal> <literal>fd</literal>. If <literal>fd</literal> is associated
+with a terminal, <function>getTerminalName</function> returns the name of the
+terminal.
+</para>
+
+<para>
+The operation may fail with:
+</para>
+
+<para>
+<variablelist>
+
+<varlistentry>
+<term><literal>InappropriateType</literal></term>
+<listitem>
+<para>
+The channel is not associated with a terminal.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><literal>NoSuchThing</literal></term>
+<listitem>
+<para>
+The channel is associated with a terminal, but it has no name.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><literal>SystemError</literal></term>
+<listitem>
+<para>
+Various other causes.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</para>
+
+<para>
+
+<programlisting>
+queryTerminal :: Fd -&#62; IO Bool
+</programlisting>
+
+</para>
+
+<para>
+<literal>queryTerminal fd</literal> calls <function>isatty</function> to determine whether or
+not <literal>Fd</literal> <literal>fd</literal> is associated with a terminal.
+</para>
+
+<para>
+
+<programlisting>
+getSysVar :: SysVar -&#62; IO Limit
+</programlisting>
+
+</para>
+
+<para>
+<literal>getSysVar var</literal> calls <function>sysconf</function> to obtain the
+dynamic value of the requested configurable system limit or option.
+For defined system limits, <function>getSysVar</function> returns the associated
+value.  For defined system options, the result of <function>getSysVar</function>
+is undefined, but not failure.
+</para>
+
+<para>
+The operation may fail with:
+</para>
+
+<para>
+<variablelist>
+
+<varlistentry>
+<term><literal>NoSuchThing</literal></term>
+<listitem>
+<para>
+The requested system limit or option is undefined.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</para>
+
+</sect1>
+
+<sect1 id="Files-and-Directories">
+<title>Posix operations on files and directories
+</title>
+
+<para>
+<indexterm><primary>Posix, files and directories</primary></indexterm>
+</para>
+
+<para>
+
+<programlisting>
+openDirStream :: FilePath -&#62; IO DirStream
+</programlisting>
+
+</para>
+
+<para>
+<literal>openDirStream dir</literal> calls <function>opendir</function> to obtain a
+directory stream for <literal>dir</literal>.
+</para>
+
+<para>
+
+<programlisting>
+readDirStream :: DirStream -&#62; IO String
+</programlisting>
+
+</para>
+
+<para>
+<literal>readDirStream dp</literal> calls <function>readdir</function> to obtain the
+next directory entry (<literal>struct dirent</literal>) for the open directory
+stream <literal>dp</literal>, and returns the <varname>d&lowbar;name</varname> member of that
+structure.
+</para>
+
+<para>
+The operation may fail with:
+</para>
+
+<para>
+<variablelist>
+
+<varlistentry>
+<term><literal>EOF</literal></term>
+<listitem>
+<para>
+End of file has been reached.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><literal>SystemError</literal></term>
+<listitem>
+<para>
+Various other causes.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</para>
+
+<para>
+
+<programlisting>
+rewindDirStream :: DirStream -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>rewindDirStream dp</literal> calls <function>rewinddir</function> to reposition
+the directory stream <literal>dp</literal> at the beginning of the directory.
+</para>
+
+<para>
+
+<programlisting>
+closeDirStream :: DirStream -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>closeDirStream dp</literal> calls <function>closedir</function> to close
+the directory stream <literal>dp</literal>.
+</para>
+
+<para>
+
+<programlisting>
+getWorkingDirectory :: IO FilePath
+</programlisting>
+
+</para>
+
+<para>
+<function>getWorkingDirectory</function> calls <function>getcwd</function> to obtain the name
+of the current working directory.
+</para>
+
+<para>
+
+<programlisting>
+changeWorkingDirectory :: FilePath -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>changeWorkingDirectory dir</literal> calls <function>chdir</function> to change
+the current working directory to <literal>dir</literal>.
+</para>
+
+<para>
+<programlisting>
+nullFileMode       :: FileMode       -- ---------
+ownerReadMode      :: FileMode       -- r--------
+ownerWriteMode     :: FileMode       -- -w-------
+ownerExecuteMode   :: FileMode       -- --x------
+groupReadMode      :: FileMode       -- ---r-----
+groupWriteMode     :: FileMode       -- ----w----
+groupExecuteMode   :: FileMode       -- -----x---
+otherReadMode      :: FileMode       -- ------r--
+otherWriteMode     :: FileMode       -- -------w-
+otherExecuteMode   :: FileMode       -- --------x
+setUserIDMode      :: FileMode       -- --S------
+setGroupIDMode     :: FileMode       -- -----S---
+                               
+stdFileMode        :: FileMode       -- rw-rw-rw-
+                               
+ownerModes         :: FileMode       -- rwx------
+groupModes         :: FileMode       -- ---rwx---
+otherModes         :: FileMode       -- ------rwx
+accessModes        :: FileMode       -- rwxrwxrwx
+
+unionFileModes     :: FileMode -&#62; FileMode -&#62; FileMode
+intersectFileModes :: FileMode -&#62; FileMode -&#62; FileMode
+
+stdInput  :: Fd
+stdInput  = intToFd 0
+
+stdOutput :: Fd
+stdOutput = intToFd 1
+
+stdError  :: Fd
+stdError  = intToFd 2
+
+data OpenFileFlags =
+ OpenFileFlags {
+    append    :: Bool,
+    exclusive :: Bool,
+    noctty    :: Bool,
+    nonBlock  :: Bool,
+    trunc     :: Bool
+ }
+
+openFd :: FilePath
+       -&#62; OpenMode
+       -&#62; Maybe FileMode  -- Just x =&#62; O_CREAT, Nothing =&#62; must exist
+       -&#62; OpenFileFlags
+       -&#62; IO Fd
+</programlisting>
+</para>
+
+<para>
+<literal>openFd path acc mode (OpenFileFlags app excl noctty nonblock trunc)</literal> calls
+<function>open</function> to obtain a <literal>Fd</literal> for the file <literal>path</literal> with access
+mode <literal>acc</literal>.  If <literal>mode</literal> is <literal>Just m</literal>, the <constant>O&lowbar;CREAT</constant> flag is
+set and the file's permissions will be based on <literal>m</literal> if it does not
+already exist; otherwise, the <constant>O&lowbar;CREAT</constant> flag is not set.  The
+arguments <literal>app</literal>, <literal>excl</literal>, <literal>noctty</literal>, <literal>nonblock</literal>, and
+<literal>trunc</literal> control whether or not the flags <constant>O&lowbar;APPEND</constant>,
+<constant>O&lowbar;EXCL</constant>, <constant>O&lowbar;NOCTTY</constant>, <constant>O&lowbar;NONBLOCK</constant>, and <constant>O&lowbar;TRUNC</constant> are set,
+respectively.
+</para>
+
+<para>
+
+<programlisting>
+createFile :: FilePath -&#62; FileMode -&#62; IO Fd
+</programlisting>
+
+</para>
+
+<para>
+<literal>createFile path mode</literal> calls <function>creat</function> to obtain a <literal>Fd</literal>
+for file <literal>path</literal>, which will be created with permissions based on
+<literal>mode</literal> if it does not already exist.
+</para>
+
+<para>
+
+<programlisting>
+setFileCreationMask :: FileMode -&#62; IO FileMode
+</programlisting>
+
+</para>
+
+<para>
+<literal>setFileCreationMask mode</literal> calls <function>umask</function> to set
+the process's file creation mask to <literal>mode</literal>.  The previous file
+creation mask is returned.
+</para>
+
+<para>
+
+<programlisting>
+createLink :: FilePath -&#62; FilePath -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>createLink old new</literal> calls <function>link</function> to create a 
+new path, <literal>new</literal>, linked to an existing file, <literal>old</literal>.
+
+<programlisting>
+createDirectory :: FilePath -&#62; FileMode -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>createDirectory dir mode</literal> calls <function>mkdir</function> to 
+create a new directory, <literal>dir</literal>, with permissions based on
+<literal>mode</literal>.
+</para>
+
+<para>
+
+<programlisting>
+createNamedPipe :: FilePath -&#62; FileMode -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>createNamedPipe fifo mode</literal> calls <function>mkfifo</function> to 
+create a new named pipe, <literal>fifo</literal>, with permissions based on
+<literal>mode</literal>.
+</para>
+
+<para>
+
+<programlisting>
+removeLink :: FilePath -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>removeLink path</literal> calls <function>unlink</function> to remove the link
+named <literal>path</literal>.
+</para>
+
+<para>
+
+<programlisting>
+removeDirectory :: FilePath -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>removeDirectory dir</literal> calls <function>rmdir</function> to remove the 
+directory named <literal>dir</literal>.
+</para>
+
+<para>
+
+<programlisting>
+rename :: FilePath -&#62; FilePath -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>rename old new</literal> calls <function>rename</function> to rename a 
+file or directory from <literal>old</literal> to <literal>new</literal>.
+</para>
+
+<para>
+
+<programlisting>
+fileMode          :: FileStatus -&#62; FileMode
+                   
+fileID            :: FileStatus -&#62; FileID
+deviceID          :: FileStatus -&#62; DeviceID
+                   
+linkCount         :: FileStatus -&#62; LinkCount
+                   
+fileOwner         :: FileStatus -&#62; UserID
+fileGroup         :: FileStatus -&#62; GroupID
+fileSize          :: FileStatus -&#62; FileOffset
+
+accessTime        :: FileStatus -&#62; EpochTime
+modificationTime  :: FileStatus -&#62; EpochTime
+statusChangeTime  :: FileStatus -&#62; EpochTime
+
+isDirectory       :: FileStatus -&#62; Bool
+isCharacterDevice :: FileStatus -&#62; Bool
+isBlockDevice     :: FileStatus -&#62; Bool
+isRegularFile     :: FileStatus -&#62; Bool
+isNamedPipe       :: FileStatus -&#62; Bool
+
+getFileStatus     :: FilePath -&#62; IO FileStatus
+</programlisting>
+
+</para>
+
+<para>
+<literal>getFileStatus path</literal> calls <function>stat</function> to get the
+<literal>FileStatus</literal> information for the file <literal>path</literal>.
+</para>
+
+<para>
+
+<programlisting>
+getFdStatus :: Fd -&#62; IO FileStatus
+</programlisting>
+
+</para>
+
+<para>
+<literal>getFdStatus fd</literal> calls <function>fstat</function> to get the
+<literal>FileStatus</literal> information for the file associated with
+<literal>Fd</literal> <literal>fd</literal>.
+</para>
+
+<para>
+
+<programlisting>
+queryAccess :: FilePath -&#62; Bool -&#62; Bool -&#62; Bool -&#62; IO Bool
+</programlisting>
+
+</para>
+
+<para>
+<literal>queryAccess path r w x</literal> calls <function>access</function> to test the access
+permissions for file <literal>path</literal>.  The three arguments, <literal>r</literal>, <literal>w</literal>,
+and <literal>x</literal> control whether or not <function>access</function> is called with
+<constant>R&lowbar;OK</constant>, <constant>W&lowbar;OK</constant>, and <constant>X&lowbar;OK</constant> respectively.
+</para>
+
+<para>
+
+<programlisting>
+queryFile :: FilePath -&#62; IO Bool
+</programlisting>
+
+</para>
+
+<para>
+<literal>queryFile path</literal> calls <function>access</function> with <constant>F&lowbar;OK</constant> to test for the
+existence for file <literal>path</literal>.
+</para>
+
+<para>
+
+<programlisting>
+setFileMode :: FilePath -&#62; FileMode -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>setFileMode path mode</literal> calls <function>chmod</function> to set the
+permission bits associated with file <literal>path</literal> to <literal>mode</literal>.
+</para>
+
+<para>
+
+<programlisting>
+setOwnerAndGroup :: FilePath -&#62; UserID -&#62; GroupID -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>setOwnerAndGroup path uid gid</literal> calls <function>chown</function> to
+set the <literal>UserID</literal> and <literal>GroupID</literal> associated with file
+<literal>path</literal> to <literal>uid</literal> and <literal>gid</literal>, respectively.
+</para>
+
+<para>
+
+<programlisting>
+setFileTimes :: FilePath -&#62; EpochTime -&#62; EpochTime -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>setFileTimes path atime mtime</literal> calls <function>utime</function> to
+set the access and modification times associated with file
+<literal>path</literal> to <literal>atime</literal> and <literal>mtime</literal>, respectively.
+</para>
+
+<para>
+
+<programlisting>
+touchFile :: FilePath -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>touchFile path</literal> calls <function>utime</function> to
+set the access and modification times associated with file
+<literal>path</literal> to the current time.
+</para>
+
+<para>
+
+<programlisting>
+getPathVar :: PathVar -&#62; FilePath -&#62; IO Limit
+</programlisting>
+
+</para>
+
+<para>
+<literal>getPathVar var path</literal> calls <function>pathconf</function> to obtain the
+dynamic value of the requested configurable file limit or option associated
+with file or directory <literal>path</literal>.  For
+defined file limits, <function>getPathVar</function> returns the associated
+value.  For defined file options, the result of <function>getPathVar</function>
+is undefined, but not failure.
+The operation may fail with:
+<variablelist>
+
+<varlistentry>
+<term><literal>NoSuchThing</literal></term>
+<listitem>
+<para>
+The requested file limit or option is undefined.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><literal>SystemError</literal></term>
+<listitem>
+<para>
+Various other causes.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</para>
+
+<para>
+
+<programlisting>
+getFdVar :: PathVar -&#62; Fd -&#62; IO Limit
+</programlisting>
+
+</para>
+
+<para>
+<literal>getFdVar var fd</literal> calls <function>fpathconf</function> to obtain the
+dynamic value of the requested configurable file limit or option associated
+with the file or directory attached to the open channel <literal>fd</literal>.
+For defined file limits, <function>getFdVar</function> returns the associated
+value.  For defined file options, the result of <function>getFdVar</function>
+is undefined, but not failure.
+</para>
+
+<para>
+The operation may fail with:
+</para>
+
+<para>
+<variablelist>
+
+<varlistentry>
+<term><literal>NoSuchThing</literal></term>
+<listitem>
+<para>
+The requested file limit or option is undefined.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><literal>SystemError</literal></term>
+<listitem>
+<para>
+Various other causes.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</para>
+
+</sect1>
+
+<sect1 id="Input-Output">
+<title>Posix Input and Output Primitives
+</title>
+
+<para>
+<indexterm><primary>Posix, input/output</primary></indexterm>
+</para>
+
+<para>
+
+<programlisting>
+createPipe :: IO (Fd, Fd)
+</programlisting>
+
+</para>
+
+<para>
+<function>createPipe</function> calls <function>pipe</function> to create a pipe and returns a pair of
+<literal>Fd</literal>s, the first for reading and the second for writing.
+</para>
+
+<para>
+
+<programlisting>
+dup :: Fd -&#62; IO Fd
+</programlisting>
+
+</para>
+
+<para>
+<literal>dup fd</literal> calls <function>dup</function> to duplicate <literal>Fd</literal> <literal>fd</literal> to
+another <literal>Fd</literal>.
+</para>
+
+<para>
+
+<programlisting>
+dupTo :: Fd -&#62; Fd -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>dupTo src dst</literal> calls <function>dup2</function> to duplicate <literal>Fd</literal>
+<literal>src</literal> to <literal>Fd</literal> <literal>dst</literal>.
+</para>
+
+<para>
+
+<programlisting>
+fdClose :: Fd -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>fdClose fd</literal> calls <function>close</function> to close <literal>Fd</literal> <literal>fd</literal>.
+</para>
+
+<para>
+
+<programlisting>
+fdRead :: Fd -&#62; ByteCount -&#62; IO (String, ByteCount)
+</programlisting>
+
+</para>
+
+<para>
+<literal>fdRead fd nbytes</literal> calls <function>read</function> to read at most <literal>nbytes</literal>
+bytes from <literal>Fd</literal> <literal>fd</literal>, and returns the result as a string
+paired with the number of bytes actually read.
+</para>
+
+<para>
+The operation may fail with:
+</para>
+
+<para>
+<variablelist>
+
+<varlistentry>
+<term><literal>EOF</literal></term>
+<listitem>
+<para>
+End of file has been reached.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><literal>SystemError</literal></term>
+<listitem>
+<para>
+Various other causes.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</para>
+
+<para>
+
+<programlisting>
+fdWrite :: Fd -&#62; String -&#62; IO ByteCount
+</programlisting>
+
+</para>
+
+<para>
+<literal>fdWrite fd s</literal> calls <function>write</function> to write
+the string <literal>s</literal> to <literal>Fd</literal> <literal>fd</literal> as a
+contiguous sequence of bytes.  It returns the number of bytes successfully
+written.
+</para>
+
+<para>
+
+<programlisting>
+queryFdOption :: FdOption -&#62; Fd -&#62; IO Bool
+</programlisting>
+
+</para>
+
+<para>
+<literal>getFdOption opt fd</literal> calls <function>fcntl</function> to determine whether or
+not the flag associated with <literal>FdOption</literal> <literal>opt</literal> is set for
+<literal>Fd</literal> <literal>fd</literal>.
+</para>
+
+<para>
+
+<programlisting>
+setFdOption :: Fd -&#62; FdOption -&#62; Bool -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>setFdOption fd opt val</literal> calls <function>fcntl</function> to set the flag
+associated with <literal>FdOption</literal> <literal>opt</literal> on <literal>Fd</literal> <literal>fd</literal> to
+<literal>val</literal>.
+</para>
+
+<para>
+
+<programlisting>
+getLock :: Fd -&#62; FileLock -&#62; IO (Maybe (ProcessID, FileLock))
+</programlisting>
+
+</para>
+
+<para>
+<literal>getLock fd lock</literal> calls <function>fcntl</function> to get the first <literal>FileLock</literal>
+for <literal>Fd</literal> <literal>fd</literal> which blocks the <literal>FileLock</literal> <literal>lock</literal>.  If
+no such <literal>FileLock</literal> exists, <function>getLock</function> returns <literal>Nothing</literal>.
+Otherwise, it returns <literal>Just (pid, block)</literal>, where <literal>block</literal> is the
+blocking <literal>FileLock</literal> and <literal>pid</literal> is the <literal>ProcessID</literal> of the
+process holding the blocking <literal>FileLock</literal>.
+</para>
+
+<para>
+
+<programlisting>
+setLock :: Fd -&#62; FileLock -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>setLock fd lock</literal> calls <function>fcntl</function> with <constant>F&lowbar;SETLK</constant> to set or
+clear a lock segment for <literal>Fd</literal> <literal>fd</literal> as indicated by the
+<literal>FileLock</literal> <literal>lock</literal>.  <function>setLock</function> does not block, but fails with
+<literal>SystemError</literal> if the request cannot be satisfied immediately.
+</para>
+
+<para>
+
+<programlisting>
+waitToSetLock :: Fd -&#62; FileLock -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>waitToSetLock fd lock</literal> calls <function>fcntl</function> with <constant>F&lowbar;SETLKW</constant> to set
+or clear a lock segment for <literal>Fd</literal> <literal>fd</literal> as indicated by the
+<literal>FileLock</literal> <literal>lock</literal>. If the request cannot be satisfied
+immediately, <function>waitToSetLock</function> blocks until the request can be
+satisfied.
+</para>
+
+<para>
+
+<programlisting>
+fdSeek :: Fd -&#62; SeekMode -&#62; FileOffset -&#62; IO FileOffset
+</programlisting>
+
+</para>
+
+<para>
+<literal>fdSeek fd whence offset</literal> calls <function>lseek</function> to position the
+<literal>Fd</literal> <literal>fd</literal> at the given <literal>offset</literal> from the starting location
+indicated by <literal>whence</literal>.  It returns the resulting offset from the
+start of the file in bytes.
+</para>
+
+</sect1>
+
+<sect1 id="Device-Specific-Functions">
+<title>Posix, Device- and Class-Specific Functions
+</title>
+
+<para>
+<indexterm><primary>Posix, device and class-specific functions</primary></indexterm>
+</para>
+
+<para>
+
+<programlisting>
+terminalMode    :: TerminalMode -&#62; TerminalAttributes -&#62; Bool
+withMode        :: TerminalAttributes -&#62; TerminalMode -&#62; TerminalAttributes
+withoutMode     :: TerminalAttributes -&#62; TerminalMode -&#62; TerminalAttributes
+
+bitsPerByte     :: TerminalAttributes -&#62; Int
+withBits        :: TerminalAttributes -&#62; Int -&#62; TerminalAttributes
+
+controlChar     :: TerminalAttributes -&#62; ControlCharacter -&#62; Maybe Char
+withCC          :: TerminalAttributes
+                -&#62; (ControlCharacter, Char)
+                -&#62; TerminalAttributes 
+withoutCC       :: TerminalAttributes 
+                -&#62; ControlCharacter 
+                -&#62; TerminalAttributes
+                  
+inputTime       :: TerminalAttributes -&#62; Int
+withTime        :: TerminalAttributes -&#62; Int -&#62; TerminalAttributes
+                  
+minInput        :: TerminalAttributes -&#62; Int
+withMinInput    :: TerminalAttributes -&#62; Int -&#62; TerminalAttributes
+                  
+inputSpeed      :: TerminalAttributes -&#62; BaudRate
+withInputSpeed  :: TerminalAttributes -&#62; BaudRate -&#62; TerminalAttributes
+                  
+outputSpeed     :: TerminalAttributes -&#62; BaudRate
+withOutputSpeed :: TerminalAttributes -&#62; BaudRate -&#62; TerminalAttributes
+
+getTerminalAttributes :: Fd -&#62; IO TerminalAttributes
+</programlisting>
+
+</para>
+
+<para>
+<literal>getTerminalAttributes fd</literal> calls <function>tcgetattr</function> to obtain
+the <literal>TerminalAttributes</literal> associated with <literal>Fd</literal> <literal>fd</literal>.
+</para>
+
+<para>
+
+<programlisting>
+setTerminalAttributes :: Fd
+                      -&#62; TerminalAttributes 
+                      -&#62; TerminalState
+                      -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>setTerminalAttributes fd attr ts</literal> calls <function>tcsetattr</function> to change
+the <literal>TerminalAttributes</literal> associated with <literal>Fd</literal> <literal>fd</literal> to
+<literal>attr</literal>, when the terminal is in the state indicated by <literal>ts</literal>.
+</para>
+
+<para>
+
+<programlisting>
+sendBreak :: Fd -&#62; Int -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>sendBreak fd duration</literal> calls <function>tcsendbreak</function> to transmit a
+continuous stream of zero-valued bits on <literal>Fd</literal> <literal>fd</literal> for the
+specified implementation-dependent <literal>duration</literal>.
+</para>
+
+<para>
+
+<programlisting>
+drainOutput :: Fd -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>drainOutput fd</literal> calls <function>tcdrain</function> to block until all output
+written to <literal>Fd</literal> <literal>fd</literal> has been transmitted.
+</para>
+
+<para>
+
+<programlisting>
+discardData :: Fd -&#62; QueueSelector -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>discardData fd queues</literal> calls <function>tcflush</function> to discard
+pending input and/or output for <literal>Fd</literal> <literal>fd</literal>,
+as indicated by the <literal>QueueSelector</literal> <literal>queues</literal>.
+</para>
+
+<para>
+
+<programlisting>
+controlFlow :: Fd -&#62; FlowAction -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>controlFlow fd action</literal> calls <function>tcflow</function> to control the 
+flow of data on <literal>Fd</literal> <literal>fd</literal>, as indicated by
+<literal>action</literal>.
+</para>
+
+<para>
+
+<programlisting>
+getTerminalProcessGroupID :: Fd -&#62; IO ProcessGroupID
+</programlisting>
+
+</para>
+
+<para>
+<literal>getTerminalProcessGroupID fd</literal> calls <function>tcgetpgrp</function> to
+obtain the <literal>ProcessGroupID</literal> of the foreground process group 
+associated with the terminal attached to <literal>Fd</literal> <literal>fd</literal>.
+</para>
+
+<para>
+
+<programlisting>
+setTerminalProcessGroupID :: Fd -&#62; ProcessGroupID -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>setTerminalProcessGroupID fd pgid</literal> calls <function>tcsetpgrp</function> to
+set the <literal>ProcessGroupID</literal> of the foreground process group 
+associated with the terminal attached to <literal>Fd</literal> 
+<literal>fd</literal> to <literal>pgid</literal>.
+</para>
+
+</sect1>
+
+<sect1 id="System-Database">
+<title>Posix System Databases
+</title>
+
+<para>
+<indexterm><primary>Posix, system databases</primary></indexterm>
+</para>
+
+<para>
+
+<programlisting>
+groupName    :: GroupEntry -&#62; String
+groupID      :: GroupEntry -&#62; GroupID
+groupMembers :: GroupEntry -&#62; [String]
+
+getGroupEntryForID :: GroupID -&#62; IO GroupEntry
+</programlisting>
+
+</para>
+
+<para>
+<literal>getGroupEntryForID gid</literal> calls <function>getgrgid</function> to obtain
+the <literal>GroupEntry</literal> information associated with <literal>GroupID</literal>
+<literal>gid</literal>.
+</para>
+
+<para>
+The operation may fail with:
+</para>
+
+<para>
+<variablelist>
+
+<varlistentry>
+<term><literal>NoSuchThing</literal></term>
+<listitem>
+<para>
+There is no group entry for the GroupID.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</para>
+
+<para>
+
+<programlisting>
+getGroupEntryForName :: String -&#62; IO GroupEntry
+</programlisting>
+
+</para>
+
+<para>
+<literal>getGroupEntryForName name</literal> calls <function>getgrnam</function> to obtain
+the <literal>GroupEntry</literal> information associated with the group called
+<literal>name</literal>.
+</para>
+
+<para>
+The operation may fail with:
+</para>
+
+<para>
+<variablelist>
+
+<varlistentry>
+<term><literal>NoSuchThing</literal></term>
+<listitem>
+<para>
+There is no group entry for the name.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</para>
+
+<para>
+
+<programlisting>
+userName      :: UserEntry -&#62; String
+userID        :: UserEntry -&#62; UserID
+userGroupID   :: UserEntry -&#62; GroupID
+homeDirectory :: UserEntry -&#62; String
+userShell     :: UserEntry -&#62; String
+
+getUserEntryForID :: UserID -&#62; IO UserEntry
+</programlisting>
+
+</para>
+
+<para>
+<literal>getUserEntryForID gid</literal> calls <function>getpwuid</function> to obtain
+the <literal>UserEntry</literal> information associated with <literal>UserID</literal>
+<literal>uid</literal>.
+The operation may fail with:
+</para>
+
+<para>
+<variablelist>
+
+<varlistentry>
+<term><literal>NoSuchThing</literal></term>
+<listitem>
+<para>
+There is no user entry for the UserID.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</para>
+
+<para>
+
+<programlisting>
+getUserEntryForName :: String -&#62; IO UserEntry
+</programlisting>
+
+</para>
+
+<para>
+<literal>getUserEntryForName name</literal> calls <function>getpwnam</function> to obtain
+the <literal>UserEntry</literal> information associated with the user login
+<literal>name</literal>.
+</para>
+
+<para>
+The operation may fail with:
+</para>
+
+<para>
+<variablelist>
+
+<varlistentry>
+<term><literal>NoSuchThing</literal></term>
+<listitem>
+<para>
+There is no user entry for the name.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</para>
+
+</sect1>
+
+<sect1 id="Error-reporting-and-handling">
+<title>POSIX Errors
+</title>
+
+<para>
+<indexterm><primary>Posix, errors</primary></indexterm>
+</para>
+
+<para>
+
+<programlisting>
+getErrorCode :: IO ErrorCode
+</programlisting>
+
+</para>
+
+<para>
+<function>getErrorCode</function> returns the current value of the external
+variable <function>errno</function>.  It never fails.
+</para>
+
+<para>
+
+<programlisting>
+setErrorCode :: ErrorCode -&#62; IO ()
+</programlisting>
+
+</para>
+
+<para>
+<literal>setErrorCode err</literal> sets the external
+variable <function>errno</function> to <literal>err</literal>.  It never fails.
+</para>
+
+<para>
+
+<programlisting>
+noError :: ErrorCode
+noError = 0
+
+argumentListTooLong, e2BIG              :: ErrorCode
+badFd, eBADF                            :: ErrorCode
+brokenPipe, ePIPE                       :: ErrorCode
+directoryNotEmpty, eNOTEMPTY            :: ErrorCode
+execFormatError, eNOEXEC                :: ErrorCode
+fileAlreadyExists, eEXIST               :: ErrorCode
+fileTooLarge, eFBIG                     :: ErrorCode
+filenameTooLong, eNAMETOOLONG           :: ErrorCode
+improperLink, eXDEV                     :: ErrorCode
+inappropriateIOControlOperation, eNOTTY :: ErrorCode
+inputOutputError, eIO                   :: ErrorCode
+interruptedOperation, eINTR             :: ErrorCode
+invalidArgument, eINVAL                 :: ErrorCode
+invalidSeek, eSPIPE                     :: ErrorCode
+isADirectory, eISDIR                    :: ErrorCode
+noChildProcess, eCHILD                  :: ErrorCode
+noLocksAvailable, eNOLCK                :: ErrorCode
+noSpaceLeftOnDevice, eNOSPC             :: ErrorCode
+noSuchOperationOnDevice, eNODEV         :: ErrorCode
+noSuchDeviceOrAddress, eNXIO            :: ErrorCode
+noSuchFileOrDirectory, eNOENT           :: ErrorCode
+noSuchProcess, eSRCH                    :: ErrorCode
+notADirectory, eNOTDIR                  :: ErrorCode
+notEnoughMemory, eNOMEM                 :: ErrorCode
+operationNotImplemented, eNOSYS         :: ErrorCode
+operationNotPermitted, ePERM            :: ErrorCode
+permissionDenied, eACCES                :: ErrorCode
+readOnlyFileSystem, eROFS               :: ErrorCode
+resourceBusy, eBUSY                     :: ErrorCode
+resourceDeadlockAvoided, eDEADLK        :: ErrorCode
+resourceTemporarilyUnavailable, eAGAIN  :: ErrorCode
+tooManyLinks, eMLINK                    :: ErrorCode
+tooManyOpenFiles, eMFILE                :: ErrorCode
+tooManyOpenFilesInSystem, eNFILE        :: ErrorCode
+</programlisting>
+
+</para>
+
+</sect1>
+
+<sect1 id="POpen">
+<title>POpen
+</title>
+
+<para>
+<indexterm><primary>POpen</primary></indexterm>
+POpen provides a convenient way of sending string input to a
+subprocess and reading output from it lazily.
+</para>
+
+<para>
+
+<programlisting>
+popen :: FilePath			-- Command
+      -> [String]			-- Arguments
+      -> Maybe String			-- Input
+      -> IO (String, String, ProcessID)	-- (stdout, stderr, pid)
+</programlisting>
+
+</para>
+
+<para>
+<literal>popen cmd args inp</literal> executes
+<literal>cmd</literal> with <literal>args</literal> in a
+forked process.  If <literal>inp</literal> is
+<literal>Just str</literal> then str in sent in a pipe to
+the standard input of the process. The output and error
+streams from the process are returned, together with the
+process id.
+</para>
+
+<para>
+
+<programlisting>
+popenEnvDir :: FilePath				-- Command
+	    -> [String]				-- Arguments
+	    -> Maybe String			-- Input
+	    -> Maybe [(String, String)]		-- Environment
+	    -> Maybe FilePath 			-- Working directory    
+	    -> IO (String, String, ProcessID)	-- (stdout, stderr, pid)
+</programlisting>
+
+</para>
+
+<para>
+<literal>popenEnvDir cmd args inp env dir</literal> like
+<literal>popen</literal> executes
+<literal>cmd</literal> with <literal>args</literal> in a
+forked process.  If <literal>inp</literal> is
+<literal>Just str</literal> then str in sent in a pipe to
+the standard input of the process. If <literal>env</literal>
+is <literal>Just pairs</literal>, the command in executed in
+the environment specified by <literal>pairs</literal>,
+instead of the current one.  If <literal>dir</literal> is
+<literal>Just d</literal> the command is executed in
+directory <literal>d</literal> instead of the current
+directory.  The output and error streams from the process
+are returned, together with the process id.
+</para>
+
+</sect1>
+
+</chapter>

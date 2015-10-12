@@ -1,0 +1,15 @@
+<!-- XmlLang04.xml: override language, and revert following element -->
+<doc xmlns:eg="http://id.example.org/namespace">
+  <eg:inner xml:base="http://id.example.org/base1" 
+            xml:lang="fr"
+            eg:a2="a2">
+    <eg:deeper xml:base="http://id.example.org/base2" 
+               xml:lang="de"
+               eg:a3="a3">
+       <eg:evendeeper />
+    </eg:deeper>
+    <eg:anotherdeeper>
+       <eg:evendeeper xml:base="" xml:lang=""/>
+    </eg:anotherdeeper>
+  </eg:inner>
+</doc>

@@ -1,0 +1,11 @@
+<sect1 id="sec-GetOpt">
+<title><literal>GetOpt</literal>: Command line parsing
+<indexterm><primary>GetOpt</primary></indexterm>
+</title>
+
+  <para>The <literal>GetOpt</literal> library has been moved to the
+  hierarchical libraries; it can be found in
+  <ulink url="../libraries/base/System.Console.GetOpt.html"><literal>System.Console.GetOpt</literal></ulink> in the
+  <literal>base</literal> package.</para>
+
+</sect1>

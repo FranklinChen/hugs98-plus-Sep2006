@@ -1,0 +1,61 @@
+#include "HsHGLConfig.h"
+
+name:		PACKAGE
+version:	VERSION
+license:	BSD3
+maintainer:	MAINTAINER
+exposed:	True
+
+exposed-modules:
+	Graphics.HGL.Core,
+	Graphics.HGL.Draw,
+	Graphics.HGL.Units,
+	Graphics.HGL.Key,
+	Graphics.HGL.Run,
+	Graphics.HGL.Draw.Brush,
+	Graphics.HGL.Draw.Font,
+	Graphics.HGL.Draw.Monad,
+	Graphics.HGL.Draw.Pen,
+	Graphics.HGL.Draw.Picture,
+	Graphics.HGL.Draw.Region,
+	Graphics.HGL.Draw.Text,
+	Graphics.HGL.Utils,
+	Graphics.HGL.Window,
+	Graphics.HGL,
+	Graphics.SOE
+
+hidden-modules:
+	Graphics.HGL.Internals.Event,
+	Graphics.HGL.Internals.Events,
+	Graphics.HGL.Internals.Draw,
+	Graphics.HGL.Internals.Types,
+	Graphics.HGL.Internals.Flag,
+	Graphics.HGL.Internals.Utilities,
+#if X_DISPLAY_MISSING
+	Graphics.HGL.Win32.Bitmap,
+	Graphics.HGL.Win32.Draw,
+	Graphics.HGL.Win32.Types,
+	Graphics.HGL.Win32.WND
+#else
+	Graphics.HGL.X11.Display,
+	Graphics.HGL.X11.DC,
+	Graphics.HGL.X11.Timer,
+	Graphics.HGL.X11.Types,
+	Graphics.HGL.X11.Window
+#endif
+
+import-dirs:	IMPORT_DIR
+library-dirs:	LIB_DIR
+hs-libraries:   "HSHGL"
+extra-libraries:
+
+include-dirs:
+includes:		
+depends:	 base, PLATFORM
+hugs-options:
+cc-options:
+ld-options:
+framework-dirs:
+frameworks:
+haddock-interfaces:	HADDOCK_IFACE
+haddock-html:		HTML_DIR

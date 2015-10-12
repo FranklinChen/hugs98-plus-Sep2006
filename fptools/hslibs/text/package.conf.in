@@ -1,0 +1,53 @@
+#include "ghcconfig.h"
+
+name:		PACKAGE
+version:	VERSION
+license:	BSD3
+maintainer:	libraries@haskell.org
+exposed:	False
+
+exposed-modules:
+        Pretty,
+        RegexString,
+        Html,
+        HtmlBlockTable,
+        Parsec,
+        ParsecChar,
+        ParsecCombinator,
+        ParsecError,
+        ParsecExpr,
+        ParsecLanguage,
+        ParsecPerm,
+        ParsecPos,
+        ParsecPrim,
+        ParsecToken
+hidden-modules:
+
+#ifdef INSTALLING
+import-dirs:	PKG_LIBDIR"/hslibs-imports/text"
+#else
+import-dirs:	FPTOOLS_TOP_ABS"/hslibs/text",
+		FPTOOLS_TOP_ABS"/hslibs/text/html",
+		FPTOOLS_TOP_ABS"/hslibs/text/parsec"
+#endif
+
+#ifdef INSTALLING
+library-dirs:	PKG_LIBDIR
+#else
+library-dirs:	FPTOOLS_TOP_ABS"/hslibs/text"
+#endif
+
+hs-libraries:   "HStext"
+extra-libraries:
+
+include-dirs:
+includes:		
+depends:	lang, parsec
+hugs-options:
+cc-options:
+ld-options:
+framework-dirs:
+frameworks:
+haddock-interfaces:
+haddock-html:
+

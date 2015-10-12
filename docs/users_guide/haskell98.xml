@@ -1,0 +1,438 @@
+<chapter id="haskell98">
+<title>Hugs <foreignphrase>vs</foreignphrase> Haskell 98 and addenda</title>
+
+<para>
+In <option>+98</option> mode, Hugs supports
+<ulink url="http://www.haskell.org/definition/">Haskell 98</ulink>
+and some standardized extensions
+(described by addenda to the Haskell 98 report).
+</para>
+
+<sect1 id="bugs-haskell98">
+<title>Haskell 98 non-compliance</title>
+
+<para>
+Hugs deviates from Haskell 98 in a few minor ways,
+listed here corresponding to the relevant sections of the Report.
+</para>
+
+<sect2 id="bugs-lexical">
+<title>Lexical structure</title>
+
+<variablelist>
+
+<varlistentry>
+<term>Restricted character set</term>
+<listitem><para>
+The Haskell report specifies that programs may be written using Unicode.
+Hugs permits Unicode in strings and comments (in the appropriate locale,
+see <xref linkend="locale"/>),
+but identifiers are limited to the ISO8859-1 (Latin-1) subset at the moment.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Limited lookahead</term>
+<listitem><para>
+Hugs is confused by such things as
+<quote><literal>Just.if</literal></quote>,
+<quote><literal>0xy</literal></quote>,
+<quote><literal>0oy</literal></quote>,
+<quote><literal>9e+y</literal></quote> and
+<quote><literal>9.0e+y</literal></quote>,
+because it doesn't look far enough ahead.
+</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect2>
+
+<sect2 id="bugs-syntax">
+<title>Expressions</title>
+
+<variablelist>
+
+<varlistentry>
+<term>Interaction of fixities with the
+<literal>let</literal>/lambda meta-rule</term>
+<listitem><para>
+Hugs doesn't use the fixity of operators until after parsing, and so
+fails to accept legal (but weird) Haskell 98 expressions like
+<programlisting>
+let x = True in x == x == True
+</programlisting>
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Restricted syntax for left sections</term>
+<listitem><para>
+In Hugs, the expression must be an fexp
+(or <literal>case</literal> or <literal>do</literal>).
+Legal expressions like <literal>(a+b+)</literal> and
+<literal>(a*b+)</literal> are rejected.
+</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect2>
+
+<sect2 id="bugs-types">
+<title>Declarations and bindings</title>
+
+<variablelist>
+
+<varlistentry>
+<term>Slight relaxation of polymorphic recursion</term>
+<listitem><para>
+Hugs's treatment of polymorphic recursion is less restrictive than Haskell 98
+when the functions involved are mutually recursive.
+Consider the following example:
+<programlisting>
+data BalancedTree a = Zero a | Succ (BalancedTree (a,a))
+
+zig :: BalancedTree a -> a
+zig (Zero a) = a
+zig (Succ t) = fst (zag t)
+
+zag (Zero a) = a
+zag (Succ t) = snd (zig t)
+</programlisting>
+As with many operations on non-regular (or nested) types,
+<function>zig</function> and <function>zag</function>
+need to be polymorphic in the element type.
+In Haskell 98, the bindings of the two functions are interdependent,
+and thus constitute a single binding group.
+When type inference is performed on this group,
+<function>zig</function> may be used at different types,
+because it has a user-supplied polymorphic signature.
+However, <function>zag</function> may not, and the example is rejected,
+unless we add an explicit type signature for <function>zag</function>.
+(It could be argued that this is a bug in Haskell 98.)
+</para>
+
+<para>
+In Hugs, the binding of <function>zig</function> depends on that of
+<function>zag</function>, but not vice versa.
+(The binding of <function>zag</function> is considered to depend only on
+the explicit signature of <function>zig</function>.)
+It is possible to infer a polymorphic type for <function>zag</function>,
+and from that for <function>zig</function>.
+This type matches the declared signature, so Hugs accepts this example.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Relaxation of type classes</term>
+<listitem><para>
+Contrary to the the Report (4.3.1), Hugs allows the types of the member
+functions of a class <replaceable>C</replaceable> <replaceable>a</replaceable>
+to impose further constraints on <replaceable>a</replaceable>, as in
+<programlisting>
+class Foo a where
+    op :: Num a => a -> a -> a
+</programlisting>
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Different implementation of the monomorphism restriction for top-level bindings</term>
+<listitem><para>
+For example, Hugs rejects the following example from the
+Haskell 98 Report, 4.5.5:
+<programlisting>
+module M where
+import List
+len1 = genericLength "Hello"
+len2 = (2*len1) :: Rational
+</programlisting>
+This module consists of two binding groups,
+containing <function>len1</function> and
+<function>len2</function> respectively.
+Type inference on the first (<function>len1</function>) triggers the
+monomorphism restriction, so that <function>len1</function> is assigned
+the monomorphic type <literal>(Num a => a)</literal>.
+The next step differs between Haskell 98 and Hugs:
+<itemizedlist>
+<listitem><para>
+In Haskell 98,
+type inference is then performed on <function>len2</function>,
+resolving the type variable <literal>a</literal>
+to <literal>Rational</literal>, and the module is legal.
+</para></listitem>
+
+<listitem><para>
+In Hugs, the defaulting rule is applied to <function>len1</function>,
+instantiating the type variable <literal>a</literal> to
+<literal>Integer</literal>.
+Then type inference on <function>len2</function> fails.
+</para></listitem>
+</itemizedlist>
+<!--
+<http://www.mail-archive.com/haskell@haskell.org/msg05160.html>
+-->
+</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect2>
+
+<sect2 id="bugs-modules">
+<title>Modules</title>
+
+<variablelist>
+
+<varlistentry>
+<term>Implicit module header</term>
+<listitem><para>
+In Haskell 98, if the module header is omitted, it defaults to
+<quote><literal>module Main(main) where</literal></quote>.
+In Hugs it defaults to <quote><literal>module Main where</literal></quote>,
+because many people test small modules without module headers.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Implicit export list</term>
+<listitem><para>
+In Haskell 98, a missing export list means all names defined in the
+current module.
+In Hugs, it is treated as
+<quote><literal>(module <replaceable>M</replaceable>)</literal></quote>,
+where <replaceable>M</replaceable> is the current module.
+This is almost the same, differing only when an imported module is aliased as
+<replaceable>M</replaceable>.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Type synonyms in export and import lists</term>
+<listitem><para>
+Hugs allows the <replaceable>T</replaceable><literal>(..)</literal>
+syntax for type synonyms in export and import lists.
+It also allows the form <replaceable>T</replaceable><literal>()</literal>
+for type synonyms in import lists.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Mutually recursive modules are not supported</term>
+<listitem><para>
+Note that although the Haskell 98 specification of the
+<literal>Prelude</literal> and library modules is recursive,
+Hugs achieves the same effect by putting most of these definitions
+in a module <literal>Hugs.Prelude</literal> that these modules import.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Weird treatment of <literal>(:)</literal></term>
+<listitem><para>
+The Hugs prelude exports <literal>(:)</literal> as if it were an identifier,
+even though this is not permitted in user-defined modules.
+This means that Hugs incorrectly rejects the following:
+<programlisting>
+module Foo where
+import Prelude()
+cs = 'a':cs
+</programlisting>
+</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect2>
+
+<sect2 id="bugs-primitives">
+<title>Predefined types and classes</title>
+
+<variablelist>
+
+<varlistentry>
+<term>Rational literals lose precision</term>
+<listitem><para>
+In Haskell 98, a floating point literal like <literal>1.234e-5</literal>
+stands for <quote><literal>fromRational (1234 % 100000000)</literal></quote>.
+In particular, if the literal is of <literal>Rational</literal> type,
+the fraction is exact.
+In Hugs such literals are stored as double precision floating point numbers
+before being converted to the appropriate type.
+If the literal is of <literal>Rational</literal> type,
+it usually denotes the same number, but some precision may be lost.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+Floating point values are printed differently
+</term>
+<listitem><para>
+Haskell 98 specifies that <function>show</function> for floating point numbers
+is the function <function>Numeric.showFloat</function>,
+but Hugs uses an internal function with slightly different semantics.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Derived instances for large tuples are not supplied</term>
+<listitem><para>
+In Haskell 98, all tuple types are instances of
+<literal>Eq</literal>, <literal>Ord</literal>, <literal>Bounded</literal>,
+<literal>Read</literal>, and <literal>Show</literal>
+if all their component types are.
+Hugs defines these instances only for tuple types of size 5 or less
+(3 or less in the small Hugs configuration).
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>File locking</term>
+<listitem><para>
+Hugs does not attempt attempt to enforce the multiple-reader single-writer
+locking on files required by Haskell 98.
+Thus under Hugs programs that read and write the same file
+at the same time may see an inconsistent state,
+and programs that write to the same file more than once may produce
+corrupt output.
+Under Haskell 98, both kinds of program would fail at runtime.
+</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect2>
+
+<sect2 id="other-bugs">
+<title>Other bugs in Hugs</title>
+
+<para>
+Here are other known bugs in Hugs, in addition to the deviations listed
+above.  If you find a bug that is not listed here, please report it
+either by using the bug tracking system on the
+<ulink url="http://hackage.haskell.org/trac/hugs">Hugs development page</ulink>
+or by sending email to
+<ulink url="mailto:hugs-bugs@haskell.org">hugs-bugs@haskell.org</ulink>.
+</para>
+
+<variablelist>
+
+<varlistentry>
+<term>Crashes on some infinite computations</term>
+<listitem><para>
+Normally, an infinite computation will either exhaust the Hugs heap:
+<screen>
+ERROR - Garbage collection fails to reclaim sufficient space
+</screen>
+overflow the Hugs stack:
+<screen>
+ERROR - Control stack overflow
+</screen>
+or just run indefinitely.
+Occasionally, depending on the relative sizes of your heap, Hugs stack
+and C stack, such expressions can overflow the C stack before exhausting
+the other two.
+On Unix, this usually causes a segmentation fault and causes Hugs to abort.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Space leaks from top-level pattern bindings</term>
+<listitem><para>
+This expression runs in constant space
+<screen>
+mapM_ putStrLn (repeat "y")
+</screen>
+but this program does not:
+<programlisting>
+main = mapM_ putStrLn (repeat "y")
+</programlisting>
+This is caused by <firstterm>CAF-leaks</firstterm> &mdash;
+a long-standing problem for Haskell implementations.
+The problem is that <function>main</function> (a Constant Applicative Form)
+is being updated with an expression of the form:
+<screen>
+putChar 'y' >> putChar '\n' >> mapM_ putStrLn (repeat "y")
+</screen>
+and so on.
+In the former case the outer <function>putChar</function> expressions become
+garbage after use, but now they are referenced by <function>main</function>.
+Some day, we hope to fix this by using a smarter garbage collector.
+In the meantime, you can avoid the problem by making
+the troublesome CAFs non-updatable.
+For example, you could rewrite <function>main</function> as the more convoluted:
+<programlisting>
+main = return () >>= \ _ -> mapM_ putStrLn (repeat "y")
+</programlisting>
+Because the problematic expression is now inside a lambda that is not
+reduced, its expansion will not be reachable from <function>main</function>,
+and will thus be garbage-collected as before.
+</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect2>
+
+</sect1>
+
+<sect1 id="addenda">
+<title>Addenda to Haskell 98</title>
+
+<para>
+These addenda describe extensions that have been standardized
+across haskell implementations.
+</para>
+
+<sect2 id="ffi">
+<title>Foreign Function Interface</title>
+
+<para>
+The Haskell Foreign Function Interface, as described in the
+<ulink url="http://www.cse.unsw.edu.au/~chak/haskell/ffi/">FFI addendum</ulink>
+is implemented except for the following limitations:
+</para>
+<itemizedlist>
+<listitem><para>
+Only the <literal>ccall</literal>, <literal>stdcall</literal> and
+<literal>dotnet</literal> calling conventions are supported.
+All others are flagged as errors.
+</para></listitem>
+
+<listitem><para>
+<literal>foreign export</literal> is not implemented.
+</para></listitem>
+
+<listitem><para>
+<literal>foreign import "wrapper"</literal> is only implemented for the
+x86, PowerPC and Sparc architectures and has been most thoroughly tested on
+Windows and Linux using <command>gcc</command>.
+</para></listitem>
+</itemizedlist>
+<para>
+Modules containing <literal>foreign</literal> declarations must be compiled
+with <command>ffihugs</command> before use (see <xref linkend="ffihugs"/>).
+</para>
+
+</sect2>
+
+<sect2 id="hierarchical-libraries">
+<title>Hierarchical Namespace Extension</title>
+
+<para>
+The
+<ulink url="http://www.haskell.org/hierarchical-modules/">Haskell Hierarchical Namespace Extension</ulink>
+allows dots in module names, e.g. <literal>System.IO.Error</literal>,
+creating a hierarchical module namespace.
+Hugs has supported this since the December 2001 release.
+When searching for the source file corresponding to a hierarchical name,
+Hugs replaces the dots with slashes.
+</para>
+
+</sect2>
+
+</sect1>
+
+</chapter>

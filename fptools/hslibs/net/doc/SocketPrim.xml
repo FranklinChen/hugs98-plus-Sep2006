@@ -1,0 +1,9 @@
+<sect1 id="SocketPrim">
+<title><literal>SocketPrim</literal>: The low-level socket binding
+<indexterm><primary>SocketPrim</primary></indexterm>
+</title>
+
+  <para>This module has moved to <ulink url="../libraries/network/Network.Socket.html"><literal>Network.Socket</literal></ulink>
+  (package <literal>network</literal>) in the hierarchical
+  libraries.</para>
+</sect1>

@@ -1,0 +1,1899 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 FINAL//EN">
+<!--Rendered using the Haskell Html Library v2.0-->
+<HTML
+><TABLE BORDER = "1" BORDERCOLOR = "red" WIDTH = "50%"
+  ><TR
+    ><TD
+      ><DL
+	><DT
+	  ><B
+	    >Name</B
+	    ></DT
+	  ><DD
+	  >HtmlBlockTable</DD
+	  ><DT
+	  ><B
+	    >Version</B
+	    ></DT
+	  ><DD
+	  >0.1</DD
+	  ><DT
+	  ><B
+	    >Description</B
+	    ></DT
+	  ><DD
+	  >
+	Provides support for building abstract (block) tables.</DD
+	  ><DT
+	  ><B
+	    >License</B
+	    ></DT
+	  ><DD
+	  >
+        The Haskell Html Library is Copyright &copy;
+        Andy Gill, and the Oregon Graduate Institute of Science and
+        Technology, 1999, All rights reserved, and is distributed as
+        free software under the license in the file "License", which
+	is included in the distribution.</DD
+	  ><DT
+	  ><B
+	    >Author</B
+	    ></DT
+	  ><DD
+	  >
+	<A HREF = "http://www.cse.ogi.edu/~andy"
+	    >Andy Gill</A
+	    ></DD
+	  ><DT
+	  ><B
+	    >Restrictions</B
+	    ></DT
+	  ><DD
+	  >
+	This works with all Haskell 98 compilers.
+  </DD
+	  ><DT
+	  ><B
+	    >Tested</B
+	    ></DT
+	  ><DD
+	  >Hugs98, GHC 4.03</DD
+	  ></DL
+	></TD
+      ></TR
+    ></TABLE
+  ><BR
+  >
+<TABLE BORDER = "0" CELLSPACING = "0" CELLPADDING = "5" BGCOLOR = "#88ffff" WIDTH = "100%"
+  ><TR
+    ><TD
+      ><FONT SIZE = "+1"
+	><FONT COLOR = "red"
+	  ><TT
+	    ><U
+	      ><B
+		>module</B
+		></U
+	      ></TT
+	    ></FONT
+	  ><TT
+	  >&nbsp;</TT
+	  ><TT
+	  ><I
+	    >HtmlBlockTable&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >(</B
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ><BR
+	  ><FONT COLOR = "teal"
+	  ><TT
+	    >--&nbsp;Datatypes:</TT
+	    ></FONT
+	  ><BR
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><TT
+	  ><I
+	    >BlockTable</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><FONT COLOR = "teal"
+	  ><TT
+	    >--&nbsp;abstract</TT
+	    ></FONT
+	  ><BR
+	  ><BR
+	  ><FONT COLOR = "teal"
+	  ><TT
+	    >--&nbsp;Contruction&nbsp;Functions:&nbsp;</TT
+	    ></FONT
+	  ><BR
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><TT
+	  ><I
+	    >single</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >,</B
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><TT
+	  ><I
+	    >above</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >,</B
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><TT
+	  ><I
+	    >beside</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >,</B
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ><BR
+	  ><FONT COLOR = "teal"
+	  ><TT
+	    >--&nbsp;Investigation&nbsp;Functions:&nbsp;</TT
+	    ></FONT
+	  ><BR
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><TT
+	  ><I
+	    >getMatrix</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >,</B
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><TT
+	  ><I
+	    >showsTable</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >,</B
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><TT
+	  ><I
+	    >showTable</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >,</B
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >)&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><FONT COLOR = "red"
+	  ><TT
+	    ><U
+	      ><B
+		>where</B
+		></U
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ><BR
+	  ><FONT COLOR = "red"
+	  ><TT
+	    ><U
+	      ><B
+		>infixr</B
+		></U
+	      ></TT
+	    ></FONT
+	  ><TT
+	  >&nbsp;</TT
+	  ><TT
+	  ><I
+	    >4&nbsp;`beside`</I
+	    ></TT
+	  ><BR
+	  ><FONT COLOR = "red"
+	  ><TT
+	    ><U
+	      ><B
+		>infixr</B
+		></U
+	      ></TT
+	    ></FONT
+	  ><TT
+	  >&nbsp;</TT
+	  ><TT
+	  ><I
+	    >3&nbsp;`above`</I
+	    ></TT
+	  ><BR
+	  ></FONT
+	></TD
+      ></TR
+    ></TABLE
+  ><BR
+  >
+
+These combinators can be used to build formated 2D tables.
+The specific target useage is for HTML table generation.
+
+<PRE
+  >
+   Examples of use:
+
+  	> table1 :: BlockTable String
+  	> table1 = single "Hello"	+-----+
+					|Hello|
+	  This is a 1x1 cell		+-----+
+	  Note: single has type
+	 
+		single :: a -> BlockTable a
+	
+	  So the cells can contain anything.
+	
+	> table2 :: BlockTable String
+	> table2 = single "World"	+-----+
+					|World|
+					+-----+
+
+
+	> table3 :: BlockTable String
+	> table3 = table1 %-% table2	+-----%-----+
+					|Hello%World|
+	 % is used to indicate		+-----%-----+
+	 the join edge between
+	 the two Tables.  
+
+	> table4 :: BlockTable String
+	> table4 = table3 %/% table2	+-----+-----+
+					|Hello|World|
+	  Notice the padding on the	%%%%%%%%%%%%%
+	  smaller (bottom) cell to	|World      |
+	  force the table to be a	+-----------+
+	  rectangle.
+
+	> table5 :: BlockTable String
+	> table5 = table1 %-% table4	+-----%-----+-----+
+					|Hello%Hello|World|
+	  Notice the padding on the	|     %-----+-----+
+	  leftmost cell, again to	|     %World      |
+	  force the table to be a	+-----%-----------+
+	  rectangle.
+ 
+   Now the table can be rendered with processTable, for example:
+	Main> processTable table5
+	[[("Hello",(1,2)),
+	  ("Hello",(1,1)),
+	  ("World",(1,1))],
+	 [("World",(2,1))]] :: [[([Char],(Int,Int))]]
+	Main> 
+</PRE
+  >
+
+<H3
+  >Contruction Functions</H3
+  > 
+
+Perhaps one day I'll write the Show instance
+to show boxes aka the above ascii renditions.
+<TABLE BORDER = "0" CELLSPACING = "0" CELLPADDING = "5" BGCOLOR = "#88ffff" WIDTH = "100%"
+  ><TR
+    ><TD
+      ><FONT SIZE = "+1"
+	><FONT COLOR = "red"
+	  ><TT
+	    ><U
+	      ><B
+		>instance</B
+		></U
+	      ></TT
+	    ></FONT
+	  ><TT
+	  >&nbsp;</TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >Show&nbsp;a</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >)&nbsp;=&gt;&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >Show&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >BlockTable&nbsp;a</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >)&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><FONT COLOR = "red"
+	  ><TT
+	    ><U
+	      ><B
+		>where</B
+		></U
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><TT
+	  ><I
+	    >showsPrec&nbsp;p&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >=&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >showsTable</I
+	    ></TT
+	  ><BR
+	  ><BR
+	  ><FONT COLOR = "red"
+	  ><TT
+	    ><U
+	      ><B
+		>type</B
+		></U
+	      ></TT
+	    ></FONT
+	  ><TT
+	  >&nbsp;</TT
+	  ><TT
+	  ><I
+	    >TableI&nbsp;a&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >=&nbsp;[[(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >a</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >,(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >Int</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >,</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >Int</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >))]]&nbsp;-&gt;&nbsp;[[(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >a</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >,(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >Int</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >,</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >Int</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >))]]</B
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ><BR
+	  ><TT
+	  ><I
+	    >data&nbsp;BlockTable&nbsp;a&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >=&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >Table&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >Int&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >-&gt;&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >Int&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >-&gt;&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >TableI&nbsp;a</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >)&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >Int&nbsp;Int</I
+	    ></TT
+	  ><BR
+	  ></FONT
+	></TD
+      ></TR
+    ></TABLE
+  ><BR
+  >
+
+You can create a (1x1) table entry
+<TABLE BORDER = "0" CELLSPACING = "0" CELLPADDING = "5" BGCOLOR = "#88ffff" WIDTH = "100%"
+  ><TR
+    ><TD
+      ><FONT SIZE = "+1"
+	><TT
+	  ><I
+	    >single&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >::&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >a&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >-&gt;&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >BlockTable&nbsp;a</I
+	    ></TT
+	  ><BR
+	  ><TT
+	  ><I
+	    >single&nbsp;a&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >=&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >Table&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >(</B
+	      ></TT
+	    ></FONT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >\&nbsp;</I
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >x&nbsp;y&nbsp;z&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >-&gt;&nbsp;[(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >a</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >,(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >x</I
+	    ></TT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >+</I
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >1</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >,</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >y</I
+	    ></TT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >+</I
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >1</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >))]&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >:&nbsp;</I
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >z</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >)&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >1&nbsp;1</I
+	    ></TT
+	  ><BR
+	  ></FONT
+	></TD
+      ></TR
+    ></TABLE
+  ><BR
+  >
+
+You can compose tables, horizonally and vertically
+<TABLE BORDER = "0" CELLSPACING = "0" CELLPADDING = "5" BGCOLOR = "#88ffff" WIDTH = "100%"
+  ><TR
+    ><TD
+      ><FONT SIZE = "+1"
+	><TT
+	  ><I
+	    >above&nbsp;&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >::&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >BlockTable&nbsp;a&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >-&gt;&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >BlockTable&nbsp;a&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >-&gt;&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >BlockTable&nbsp;a</I
+	    ></TT
+	  ><BR
+	  ><TT
+	  ><I
+	    >beside&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >::&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >BlockTable&nbsp;a&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >-&gt;&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >BlockTable&nbsp;a&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >-&gt;&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >BlockTable&nbsp;a</I
+	    ></TT
+	  ><BR
+	  ><BR
+	  ><TT
+	  ><I
+	    >t1&nbsp;`above`&nbsp;t2&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >=&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >trans&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >combine&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >trans&nbsp;t1</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >)&nbsp;(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >trans&nbsp;t2</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >)&nbsp;(</B
+	      ></TT
+	    ></FONT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >.</I
+	      ></TT
+	    ></FONT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >))</B
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ><BR
+	  ><TT
+	  ><I
+	    >t1&nbsp;`beside`&nbsp;t2&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >=&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >combine&nbsp;t1&nbsp;t2&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >(</B
+	      ></TT
+	    ></FONT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >\&nbsp;</I
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >lst1&nbsp;lst2&nbsp;r&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >-&gt;</B
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><TT
+	  ><I
+	    >let</I
+	    ></TT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><FONT COLOR = "teal"
+	  ><TT
+	    >--&nbsp;Note&nbsp;this&nbsp;depends&nbsp;on&nbsp;the&nbsp;fact&nbsp;that</TT
+	    ></FONT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><FONT COLOR = "teal"
+	  ><TT
+	    >--&nbsp;that&nbsp;the&nbsp;result&nbsp;has&nbsp;the&nbsp;same&nbsp;number</TT
+	    ></FONT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><FONT COLOR = "teal"
+	  ><TT
+	    >--&nbsp;of&nbsp;lines&nbsp;as&nbsp;the&nbsp;y&nbsp;dimention;&nbsp;one&nbsp;list</TT
+	    ></FONT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><FONT COLOR = "teal"
+	  ><TT
+	    >--&nbsp;per&nbsp;line.&nbsp;This&nbsp;is&nbsp;not&nbsp;true&nbsp;in&nbsp;general</TT
+	    ></FONT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><FONT COLOR = "teal"
+	  ><TT
+	    >--&nbsp;but&nbsp;is&nbsp;always&nbsp;true&nbsp;for&nbsp;these&nbsp;combinators.</TT
+	    ></FONT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><FONT COLOR = "teal"
+	  ><TT
+	    >--&nbsp;I&nbsp;should&nbsp;assert&nbsp;this!</TT
+	    ></FONT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><FONT COLOR = "teal"
+	  ><TT
+	    >--&nbsp;I&nbsp;should&nbsp;even&nbsp;prove&nbsp;this.</TT
+	    ></FONT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><TT
+	  ><I
+	    >beside&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >x</I
+	    ></TT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >:</I
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >xs</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >)&nbsp;(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >y</I
+	    ></TT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >:</I
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >ys</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >)&nbsp;=&nbsp;(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >x&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >++&nbsp;</I
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >y</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >)&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >:&nbsp;</I
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >beside&nbsp;xs&nbsp;ys</I
+	    ></TT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><TT
+	  ><I
+	    >beside&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >x</I
+	    ></TT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >:</I
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >xs</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >)&nbsp;[]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >:&nbsp;</I
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >xs&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >++&nbsp;</I
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >r</I
+	    ></TT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><TT
+	  ><I
+	    >beside&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >[]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >y</I
+	    ></TT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >:</I
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >ys</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >)&nbsp;=&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >y&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >:&nbsp;</I
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >ys&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >++&nbsp;</I
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >r</I
+	    ></TT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><TT
+	  ><I
+	    >beside&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >[]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >r</I
+	    ></TT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><TT
+	  ><I
+	    >in</I
+	    ></TT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><TT
+	  ><I
+	    >beside&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >lst1&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >[])&nbsp;(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >lst2&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >[]))</B
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ></FONT
+	></TD
+      ></TR
+    ></TABLE
+  ><BR
+  >
+
+trans flips (transposes) over the x and y axis of
+the table. It is only used internally, and typically
+in pairs, ie. (flip ... munge ... (un)flip).
+<TABLE BORDER = "0" CELLSPACING = "0" CELLPADDING = "5" BGCOLOR = "#88ffff" WIDTH = "100%"
+  ><TR
+    ><TD
+      ><FONT SIZE = "+1"
+	><TT
+	  ><I
+	    >trans&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >::&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >BlockTable&nbsp;a&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >-&gt;&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >BlockTable&nbsp;a</I
+	    ></TT
+	  ><BR
+	  ><TT
+	  ><I
+	    >trans&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >Table&nbsp;f1&nbsp;x1&nbsp;y1</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >)&nbsp;=&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >Table&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >flip&nbsp;f1</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >)&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >y1&nbsp;x1</I
+	    ></TT
+	  ><BR
+	  ><BR
+	  ><TT
+	  ><I
+	    >combine&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >::&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >BlockTable&nbsp;a&nbsp;</I
+	    ></TT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >-&gt;&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >BlockTable&nbsp;b&nbsp;</I
+	    ></TT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >-&gt;&nbsp;(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >TableI&nbsp;a&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >-&gt;&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >TableI&nbsp;b&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >-&gt;&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >TableI&nbsp;c</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >)&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >-&gt;&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >BlockTable&nbsp;c</I
+	    ></TT
+	  ><BR
+	  ><TT
+	  ><I
+	    >combine&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >Table&nbsp;f1&nbsp;x1&nbsp;y1</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >)&nbsp;(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >Table&nbsp;f2&nbsp;x2&nbsp;y2</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >)&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >comb&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >=&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >Table&nbsp;new_fn&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >x1</I
+	    ></TT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >+</I
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >x2</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >)&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >max_y</I
+	    ></TT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><FONT COLOR = "red"
+	  ><TT
+	    ><U
+	      ><B
+		>where</B
+		></U
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><TT
+	  ><I
+	    >max_y&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >=&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >max&nbsp;y1&nbsp;y2</I
+	    ></TT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><TT
+	  ><I
+	    >new_fn&nbsp;x&nbsp;y&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >=</B
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><TT
+	  ><I
+	    >case&nbsp;compare&nbsp;y1&nbsp;y2&nbsp;of</I
+	    ></TT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><TT
+	  ><I
+	    >EQ&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >-&gt;&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >comb&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >f1&nbsp;0&nbsp;y</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >f2&nbsp;x&nbsp;y</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >)</B
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><TT
+	  ><I
+	    >GT&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >-&gt;&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >comb&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >f1&nbsp;0&nbsp;y</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >f2&nbsp;x&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >y&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >+&nbsp;</I
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >y1&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >-&nbsp;</I
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >y2</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >))</B
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><TT
+	  ><I
+	    >LT&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >-&gt;&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >comb&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >f1&nbsp;0&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >y&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >+&nbsp;</I
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >y2&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >-&nbsp;</I
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >y1</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >))&nbsp;(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >f2&nbsp;x&nbsp;y</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >)</B
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ></FONT
+	></TD
+      ></TR
+    ></TABLE
+  ><BR
+  >
+
+<H2
+  >Investigation Functions</H2
+  >
+
+This is the other thing you can do with a Table;
+turn it into a 2D list, tagged with the (x,y)
+sizes of each cell in the table.
+<TABLE BORDER = "0" CELLSPACING = "0" CELLPADDING = "5" BGCOLOR = "#88ffff" WIDTH = "100%"
+  ><TR
+    ><TD
+      ><FONT SIZE = "+1"
+	><TT
+	  ><I
+	    >getMatrix&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >::&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >BlockTable&nbsp;a&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >-&gt;&nbsp;[[(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >a</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >,(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >Int</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >,</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >Int</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >))]]</B
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ><TT
+	  ><I
+	    >getMatrix&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >Table&nbsp;r&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >_&nbsp;_)&nbsp;=&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >r&nbsp;0&nbsp;0&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >[]</B
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ></FONT
+	></TD
+      ></TR
+    ></TABLE
+  ><BR
+  >
+
+You can also look at a table
+<TABLE BORDER = "0" CELLSPACING = "0" CELLPADDING = "5" BGCOLOR = "#88ffff" WIDTH = "100%"
+  ><TR
+    ><TD
+      ><FONT SIZE = "+1"
+	><TT
+	  ><I
+	    >showsTable&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >::&nbsp;(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >Show&nbsp;a</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >)&nbsp;=&gt;&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >BlockTable&nbsp;a&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >-&gt;&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >ShowS</I
+	    ></TT
+	  ><BR
+	  ><TT
+	  ><I
+	    >showsTable&nbsp;table&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >=&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >shows&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >getMatrix&nbsp;table</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >)</B
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ><BR
+	  ><TT
+	  ><I
+	    >showTable&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >::&nbsp;(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >Show&nbsp;a</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >)&nbsp;=&gt;&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >BlockTable&nbsp;a&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >-&gt;&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >String</I
+	    ></TT
+	  ><BR
+	  ><TT
+	  ><I
+	    >showTable&nbsp;table&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >=&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >showsTable&nbsp;table&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "green"
+	  ><TT
+	    ><I
+	      >&quot;&quot;</I
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ></FONT
+	></TD
+      ></TR
+    ></TABLE
+  ><BR
+  >
+
+
+</HTML
+>

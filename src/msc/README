@@ -1,0 +1,46 @@
+How to build Hugs with Microsoft Visual C++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We used to do this using a pure Microsoft environment (.bat files, DOS
+command windows, etc.) and that all ought to still work but we don't
+do things that way anymore so we can't provide accurate information on
+how to do it.  
+
+These days, we often build using a Cygwin environment to provide the
+shell and Microsoft's Visual C++ compiler (using in batch mode) and NMake
+to compile Hugs.
+
+
+1) Put this in your .bashrc (or whatever you use)
+
+VSCommonDir="/cygdrive/c/program files/microsoft visual studio/common"
+MSDevDir="/cygdrive/c/program files/microsoft visual studio/common/msdev98"
+MSVCDir="/cygdrive/c/program files/microsoft visual studio/vc98"
+
+export PATH="$MSDevDir/bin:$MSVCDir/bin:$VSCommonDir/tools/win95:$VSCommonDir/tools:$PATH"
+
+export VSCommonDir="C:\\PROGRA~1\\MICROS~3\\COMMON"
+export MSDevDir="C:\\PROGRA~1\\MICROS~3\\COMMON\\msdev98"
+export MSVCDir="C:\\PROGRA~1\\MICROS~3\\VC98"
+export INCLUDE="$MSVCDir\\ATL\\INCLUDE;$MSVCDir\\INCLUDE;$MSVCDir\\MFC\\INCLUDE;$INCLUDE"
+export LIB="$MSVCDir\\LIB;$MSVCDir\\MFC\\LIB;$LIB"
+
+
+2) Put configure-generated files in the right place:
+
+   cd hugs98/src
+   cp msc/{Makefile,config.h,options.h} .
+
+3) Build using nmake  (_not__ GNU make)
+
+   nmake
+
+4) Copy into directory above and test
+
+   cp *.exe ..
+   ../hugs
+
+At the moment, there's no story for running convert_libraries and
+friends when doing a build like this.  (Probably easy but I haven't
+done it so I can't document it.)
+ 

@@ -1,0 +1,15 @@
+<!DOCTYPE doc  [
+<!ELEMENT doc (#PCDATA)>
+<!ENTITY e SYSTEM "xmlData33I.ent">
+]>
+<doc
+  ><p
+    >some data
+   
+    <p1
+      >more data 1</p1
+    ><p2
+      >more data 2</p2
+    >
+   wrapping up
+</p></doc>

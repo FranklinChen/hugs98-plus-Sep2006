@@ -1,0 +1,87 @@
+#include "ghcconfig.h"
+
+name:		PACKAGE
+version:	VERSION
+license:	BSD3
+maintainer:	libraries@haskell.org
+exposed:	False
+
+exposed-modules:
+        Addr,
+        ArrayBase,
+        Arrow,
+        ByteArray,
+        CTypesISO,
+        DiffArray,
+        DirectoryExts,
+        Dynamic,
+        Exception,
+        ForeignObj,
+        Generics,
+        GlaExts,
+        IArray,
+        IOExts,
+        IORef,
+        LazyST,
+        MArray,
+        MutableArray,
+        NativeInfo,
+        NumExts,
+        PackedString,
+        PrelByteArr,
+        ST,
+        ShowFunctions,
+        Stable,
+        StableName,
+        StorableArray,
+        SystemExts,
+        TimeExts,
+        Weak,
+        MonadCont,
+        MonadEither,
+        MonadError,
+        MonadFix,
+        MonadIdentity,
+        MonadList,
+        MonadRWS,
+        MonadReader,
+        MonadState,
+        MonadTrans,
+        MonadWriter,
+        Monoid
+
+hidden-modules:
+
+#ifdef INSTALLING
+import-dirs:	PKG_LIBDIR"/hslibs-imports/lang"
+#else
+import-dirs:	FPTOOLS_TOP_ABS"/hslibs/lang",
+		FPTOOLS_TOP_ABS"/hslibs/lang/monads"
+#endif
+
+#ifdef INSTALLING
+library-dirs:	PKG_LIBDIR
+#else
+library-dirs:	FPTOOLS_TOP_ABS"/hslibs/lang",
+		FPTOOLS_TOP_ABS"/hslibs/lang/cbits"
+#endif
+
+hs-libraries:   "HSlang"
+extra-libraries:
+
+#ifdef INSTALLING
+include-dirs:
+#else
+include-dirs:	FPTOOLS_TOP_ABS"/hslibs/lang/cbits"
+#endif
+
+includes:	HsLang.h
+depends:	base, mtl
+hugs-options:
+cc-options:
+ld-options:
+framework-dirs:
+frameworks:
+haddock-interfaces:
+haddock-html:
+

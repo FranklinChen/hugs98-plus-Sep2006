@@ -1,0 +1,23 @@
+THISPKG	= parsec
+SEARCH	=
+
+SRCS	= \
+	Text/ParserCombinators/Parsec/Char.hs \
+	Text/ParserCombinators/Parsec/Combinator.hs \
+	Text/ParserCombinators/Parsec/Error.hs \
+	Text/ParserCombinators/Parsec/Expr.hs \
+	Text/ParserCombinators/Parsec/Perm.hs \
+	Text/ParserCombinators/Parsec/Pos.hs \
+	Text/ParserCombinators/Parsec/Prim.hs \
+	Text/ParserCombinators/Parsec.hs
+
+#	Text/ParserCombinators/Parsec/Token.hs \
+#	Text/ParserCombinators/Parsec/Language.hs
+
+# Here are the main rules.
+include ../Makefile.common
+
+# Here are any extra dependencies.
+
+# C-files dependencies.
+

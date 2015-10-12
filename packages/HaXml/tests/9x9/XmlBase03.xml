@@ -1,0 +1,8 @@
+<!-- XmlBase03.xml: override base URI -->
+<doc xmlns:eg="http://id.example.org/namespace">
+  <eg:inner xml:base="http://id.example.org/base1" eg:a2="a2">
+    <eg:deeper xml:base="http://id.example.org/base2" eg:a3="a3">
+       <eg:evendeeper />
+    </eg:deeper>
+  </eg:inner>
+</doc>

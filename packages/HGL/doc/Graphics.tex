@@ -1,0 +1,1503 @@
+%**<title> The Hugs Graphics Library </title>
+%**<body bgcolor="#ffffff">
+%**<h2>The Hugs Graphics Library (Version 2.0)</h2>
+%**<font size=4> <blockquote>
+%**Alastair Reid<br>
+%**Reid Consulting (UK) Limited<br>
+%**alastair@reid-consulting-ltd.ltd.uk<br>
+%**</blockquote></font>
+%*ignore
+
+%\documentstyle[11pt]{article}
+\documentstyle{article}
+
+% copied from the Haskore tutorial
+\textheight=8.5in
+\textwidth=6.5in
+\topmargin=-.3in
+\oddsidemargin=0in
+\evensidemargin=0in
+\parskip=6pt plus2pt minus2pt
+
+\topsep=0pt % how much extra space (on top of parskip) is added round list/verbatim
+
+% and some of my own personal preferences
+\parindent=0in
+
+\newcommand{\var}[1]{{\tt #1\/}}    % variables
+\newcommand{\fun}[1]{{\tt #1\/}}    % functions
+\newcommand{\expr}[1]{{\tt #1\/}}   % expressions
+\newcommand{\type}[1]{{\tt #1\/}}   % types
+\newcommand{\module}[1]{{\tt #1\/}} % modules
+%\newcommand{\modName}[1]{\item[module #1]:}
+\newcommand{\modName}[1]{\subsection{Module {#1}}}
+
+\newcommand{\tva}{$\alpha$} % type variables
+\newcommand{\tvb}{$\beta $}
+\newcommand{\tvc}{$\gamma$}
+
+\newcommand{\arrow}{$\enspace\to\enspace$} % type constructors
+
+\newcommand{\Hugs}{{\sffamily Hugs\/}}
+\newcommand{\GHC}{{\sffamily GHC\/}}
+\newcommand{\Haskell}{{\sffamily Haskell\/}}
+\newcommand{\Library}{{\sffamily Hugs Graphics Library\/}}
+
+\newenvironment{aside}
+  {\noindent
+   \begingroup
+     \small
+     {\bf Aside}
+     \list{}
+          {\topsep 0pt
+           \advance\leftmargin -1.5em
+           \sl
+          }%
+     \item\relax%
+  }
+  {  \endlist
+     {\bf End aside.}
+   \endgroup
+  }
+
+\newenvironment{note}
+  {\noindent
+   \begingroup
+     \small
+     {\bf Note}
+     \list{}
+          {\topsep 0pt
+           \advance\leftmargin -1.5em
+           \sl
+          }%
+     \item\relax%
+  }
+  {  \endlist
+     {\bf End note.}
+   \endgroup
+  }
+
+\newcommand{\Portability}[1]{\par{{\bf Portability Note:} \sl #1}\par}
+
+\newenvironment{portability}{%
+%  \medbreak
+  \noindent
+  \begingroup
+    \small
+    {\bf Portability Note: }
+    \nobreak
+    \sl
+    \begin{itemize}
+    \itemsep0pt
+}{%
+    \end{itemize}
+    \nobreak
+    {\bf End Portability Note.}
+  \endgroup
+%  \medbreak
+}
+
+\def\NotInX#1{{#1} is not provided in the X11 implementation of this library.}
+\def\NotInWin#1{{#1} is not provided in the Win32 implementation of this library.}
+
+% These are used for reminders, communication between authors, etc.
+% There should be no calls to these guys in the final document.
+
+\newcommand{\HeyPaul}[1]{\par{{\bf Hey Paul:} \sl #1}\par}
+\newcommand{\ToDo}[1]{\par{{\bf ToDo:} \sl #1}\par}
+
+\newenvironment{outline}{%
+%  \medbreak
+  \noindent
+  {\bf Outline: }
+  \begingroup
+    \nobreak
+    \sl
+}{%
+  \endgroup
+  \nobreak
+  {\bf End outline.}
+%  \medbreak
+}
+
+% Here's how you create figures
+%
+% \begin{figure*}
+% \centerline{
+% Foo
+% }
+% \caption{...}
+% \label{...}
+% \end{figure*}
+
+\begin{document}
+
+\title{%
+  The Hugs Graphics Library\\
+  (Version 2.0)%
+}
+
+\author{Alastair Reid\\
+Reid Consulting (UK) Limited\\
+{\tt alastair@reid-consulting-ltd.ltd.uk}\\
+{\tt http://www.reid-consulting-uk.ltd.uk/alastair/}}
+
+%\date{26 November, 1999}
+
+\maketitle
+
+%*endignore
+
+\section{Introduction}\label{introduction}
+
+The \Library{} is designed to give the programmer access to
+most interesting parts of the Win32 Graphics Device Interface and X11
+library without exposing the programmer to the pain and anguish
+usually associated with using these interfaces.
+
+To give you a taste of what the library looks like, here is the 
+obligatory ``Hello World'' program:
+
+\begin{verbatim}
+> module Hello where
+>
+> import GraphicsUtils
+>
+> helloWorld :: IO ()
+> helloWorld = runGraphics (do
+>   w <- openWindow "Hello World Window" (300, 300)
+>   drawInWindow w (text (100, 100) "Hello")
+>   drawInWindow w (text (100, 200) "World")
+>   getKey w
+>   closeWindow w
+>   )
+\end{verbatim}
+
+Here's what each function does:
+\begin{itemize}
+\item
+  \expr{runGraphics :: IO () -> IO ()} get \Hugs{} ready to do graphics,
+  runs an action (here, the action is a sequence of 5 subactions) and
+  cleans everything up at the end.%
+  %
+  \footnote{%
+    The description of
+    \fun{runGraphics} is rather vague because of our promise to protect
+    you from the full horror of Win32/X11 programming.  If you really want to
+    know, we highly recommend Charles Petzold's book ``Programming
+    Windows''~\cite{petzold}
+    which does an excellent job with a difficult subject or Adrian Nye's 
+    ``Xlib Programming Manual''~\cite{Xlib} which is almost adequate.%
+  }
+  %
+
+\item
+  \expr{openWindow :: Title -> Point -> IO Window} opens a window 
+  specifying the window title ``Hello World Window'' and the size
+  of the window (300 pixels $\times$ 300 pixels).
+
+\item
+  \expr{drawInWindow :: Window -> Graphic -> IO ()} draws a \type{Graphic}
+  on a \type{Window}.
+
+\item
+  \expr{text :: Point -> String -> Graphic} creates a \type{Graphic}
+  consisting of a \type{String} at a given screen location. 
+
+\item
+  \expr{getKey :: Window -> IO Char} waits for the user to press
+  (and release) a key.  This is necessary to prevent the window
+  from closing before you have a chance to read what's on the screen.
+
+\item
+  \expr{closeWindow :: Window -> IO ()} closes the window.
+
+\end{itemize}
+
+The rest of this document is organized as follows:
+%\begin{itemize}
+%\item 
+Section~\ref{graphics} describes the \type{Graphic} type (a declarative
+    way of drawing pictures);
+%\item 
+Section~\ref{windows} describes \type{Window}s;
+%\item 
+Section~\ref{events} describes \type{Event}s;
+%\item
+Section~\ref{concurrency} describes the Concurrent Haskell
+      primitives which you need to create complex interfaces; and
+%\item 
+Section~\ref{Draw} describes the \type{Draw} monad (a more
+      imperative side to the \type{Graphic} type).
+%\end{itemize}
+
+% \begin{note}
+% This document is just a draft --- it contains British spelling (which
+% conflicts horribly with the US spelling used within the library); it
+% is incomplete; and it probably contains the occasional error as well.
+% \end{note}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Graphics}\label{graphics}
+
+In section~\ref{introduction}, we used these two functions to draw 
+to a window
+
+\begin{verbatim}
+> drawInWindow :: Window -> Graphic -> IO ()
+> text         :: Point  -> String  -> Graphic
+\end{verbatim}
+
+This section describes other ways of creating graphics that can be
+drawn to the screen.
+
+\subsection{Atomic Graphics}\label{primitives}
+
+Here's a list of the atomic operations
+
+\begin{verbatim}
+> emptyGraphic ::                                     Graphic
+> ellipse      :: Point -> Point                   -> Graphic
+> shearEllipse :: Point -> Point -> Point          -> Graphic
+> arc          :: Point -> Point -> Angle -> Angle -> Graphic
+> line         :: Point -> Point                   -> Graphic
+> polyline     :: [Point]                          -> Graphic
+> polygon      :: [Point]                          -> Graphic
+> polyBezier   :: [Point]                          -> Graphic
+> text         :: Point -> String                  -> Graphic
+\end{verbatim}
+
+\fun{emptyGraphic} is a blank \type{Graphic}.
+
+\fun{ellipse} is a filled ellipse which fits inside a rectangle
+defined by two \type{Point}s on the window. \fun{shearEllipse} is a
+filled ellipse inside a parallelogram defined by three \type{Point}s
+on the window.  \fun{arc} is an unfilled elliptical arc which fits
+inside a rectangle defined by two \type{Point}s on the window.  The
+angles specify the start and end points of the arc --- the arc
+consists of all points from the start angle counter-clockwise to the
+end angle.  Angles are in degrees $[0..360]$ rather than radians
+$[0..2\pi]$.
+
+\fun{line} is a line between two \type{Point}s.  \fun{polyline}
+is a series of lines through a list of \type{Point}s.
+\fun{polyBezier} is a series of (unfilled) bezier curves defined by
+a list of $3n+1$ control \type{Point}s.
+\fun{polygon} is a filled polygon defined by a list of \type{Point}s.
+
+\fun{text} is a rendered \type{String}.
+
+\begin{portability}
+%\begin{itemize}
+\item \NotInX{\fun{polyBezier}}
+\item \fun{shearEllipse} is implemented by polygons on both Win32 and X11.
+%\end{itemize}
+\end{portability}
+
+
+\subsection{Graphic Modifiers}\label{modifiers}
+
+One of the most useful properties of \type{Graphic}s is that they can
+be modified in various ways.  Here is a selection of the modifiers
+available
+
+\begin{verbatim}
+> withFont          :: Font      -> Graphic -> Graphic
+> withTextColor     :: RGB       -> Graphic -> Graphic
+> withTextAlignment :: Alignment -> Graphic -> Graphic
+> withBkColor       :: RGB       -> Graphic -> Graphic
+> withBkMode        :: BkMode    -> Graphic -> Graphic
+> withPen           :: Pen       -> Graphic -> Graphic
+> withBrush         :: Brush     -> Graphic -> Graphic
+> withRGB           :: RGB       -> Graphic -> Graphic
+\end{verbatim}
+
+The effect of these ``modifiers'' is to modify the way in which a
+graphic will be drawn.  For example, if \var{courier :: Font} is a 10
+point Courier font, then drawing \expr{withFont courier (text (100,100)
+"Hello")} will draw the string \expr{"Hello"} on the window using the
+10 point Courier font.
+
+Modifiers are cumulative: a series of modifiers can be applied to a
+single graphic.  For example, the graphic
+  
+\begin{verbatim}
+> withFont courier (
+>   withTextColor red (
+>     withTextAlignment (Center, Top) (
+>       text (100,100) "Hello World"
+>     )
+>   )
+> )
+\end{verbatim}
+
+will be 
+%
+\begin{itemize}
+\itemsep0pt
+\item horizontally aligned
+  so that the centre of the text is at \expr{(100, 100)};
+
+\item vertically aligned
+  so that the top of the text is at \expr{(100, 100)};
+
+\item colored red
+
+\item displayed in 10 point Courier font
+
+\end{itemize}
+
+Modifiers nest in the obvious way --- so 
+%
+\begin{verbatim}
+> withTextColor red (
+>   withTextColor green (
+>     text (100,100) "What Color Am I?"
+>   )
+> )
+\end{verbatim}
+%
+will produce green text, as expected.
+
+\begin{aside}
+As you write more and more complex graphics, you'll quickly realize
+that it's very tedious to insert all those parentheses and to keep
+everything indented in a way that reveals its structure.
+
+Fortunately, the Haskell Prelude provides a right associative 
+application operator
+%
+\begin{verbatim}
+> ($) :: (a -> b) -> a -> b
+\end{verbatim}
+%
+which eliminates the need for almost all parentheses when defining
+\type{Graphic}s.  Using the \fun{(\$)} operator, the above example can
+be rewritten like this
+%
+\begin{verbatim}
+> withTextColor red   $
+> withTextColor green $
+> text (100,100) "What Color Am I?"
+\end{verbatim}
+%
+
+\end{aside}
+
+\subsection{Combining Graphics}\label{combining}
+
+The other useful property of \type{Graphic}s is that they can be
+combined using the \fun{overGraphic} combinator
+
+\begin{verbatim}
+> overGraphic :: Graphic -> Graphic -> Graphic
+\end{verbatim}
+
+For example, drawing this graphic produces a red triangle ``on top of''
+(or ``in front of'') a blue square
+%
+\begin{verbatim}
+> overGraphic
+>   (withBrush red  $ polygon [(200,200),(400,200),(300,400)])
+>   (withBrush blue $ polygon [(100,100),(500,100),(500,500),(100,500)])
+\end{verbatim}
+
+Notice that modifiers respect the structure of a graphic --- modifiers
+applied to one part of a graphic have no effect on other parts of
+the graphic.  For example the above graphic could be rewritten like
+this.
+%
+\begin{verbatim}
+> withBrush blue $ 
+> overGraphic
+>   (withBrush red  $ polygon [(200,200),(400,200),(300,400)])
+>   (polygon [(100,100),(500,100),(500,500),(100,500)])
+\end{verbatim}
+
+The \fun{overGraphics} function is useful if you want to draw a list of
+graphics.  It's type and definition are
+
+\begin{verbatim}
+> overGraphics :: [Graphic] -> Graphic
+> overGraphics = foldr overGraphic emptyGraphic
+\end{verbatim}
+
+Notice that graphics at the head of the list are drawn ``in front of'' 
+graphics at the tail of the list.
+
+
+\subsection{Attribute Generators}\label{generators}
+
+The graphic modifiers listed at the start of Section~\ref{modifiers}
+use attributes with types like \type{Font}, \type{RGB} and
+\type{Brush}, but so far we have no way of generating any of these attributes.
+
+Some of these types are {\em concrete\/} (you can create them using
+normal data constructors) and some are {\em abstract\/} (you can only create
+them with special ``attribute generators'').  Here's the definitions
+of the concrete types.
+
+\begin{verbatim}
+> type Angle     = Double
+> type Dimension = Int
+> type Point     = (Dimension,Dimension)
+> data RGB       = RGB Int Int Int
+> 
+> -- Text alignments
+> type Alignment = (HAlign, VAlign)
+> -- names have a tick to distinguish them from Prelude names (blech!)
+> data HAlign = Left' | Center   | Right'
+> data VAlign = Top   | Baseline | Bottom
+> 
+> -- Text background modes
+> data BkMode = Opaque | Transparent
+\end{verbatim}
+
+The attributes \type{Font}, \type{Brush} and \type{Pen} are
+{\em abstract,\/} and are a little more complex because we want to 
+delete the font, brush, or pen once we've finished using it.  This
+gives the attribute generators a similar flavour to the modifiers seen
+in section~\ref{modifiers} --- these functions are applied to an
+argument of type \type{\tva \arrow Graphic} and return a
+\type{Graphic}.
+
+%
+\begin{verbatim}
+> mkFont  :: Point -> Angle -> Bool -> Bool -> String -> 
+>                                   (Font  -> Graphic) -> Graphic
+> mkBrush ::                 RGB -> (Brush -> Graphic) -> Graphic
+> mkPen   :: Style -> Int -> RGB -> (Pen   -> Graphic) -> Graphic
+\end{verbatim}
+
+For example, the following program uses a $50 \times 50$ pixel, non-bold,
+italic, courier font to draw red text on a green background at an angle
+of 45 degrees across the screen.
+
+\begin{verbatim}
+> fontDemo = runGraphics $ do
+>   w <- openWindow "Font Demo Window" (100,100)
+>   drawInWindow w $
+>     withTextColor (RGB 255 0 0)                 $
+>     mkFont (50,100) (pi/4) False True "courier" $ \ font ->
+>     withFont font                               $
+>     withBkColor (RGB 0 255 0)                   $
+>     withBkMode  Opaque                          $
+>     text (50,50) "Font Demo"
+>   getKey w
+>   closeWindow w
+\end{verbatim}
+
+A default font is substituted if the requested font does not exist.
+The rotation angle is ignored if the font is not a ``TrueType'' font
+(e.g., for {\tt System} font on Win32).
+
+\begin{portability}
+%\begin{itemize}
+\item X11 does not directly support font rotation so \fun{mkFont}
+always ignores the rotation angle argument in the X11 implementation
+of this library.
+
+\item Many of the font families typically available on Win32 are not
+available on X11 (and {\it vice-versa\/}).  In our experience, the
+font families ``courier,'' ``helvetica'' and ``times'' are somewhat
+portable.
+%\ToDo{Check this}
+
+%\end{itemize}
+\end{portability}
+
+
+
+\subsection{Brushes, Pens and Text Colors}
+
+If you were counting, you'll have noticed that there are five separate
+ways of specifying colors
+
+\begin{verbatim}
+> mkBrush       ::                 RGB -> (Brush -> Graphic) -> Graphic
+> mkPen         :: Style -> Int -> RGB -> (Pen   -> Graphic) -> Graphic
+> withTextColor ::                 RGB -> Graphic            -> Graphic
+> withBkColor   ::                 RGB -> Graphic            -> Graphic
+> withRGB       ::                 RGB -> Graphic            -> Graphic
+\end{verbatim}
+
+What do these different modifiers and attributes control?
+
+\begin{description}
+\item[Brushes] 
+  are used when filling shapes --- so the brush color is
+  used when drawing polygons, ellipses and regions.
+
+\item[Pens]
+  are used when drawing lines --- so the pen color is used
+  when drawing arcs, lines, polylines and polyBeziers.
+
+  Pens also have a ``style'' and a ``width''.  The \type{Style}
+  argument is used to select solid lines or various styles of
+  dotted and dashed lines.
+
+\begin{verbatim}
+> data Style
+>   = Solid 
+>   | Dash        -- "-------"
+>   | Dot         -- "......."  
+>   | DashDot     -- "_._._._"  
+>   | DashDotDot  -- "_.._.._"  
+>   | Null
+>   | InsideFrame
+\end{verbatim}
+
+\item[TextColor]
+  is used as the foreground color when drawing text.
+
+\item[BkColor]
+  is used as the background color when drawing text with
+  background mode \fun{Opaque}.  The background color is
+  ignored when the mode is \fun{Transparent}.
+  
+%  \ToDo{Should I expand the name \type{BkColor} to \type{BackgroundColor}?}
+
+\end{description}
+
+Finally, \fun{withRGB} is a convenience function which sets the brush,
+pen and text colors to the same value.  Here is its definition
+
+\begin{verbatim}
+> withRGB :: RGB -> Graphic -> Graphic
+> withRGB c g = 
+>   mkBrush c       $ \ brush ->
+>   withBrush brush $
+>   mkPen Solid 2 c $ \ pen ->
+>   withPen pen     $
+>   withTextColor c $
+>   g
+\end{verbatim}
+
+\begin{portability}
+%\begin{itemize}
+\item
+  On Win32, the pen is also used to draw a line round all
+  the filled shapes --- so the pen color also affects how
+  polygons, ellipses and regions are drawn.
+
+\item
+  One of the Win32 ``gotchas'' is that the choice of \type{Style}
+  only applies if the width is 1 or less.  With greater widths,
+  the pen style will always be \fun{Solid} no matter what you try to
+  select.  This problem does not apply to X11.
+%\end{itemize}
+\end{portability}
+
+
+\subsection{Named Colors}
+
+Working with RGB triples is a pain in the neck so the
+\module{HGL.Graphics.Utils} module provides these built in colors as
+convenient ``abbreviations.''
+
+\begin{verbatim}
+> data Color 
+>   = Black
+>   | Blue
+>   | Green 
+>   | Cyan
+>   | Red 
+>   | Magenta
+>   | Yellow
+>   | White
+>  deriving (Eq, Ord, Bounded, Enum, Ix, Show, Read)
+\end{verbatim}
+
+This type is useful because it may be used to index an array of
+RGB triples.
+
+\begin{verbatim}
+> colorTable :: Array Color RGB
+\end{verbatim}
+
+For example, we provide this function which looks up a color in the
+\var{colorTable} and uses that color for the brush, pen and text color.
+
+\begin{verbatim}
+> withColor :: Color -> Graphic -> Graphic
+\end{verbatim}
+
+It's worth pointing out that there's nothing ``magical'' about the
+\type{Color} type or our choice of colors.  If you don't like our
+choice of colors, our names, or the way we mapped them onto RGB
+triples, you can write your own!  To get you started, here's our
+implementation of \fun{withColor} and \var{colorTable}.
+
+\begin{verbatim}
+> withColor c = withRGB (colorTable ! c)
+> 
+> colorTable = array (minBound, maxBound) colorList
+> 
+> colorList  :: [(Color, RGB)]
+> colorList =
+>   [ (Black   , RGB   0   0   0)
+>   , (Blue    , RGB   0   0 255)
+>   , (Green   , RGB   0 255   0)
+>   , (Cyan    , RGB   0 255 255)
+>   , (Red     , RGB 255   0   0)
+>   , (Magenta , RGB 255   0 255)
+>   , (Yellow  , RGB 255 255   0)
+>   , (White   , RGB 255 255 255)
+>   ]
+\end{verbatim}
+
+\subsection{Bitmaps}
+
+\type{Bitmap}s can be displayed in three ways:
+
+\begin{enumerate}
+\item with no transformation at  a point
+\item stretched to fit           a rectangle
+\item rotated and sheared to fit a parallelogram
+\end{enumerate}
+
+Rectangles are specified by a pair of points: the top-left, and
+bottom-right corners of the rectangle.
+
+\begin{verbatim}
+> bitmap        :: Point                      -> Bitmap -> Graphic
+> stretchBitmap :: Point  -> Point            -> Bitmap -> Graphic
+> shearBitmap   :: Point  -> Point  -> Point  -> Bitmap -> Graphic
+\end{verbatim}
+
+\type{Bitmap}s are read in from files and disposed of using 
+\begin{verbatim}
+> readBitmap    :: String -> IO Bitmap
+> deleteBitmap  :: Bitmap -> IO ()
+\end{verbatim}
+(but be sure that the current \type{Graphic} on a \type{Window}
+doesn't contain a reference to a \type{Bitmap} before you delete the
+\type{Bitmap}!)
+
+This operation gets the size of a bitmap.
+\begin{verbatim}
+> getBitmapSize :: Bitmap -> IO (Int, Int)
+\end{verbatim}
+
+% \ToDo{%
+%   Describe the other bitmap operations 
+%   --- clean them up a bit first though!%
+% }
+
+\begin{portability}
+%\begin{itemize}
+\item The Bitmap functions are not currently provided in the X11
+implementation of this library.
+\item \fun{shearBitmap} is supported on Win'NT but not Win'95.
+%\end{itemize}
+\end{portability}
+
+
+
+\subsection{Regions}
+
+\type{Region}s can be viewed as an efficient representation of sets of
+pixels.  They are created from rectangles, ellipses, polygons and
+combined using set operations (intersection, union, difference and xor
+(symmetric difference)).
+
+These are the operations available:
+\begin{verbatim}
+> emptyRegion     ::                   Region
+> rectangleRegion :: Point -> Point -> Region
+> ellipseRegion   :: Point -> Point -> Region
+> polygonRegion   :: [Point]        -> Region
+> 
+> intersectRegion :: Region -> Region -> Region
+> unionRegion     :: Region -> Region -> Region
+> subtractRegion  :: Region -> Region -> Region
+> xorRegion       :: Region -> Region -> Region
+>                            
+> regionToGraphic :: Region -> Graphic
+\end{verbatim}
+
+\fun{withBrush} affects the color of \fun{regionToGraphic}.
+
+\begin{portability}
+%\begin{itemize}
+\item \NotInWin{\fun{emptyRegion}}
+It is possible to use an empty rectangle region instead
+\item \fun{ellipseRegion} is implemented using polygons in the X11
+implementation of the library.
+%\end{itemize}
+\end{portability}
+
+
+\subsection{The \type{Graphic} Algebra}
+
+The Graphic modifiers satisfy a large number of useful identities.
+For example, 
+
+\begin{itemize}
+\item
+  The triple $\langle \type{Graphic}, \fun{overGraphic}, \fun{emptyGraphic} \rangle$
+  forms a ``monoid.'' If this wasn't true, we wouldn't find the
+  \fun{overGraphics} function very useful.
+
+\item
+  Modifiers and generators all distribute over \fun{overGraphic}.
+  That is,
+\begin{verbatim}
+> mkFoo <args> (p1 `overGraphic` p2) 
+>  = (mkFoo <args> p1) `overGraphic` (mkFoo <args> p2)
+> withFoo foo  (p1 `overGraphic` p2) 
+>  = (withFoo foo  p1) `overGraphic` (withFoo foo  p2)
+\end{verbatim}
+
+(These laws are especially useful when trying to make programs more efficient
+--- see section~\ref{efficiency}.)
+
+\item
+  ``Independent'' modifiers commute with each other.
+  For example,
+\begin{verbatim}
+> withTextColor c (withTextAlignment a p) 
+>  = withTextAlignment a (withTextColor c p)
+\end{verbatim}
+
+\item
+  Generators commute with modifiers.
+  For example,
+\begin{verbatim}
+> mkBrush c (\ b -> withBrush b' p) = withBrush b' mkBrush c (\ b -> p)
+\end{verbatim}
+  if \var{b} and \var{b'} are distinct.
+
+\item
+  Generators commute with other generators.  For example
+
+\begin{verbatim}
+> mkBrush c (\ b -> mkBrush c' (\ b' -> p)) 
+>  = mkBrush c' (\ b' -> mkBrush c (\ b -> p))
+\end{verbatim}
+  if \var{b} and \var{b'} are distinct.
+
+\item
+  ``Irrelevant'' modifiers and generators can be added or removed at will.
+  For example, the text color has no effect on line drawing
+\begin{verbatim}
+> withTextColor c (line p0 p1) = line p0 p1
+\end{verbatim}
+  and there's no need to create a brush if you don't use it
+\begin{verbatim}
+> mkBrush c (\ b -> p) = p, if b does not occur in p
+\end{verbatim}
+
+This last law can also be stated in the form
+\begin{verbatim}
+> mkBrush c (\ b -> atomic) = atomic
+\end{verbatim}
+for any atomic operation.
+
+\end{itemize}
+
+% \ToDo{%
+%   Add tables describing which modifiers are relevant and which
+%   ones are independent.  Or just list all the identities.%
+% }
+
+The practical upshot of all this is that there are many ways to
+rearrange a graphic so that it will be drawn more (or less)
+efficiently.  We explore this topic in the next section.
+
+
+\subsection{Efficiency Considerations}\label{efficiency}
+
+The other sections provide a very simple set of functions for creating
+graphics --- but at the cost of ignoring efficiency.  For example, this
+innocent looking graphic
+
+\begin{verbatim}
+> overGraphics
+>   [ withColor Red $ ellipse (000,000) (100,100)
+>   , withColor Red $ ellipse (100,100) (200,200)
+>   , withColor Red $ ellipse (200,200) (300,300)
+>   ]
+\end{verbatim}
+
+will take longer to draw than this equivalent graphic
+
+\begin{verbatim}
+> mkBrush (colorTable ! Red) $ \ redBrush  ->
+> overGraphics
+>   [ withBrush redBrush $ ellipse (000,000) (100,100)
+>   , withBrush redBrush $ ellipse (100,100) (200,200)
+>   , withBrush redBrush $ ellipse (200,200) (300,300)
+>   ]
+\end{verbatim}
+
+Briefly, the problems are that \fun{withColor} sets the color of the
+brush, the pen and the text but ellipses only use the brush color;
+and we're calling \fun{withColor} $3$ times more than we have to.
+This wouldn't matter if brush creation was cheap and easy.  However,
+most typical workstations can only display at most $256$ or $65536$
+different colors on the screen at once but allow you to specify any
+one of $16777216$ different colors when selecting a drawing color
+--- finding a close match to the requested color can be as
+expensive as drawing the primitive object itself.
+
+% \ToDo{%
+%   Time both graphics --- check that my estimate is about right.%
+% }
+
+This doesn't matter much for a graphic of this size --- but if you're
+drawing several thousand graphic elements onto the screen as part of
+an animation, it can make the difference between a quite respectable
+frame rate of 20--30 frames per second and an absolutely unusable
+frame rate of 2--3 frames per second.
+
+% \begin{aside}
+% 
+% The (lazy) functional programming community has a bad habit of
+% ignoring these kinds of considerations; with the result that C
+% programmers have acquired the notion that functional programs will
+% {\em necessarily\/} run {\em several orders of magnitude\/} more
+% slowly than equivalent C programs.  On the basis of this notion, 
+% they {\em quite rightly\/} regard functional languages as toys which
+% have no relevance to Real Programming.
+% 
+% We'd like to dispel that belief and so, in designing the graphics
+% library, we have made a serious attempt to expose enough of the
+% underlying machinery that we can tackle this sort of efficiency
+% consideration.
+% 
+% That said, it's worth emphasising that \Hugs{} is an interpreter which
+% makes it run 10--100 times more slowly than compiled implementations
+% of \Haskell{} such as \GHC{}.  If you really are wanting to animate
+% thousands of objects, you probably shouldn't be relying on \Hugs{}.
+% 
+% \end{aside}
+
+
+\subsubsection{Eliminate calls to \fun{withRGB} and \fun{withColor}}
+
+At the risk of pointing out the obvious, the first step in optimizing
+a program in this way is to expand all uses of the \fun{withRGB} and
+\fun{withColor} functions and eliminating unnecessary calls to
+\fun{mkBrush}, \fun{mkPen} and \fun{withTextColor}.  Applying this
+optimization to the above \type{Graphic}, we obtain this (which should run
+about 3 times faster).
+
+\begin{verbatim}
+> overGraphics
+>   [ mkBrush red $ \ redBrush -> withBrush redBrush $ ellipse (00,00) (10,10)
+>   , mkBrush red $ \ redBrush -> withBrush redBrush $ ellipse (10,10) (20,20)
+>   , mkBrush red $ \ redBrush -> withBrush redBrush $ ellipse (20,20) (30,30)
+>   ]
+\end{verbatim}
+
+\subsubsection{Lifting generators to the top of \type{Graphics}}
+
+
+Another important optimization is to avoid creating many identical
+brushes, pens or fonts when one will do.  We do this by ``lifting''
+brush creation out to the top of a graphic.  For example, this graphic
+
+\begin{verbatim}
+> overGraphics
+>   [ mkBrush red $ \ redBrush -> withBrush redBrush $ ellipse (00,00) (10,10)
+>   , mkBrush red $ \ redBrush -> withBrush redBrush $ ellipse (10,10) (20,20)
+>   , mkBrush red $ \ redBrush -> withBrush redBrush $ ellipse (20,20) (30,30)
+>   ]
+\end{verbatim}
+
+creates three red brushes.  It would be more efficient to rewrite it 
+like this
+
+\begin{verbatim}
+> mkBrush red  $ \ redBrush  ->
+> overGraphics
+>   [ withBrush redBrush $ ellipse (00,00) (10,10)
+>   , withBrush redBrush $ ellipse (10,10) (20,20)
+>   , withBrush redBrush $ ellipse (20,20) (30,30)
+>   ]
+\end{verbatim}
+
+If your program uses a lot of brushes, it may be more convenient to
+store the brushes in a ``palette'' (i.e., an array of brushes)
+
+\begin{verbatim}
+> mkBrush red  $ \ redBrush  ->
+> mkBrush blue $ \ blueBrush ->
+> let palette = array (minBound, maxBound) 
+>                     [(Red, redBrush), (Blue, blueBrush)]
+> in
+> overGraphics
+>   [ withBrush (palette ! Red)  $ ellipse (00,00) (10,10)
+>   , withBrush (palette ! Blue) $ ellipse (10,10) (20,20)
+>   , withBrush (palette ! Red)  $ ellipse (20,20) (30,30)
+>   ]
+\end{verbatim}
+
+% \ToDo{%
+%   Write the obvious function with type
+%   \type{[RGB] -> ([Brush] -> Graphic) -> Graphic} 
+%   (and similarily, for Pens, Fonts, etc).%
+% }
+
+\subsubsection{Lifting generators out of graphics}
+
+% \ToDo{Update this section}
+
+Even this program has room for improvement: every time the graphic is
+redrawn (e.g., whenever the window is resized), it will create fresh
+brushes with which to draw the graphic.  The graphics library provides
+a way round this --- but it's more difficult and fraught with danger.
+
+\begin{outline}
+This section will talk about using explicit creation and deletion
+functions to create brushes, fonts, etc.
+
+The situation isn't very happy at the moment because it's easy to
+forget to deallocate brushes before you quit or to deallocate them
+before you change the graphic.  
+
+% \ToDo{Maybe things will be better by the time we do an official release...}
+
+\end{outline}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Windows}\label{windows}
+
+In section~\ref{introduction} we saw the function \fun{drawInWindow} for
+drawing a \type{Graphic} on a \type{Window}.  It turns out that
+\fun{drawInWindow} is not a primitive function but, rather, it is defined
+using these two primitive functions which read the current
+\type{Graphic} and set a new \type{Graphic}.
+
+\begin{verbatim}
+> getGraphic   :: Window -> IO Graphic
+> setGraphic   :: Window -> Graphic -> IO ()
+\end{verbatim}
+
+Here's how these functions are used to define the function \fun{drawInWindow}
+(which we used in section~\ref{introduction}) and another useful
+function \fun{clearWindow}.
+
+\begin{verbatim}
+> drawInWindow :: Window -> Graphic -> IO ()
+> drawInWindow w p = do
+>   oldGraphic <- getGraphic w
+>   setGraphic w (p `over` oldGraphic)
+>
+> clearWindow :: Window -> IO ()
+> clearWindow w = setGraphic w emptyGraphic
+\end{verbatim}
+
+% \ToDo{This is no longer true.  I think I want to make the ability to draw
+% the delta explicit.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Events}\label{events}
+
+The graphics library supports several different input devices (the
+mouse, the keyboard, etc) each of which can generate several different
+kinds of event (mouse movement, mouse button clicks, key presses, key
+releases, window resizing, etc.)
+
+
+\subsection{Keyboard events}
+
+In section~\ref{introduction} we saw the function \fun{getKey} being
+used to wait until a key was pressed and released.  The function
+\fun{getKey} is defined in terms of a more general function \fun{getKeyEx}
+
+\begin{verbatim}
+> getKeyEx     :: Window -> Bool -> IO Char
+\end{verbatim}
+
+which can be used to wait until a key is pressed (\expr{getKeyEx w True})
+or until it is released (\expr{getKeyEx w False}).  The definition of
+\fun{getKey} using this function is trivial:
+
+\begin{verbatim}
+> getKey       :: Window -> IO Char
+> getKey w = do{ getKeyEx w True; getKeyEx w False }
+\end{verbatim}
+
+
+\subsection{Mouse events}
+
+As well as waiting for keyboard events, we can wait for mouse button
+events.  We provide three functions for getting these events.
+\fun{getLBP} and \fun{getRBP} are used to wait for left and right
+button presses.  Both functions are defined using \fun{getButton}
+which can be used to wait for either the left button or the right
+button being either pressed or released.
+
+\begin{verbatim}
+> getLBP       :: Window -> IO Point
+> getRBP       :: Window -> IO Point
+> getButton    :: Window -> Bool -> Bool -> IO Point
+>
+> getLBP w = getButton w True  True
+> getRBP w = getButton w False True
+\end{verbatim}
+
+
+\subsection{General events}
+
+The functions \fun{getKeyEx} and \fun{getButton} described in the
+previous sections are not primitive functions.  Rather they are
+defined using the primitive function \fun{getWindowEvent}
+
+\begin{verbatim}
+> getWindowEvent :: Window -> IO Event
+\end{verbatim}
+
+which waits for the next ``event'' on a given \type{Window}.
+\type{Event}s are defined by the following data type.
+
+\begin{verbatim}
+> data Event 
+>   = Key       { char :: Char, isDown :: Bool }
+>   | Button    { pt :: Point, isLeft, isDown :: Bool }
+>   | MouseMove { pt :: Point }
+>   | Resize
+>   | Closed
+>  deriving Show 
+\end{verbatim}
+
+These events are:
+
+\begin{itemize}
+\item
+  \expr{Key\{char, isDown\}} occurs when a key is pressed 
+  (\expr{isDown==True})
+  or released (\expr{isDown==False}).  \expr{char} is the ``keycode'' for the
+  corresponding key.  This keycode can be a letter, a number or some other 
+  value corresponding to the shift key, control key, etc.  
+
+%   \ToDo{%
+%     Say more about what the keycode is --- in the meantime, users will
+%     just have to try a few experiments to find out which code each key
+%     produces.%
+%   }
+
+\item
+  \expr{Button\{pt, isLeft, isDown\}} occurs when a mouse button is
+  pressed (\expr{isDown==True}) or released (\expr{isDown==False}).
+  \expr{pt} is the mouse position when the button was pressed and
+  \expr{isLeft} indicates whether it was the left or the right button.
+
+\item
+  \expr{MouseMove\{pt\}} occurs when the mouse is moved inside the window.
+  \expr{pt} is the position of the mouse after the movement.
+
+\item
+  \expr{Resize} occurs when the window is resized.
+  The new window size can be discovered using these functions.
+
+\begin{verbatim}
+> getWindowRect   :: Window -> IO (Point, Size)
+> getWindowSize   :: Window -> IO Size
+> getWindowSize w = do
+>   (pt,sz) <- getWindowRect w
+>   return sz
+\end{verbatim}
+
+\item
+  \expr{Resize} occurs when the window is closed.
+
+\end{itemize}
+
+\begin{portability}
+%\begin{itemize}
+\item
+  Programmers should assume that the \type{Event} datatype will be extended in the
+  not-too-distant future and that individual events may change slightly.
+  As a minimum, you should add a ``match anything'' alternative to
+  any function which pattern matches against \type{Event}s.
+
+\item
+X11 systems typically have three button mice.  Button 1 is used as the
+left button, button 3 as the right button and button 2 (the middle
+button) is ignored.
+
+%\end{itemize}
+\end{portability}
+
+As examples of how \fun{getWindowEvent} might be used in a program, here are
+the definitions of \fun{getKeyEx} and \fun{getButton}.
+
+\begin{verbatim}
+> getKeyEx     :: Window -> Bool -> IO Char
+> getKeyEx w down = loop
+>  where
+>   loop = do
+>         e <- getWindowEvent w
+>         case e of 
+>           Key{ char = c, isDown } 
+>             |  isDown == down 
+>             -> return c
+>           _ -> loop
+\end{verbatim}
+
+\begin{verbatim}
+> getButton    :: Window -> Bool -> Bool -> IO Point
+> getButton w left down = loop
+>  where
+>   loop = do
+>         e <- getWindowEvent w
+>         case e of 
+>           Button{pt,isLeft,isDown} 
+>             | isLeft == left && isDown == down
+>             -> return pt
+>           _ -> loop
+\end{verbatim}
+
+\subsection{Using Timers}
+
+% \ToDo{%
+%   Timers are not very well integrated with the rest of the library at
+%   the moment.  We plan to improve this situation in future versions.%
+% }
+
+If you want to use a timer, you have to open the window using
+\fun{openWindowEx} instead of \fun{openWindow}
+
+\begin{verbatim}
+> openWindowEx :: Title -> Maybe Point -> Size ->
+>                 RedrawMode -> Maybe Time -> IO Window
+>
+> data RedrawMode
+>   = Unbuffered
+>   | DoubleBuffered
+\end{verbatim}
+
+This {\em extended\/} version of \fun{openWindow} takes extra parameters
+which specify
+\begin{itemize}
+\item the initial position of a window;
+\item how to display a graphic on a window; and
+\item the time between ticks (in milliseconds).
+\end{itemize}
+
+The function \fun{openWindow} is defined using \fun{openWindowEx}
+\begin{verbatim}
+> openWindow name size = openWindowEx name Nothing size Unbuffered Nothing
+\end{verbatim}
+
+The drawing mode can be either \fun{DoubleBuffered} which uses a
+``double buffer'' to reduce flicker or \fun{Unbuffered} which draws
+directly to the window and runs slightly faster but is more prone to
+flicker.  You should probably use \fun{DoubleBuffered} for
+animations.
+
+The timer generates ``tick events'' at regular intervals.  The
+function \fun{getWindowTick} waits for the next ``tick event'' to occur.
+
+\begin{verbatim}
+> getWindowTick :: Window -> IO ()
+\end{verbatim}
+
+\begin{aside}
+With normal events, like button presses, we store every event that
+happens until you remove that event from the queue.  If we did this
+with tick events, and your program takes a little too long to draw
+each frame of an animation, the event queue could become so swamped
+with ``ticks'' that you'd never respond to user input.  To avoid this
+problem, we only insert a tick into the queue if there's no tick there 
+already.
+\end{aside}
+
+Here's a simple example of how to use timers.  Note the use of
+\fun{setGraphic} instead of \fun{drawInWindow}.
+
+\begin{verbatim}
+> timerDemo = do
+>   w <- openWindowEx 
+>          "Timer demo"         -- title
+>          (Just (500,500))     -- initial position of window
+>          (100,100)            -- initial size of window
+>          DoubleBuffered       -- drawing mode - see above
+>          (Just 50)            -- tick rate
+>   let
+>     loop x = do
+>       setGraphic w $ text (0,50) $ show x
+>       getWindowTick w         -- wait for next tick on window
+>       loop (x+1)
+>   loop 0
+\end{verbatim}
+
+% \ToDo{There is currently no way to specify a background color.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Concurrent Haskell}\label{concurrency}
+
+If you want to use multiple windows or each window contains a
+number of essentially independent components, it is convenient
+to use separate threads for handling each window.  \Hugs{}
+provides a simple mechanism for doing that. 
+
+The simplest concurrency primitives are \fun{par} and \fun{par\_}
+
+\begin{verbatim}
+> par  :: IO a -> IO b -> IO (a,b)
+> par_ :: IO a -> IO b -> IO ()
+\end{verbatim}
+
+(These are both exported from the \module{HGL.Graphics.Utils} module.)
+
+These run two \type{IO} actions in parallel and terminate when both
+actions terminate.  The function \fun{par\_} discards the results of
+the actions.
+
+\begin{aside}
+The underscore in the name \fun{par\_} is derived from the use of
+the underscore in the definition of \fun{par\_}.
+ 
+\begin{verbatim}
+> par_ p q = (p `par` q) >>= \ _ -> return ()
+\end{verbatim}
+
+This naming convention is also used in the Haskell Prelude and
+standard libraries (\fun{mapM\_}, \fun{zipWithM\_}, etc.).
+\end{aside}
+
+The function \fun{parMany} generalizes \fun{par\_} to lists.
+
+\begin{verbatim}
+> parMany :: [ IO () ] -> IO ()
+> parMany = foldr par_ (return ())
+\end{verbatim}
+
+Of course, you'll quickly realise that there's not much point in being
+able to create concurrent threads if threads can't communicate with
+each other.  \Hugs{} provides an implementation of the ``Concurrent
+Haskell'' primitives described in the Concurrent Haskell
+paper~\cite{concurrentHaskell:popl96} to which we refer the enthusiastic reader.
+
+% \begin{aside}
+% Programmers should be aware that there is one significant difference
+% between \Hugs{}' implementation of concurrency and \GHC{}'s.
+% 
+% \begin{description}
+% \item[GHC]
+%   uses preemptive multitasking.
+% 
+%   Context switches can occur at any time (except if you call a C
+%   function (like "getchar") which blocks the entire process while
+%   waiting for input.
+% 
+% \item[Hugs]
+%   uses cooperative multitasking.  
+% 
+%   Context switches only occur when you use one of the primitives
+%   defined in this module.  This means that programs such as:
+% 
+% \begin{verbatim}
+% > main = forkIO (write 'a') >> write 'b'
+% >  where
+% >   write c = putChar c >> write c
+% \end{verbatim}
+% 
+%   will print either "aaaaaaaaaaaaaa..." or "bbbbbbbbbbbb..."
+%   instead of some random interleaving of 'a's and 'b's.
+% 
+% \end{description}
+% 
+% Cooperative multitasking is sufficient for writing coroutines and simple
+% graphical user interfaces. 
+% \end{aside}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{The \type{Draw} monad}\label{Draw}
+
+The \type{Graphic} type, operations and combinators provide a
+flexible, efficient and convenient way of drawing images on a window
+and encapsulate good programming practice by cleaning up any changes
+they must make to the state of the window.  In some applications
+though, it is appropriate to use a lower-level, more error-prone
+interface for drawing images.  For example, when building a library on
+top of the Graphics library, one might want to build on a slightly
+more efficient, less secure interface.  Or, when teaching courses on
+computer graphics, it would not be possible to demonstrate low-level
+aspects of graphics using an interface which hides those aspects.
+This section describes the \type{Draw} monad (an imperative graphics
+interface) and describes how this is used to implement the
+\type{Graphic} type (a declarative graphics interface).  This section
+can be ignored by most readers.
+
+\subsection{The \type{Draw} monad and the \type{Graphic} type}\label{Draw monad}
+
+The \type{Graphic} type lets you describe what an image should look
+like; the \type{Draw} monad lets you describe how to build an image.
+These views intersect for atomic graphics.  For example, the function
+to draw a line can serve both as a description and as the
+implementation.  This is exploited in the graphics library by defining
+\type{Graphic} as an instance of the \type{Draw} monad.  Thus, all
+\type{Graphic} types and operations listed in section~\ref{graphics}
+can also be used with the \type{Draw} monad.
+
+\begin{verbatim}
+> data Draw a = ...
+> instance Functor Draw where ...
+> instance Monad   Draw where ...
+>
+> type Graphic = Draw ()
+\end{verbatim}
+
+The \fun{emptyGraphic} and \fun{overGraphic} functions are implemented
+using this monad.  Their definitions should not be surprising.
+\begin{verbatim}
+> emptyGraphic        = return ()
+> g1 `overGraphic` g2 = g2 >> g1
+\end{verbatim}
+
+\subsection{\type{Draw} modifiers and generators}\label{Draw modifiers}
+
+The difference between the \type{Draw} monad and the \type{Graphic}
+type is that the \type{Graphic} modifiers and combinators respect the
+structure of the graphic (see section~\ref{combining}).  For example,
+the \fun{withBrush} modifier only affects the color of the
+\type{Graphic} it is applied to, it does not affect the color of the
+\type{Graphic} it is embedded in.  In contrast, the \type{Draw} monad
+provides operations which change the effect of subsequent drawing
+operations.  The following operations correspond to the graphics
+modifiers described in section~\ref{modifiers}.
+
+\begin{verbatim}
+> selectFont       :: Font          -> Draw Font  
+> setTextColor     :: RGB           -> Draw RGB
+> setTextAlignment :: Alignment     -> Draw Alignment
+> setBkColor       :: RGB           -> Draw RGB
+> setBkMode        :: BkMode        -> Draw BkMode
+> selectPen        :: Pen           -> Draw Pen  
+> selectBrush      :: Brush         -> Draw Brush
+\end{verbatim}
+
+These operations all have a type of the form \type{\tva \arrow Draw
+\tva}.  The value returned is the old value of the attribute being
+changed and can be used to restore the attribute to its previous
+value.  For example, the \fun{withFont} modifier could be implemented
+like this:
+
+\begin{verbatim}
+> withFont new g = do
+>   old <- selectFont new
+>   g
+>   selectFont old
+>   return ()
+\end{verbatim}
+
+\begin{aside}
+This pattern of use is very common in imperative programs so the
+Haskell \module{IO} library provides two combinators which encapsulate
+this behavior.  The \fun{bracket} function takes three operations as
+arguments: a pre-operation \var{left}, a post-operation \var{right}
+and an operation \var{middle} and performs them in the order
+\var{left}; \var{middle}; \var{right}.  The arguments are provided in
+the order \var{left}, \var{right}, \var{middle} because the \var{left}
+and \var{right} operations are often ``inverses'' of each other such
+as \var{openFile} and \var{closeFile}.  The \fun{bracket\_} function is
+similar and is used when the \var{middle} operation does not require
+the result of the \var{left} operation.
+
+\begin{verbatim}
+> bracket  :: IO a -> (a -> IO b) -> (a -> IO c) -> IO c
+> bracket_ :: IO a -> (a -> IO b) -> IO c        -> IO c
+> 
+> bracket left right middle = do
+>   a <- left
+>   c <- middle a
+>   right a
+>   return c
+> 
+> bracket_ left right middle = bracket left right (const middle)
+\end{verbatim}
+\end{aside}
+
+% \ToDo{Should these functions be qualified?}
+
+The graphics library provides similar combinators for the \fun{Draw}
+monad:
+\begin{verbatim}
+> bracket  :: Draw a -> (a -> Draw b) -> (a -> Draw c) -> Draw c
+> bracket_ :: Draw a -> (a -> Draw b) -> Draw c        -> Draw c
+\end{verbatim}
+
+\begin{aside}
+In fact, the \fun{bracket} and \fun{bracket\_} functions do slightly
+more than the above description suggests.  Those provided in the
+\module{IO} library use Haskell's error-catching facilities to ensure that
+the \var{right} operation is performed even if the \var{middle} operation
+raises an \type{IOError} whilst those in the Graphics library
+use Hugs' exception-handling facilities to ensure that the \var{right}
+operation is performed even if the \var{middle} operation raises an
+exception.
+\end{aside}
+
+
+Using these combinators, it is trivial to implement the modifiers
+described in section~\ref{modifiers}.
+
+\begin{verbatim}
+> withFont          x = bracket_ (selectFont       x) selectFont
+> withTextColor     x = bracket_ (setTextColor     x) setTextColor
+> withTextAlignment x = bracket_ (setTextAlignment x) setTextAlignment
+> withBkColor       x = bracket_ (setBkColor       x) setBkColor
+> withBkMode        x = bracket_ (setBkMode        x) setBkMode
+> withPen           x = bracket_ (selectPen        x) selectPen
+> withBrush         x = bracket_ (selectBrush      x) selectBrush
+\end{verbatim}
+
+
+% \ToDo{Can we expose the mkFoo functions in the same way?  Not at the moment!}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bibliographystyle{abbrv}
+\bibliography{graphics}
+\addcontentsline{toc}{chapter}{References}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\appendix
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Quick Reference}
+
+The exported (stable) interface of the library consists of all symbols
+exported from \module{HGL.Graphics.Core} and \module{HGL.Graphics.Utils}.
+\module{HGL.Graphics} reexports all symbols exported by these modules
+and it is expected that most users will only import \module{HGL.Graphics};
+the \module{HGL.Graphics.Core} interface is
+aimed solely at those wishing to use the graphics library as a base on
+which to build their own library or who find the
+\module{HGL.Graphics.Utils} interface inappropriate for their needs.
+
+% \begin{description}
+
+\iffalse
+% Use this command to generate the documentation:
+% ./gendoc GraphicsColor.hs GraphicsEvent.hs GraphicsFont.hs GraphicsPicture.hs GraphicsRegion.hs GraphicsUtils.hs > appendix.tex
+%
+\include{appendix}
+\else
+\include{oldappendix}
+\fi
+
+% \end{description}
+
+%*ignore
+\end{document}
+%*endignore
+
+% Local Variables:
+% indent-tabs-mode: nil
+% End:

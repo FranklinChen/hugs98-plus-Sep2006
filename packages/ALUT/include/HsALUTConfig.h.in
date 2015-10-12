@@ -1,0 +1,139 @@
+/* include/HsALUTConfig.h.in.  Generated from configure.ac by autoheader.  */
+
+/* Define to 1 if `alutExit' returns void. */
+#undef ALUTEXIT_VOID
+
+/* Define to 1 if `alutInit' returns void. */
+#undef ALUTINIT_VOID
+
+/* C flags for ALUT, as a list of string literals. */
+#undef ALUT_CFLAGS
+
+/* Framework flags for ALUT, as a list of string literals. */
+#undef ALUT_FRAMEWORKS
+
+/* Library flags for ALUT, as a list of string literals. */
+#undef ALUT_LIBS
+
+/* The value of ALUT_API_MAJOR_VERSION. */
+#undef CONST_ALUT_API_MAJOR_VERSION
+
+/* The value of ALUT_API_MINOR_VERSION. */
+#undef CONST_ALUT_API_MINOR_VERSION
+
+/* The value of ALUT_LOADER_BUFFER. */
+#undef CONST_ALUT_LOADER_BUFFER
+
+/* The value of ALUT_LOADER_MEMORY. */
+#undef CONST_ALUT_LOADER_MEMORY
+
+/* The value of ALUT_WAVEFORM_IMPULSE. */
+#undef CONST_ALUT_WAVEFORM_IMPULSE
+
+/* The value of ALUT_WAVEFORM_SAWTOOTH. */
+#undef CONST_ALUT_WAVEFORM_SAWTOOTH
+
+/* The value of ALUT_WAVEFORM_SINE. */
+#undef CONST_ALUT_WAVEFORM_SINE
+
+/* The value of ALUT_WAVEFORM_SQUARE. */
+#undef CONST_ALUT_WAVEFORM_SQUARE
+
+/* The value of ALUT_WAVEFORM_WHITENOISE. */
+#undef CONST_ALUT_WAVEFORM_WHITENOISE
+
+/* Define to 1 if you have the `alutCreateBufferFromFile' function. */
+#undef HAVE_ALUTCREATEBUFFERFROMFILE
+
+/* Define to 1 if you have the `alutCreateBufferFromFileImage' function. */
+#undef HAVE_ALUTCREATEBUFFERFROMFILEIMAGE
+
+/* Define to 1 if you have the `alutCreateBufferHelloWorld' function. */
+#undef HAVE_ALUTCREATEBUFFERHELLOWORLD
+
+/* Define to 1 if you have the `alutCreateBufferWaveform' function. */
+#undef HAVE_ALUTCREATEBUFFERWAVEFORM
+
+/* Define to 1 if you have the `alutGetError' function. */
+#undef HAVE_ALUTGETERROR
+
+/* Define to 1 if you have the `alutGetErrorString' function. */
+#undef HAVE_ALUTGETERRORSTRING
+
+/* Define to 1 if you have the `alutGetMajorVersion' function. */
+#undef HAVE_ALUTGETMAJORVERSION
+
+/* Define to 1 if you have the `alutGetMIMETypes' function. */
+#undef HAVE_ALUTGETMIMETYPES
+
+/* Define to 1 if you have the `alutGetMinorVersion' function. */
+#undef HAVE_ALUTGETMINORVERSION
+
+/* Define to 1 if you have the `alutInitWithoutContext' function. */
+#undef HAVE_ALUTINITWITHOUTCONTEXT
+
+/* Define to 1 if you have the `alutLoadMemoryFromFile' function. */
+#undef HAVE_ALUTLOADMEMORYFROMFILE
+
+/* Define to 1 if you have the `alutLoadMemoryFromFileImage' function. */
+#undef HAVE_ALUTLOADMEMORYFROMFILEIMAGE
+
+/* Define to 1 if you have the `alutLoadMemoryHelloWorld' function. */
+#undef HAVE_ALUTLOADMEMORYHELLOWORLD
+
+/* Define to 1 if you have the `alutLoadMemoryWaveform' function. */
+#undef HAVE_ALUTLOADMEMORYWAVEFORM
+
+/* Define to 1 if you have the `alutSleep' function. */
+#undef HAVE_ALUTSLEEP
+
+/* Define to 1 if you have the <AL/alut.h> header file. */
+#undef HAVE_AL_ALUT_H
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H
+
+/* Define to 1 if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
+
+/* Define to 1 if you have the <OpenAL/alut.h> header file. */
+#undef HAVE_OPENAL_ALUT_H
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H
+
+/* Define to 1 if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#undef HAVE_STRING_H
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
+
+/* Define to the address where bug reports for this package should be sent. */
+#undef PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#undef PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#undef PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#undef PACKAGE_TARNAME
+
+/* Define to the version of this package. */
+#undef PACKAGE_VERSION
+
+/* Define to 1 if you have the ANSI C header files. */
+#undef STDC_HEADERS

@@ -1,0 +1,37 @@
+//
+// Project file for Hugs98
+//
+
+TARGET			hugs.exe
+
+TARGETTYPE		exe
+
+PROJECT			epoc_code
+
+SUBPROJECT              hugs98\src
+
+SOURCE hugs.c storage.c input.c static.c type.c subst.c 
+SOURCE output.c compiler.c machine.c builtin.c plugin.c
+SOURCE epoc\epoc.c epoc\epoc_input.c
+
+SYSTEMINCLUDE   \epoc32\include\libc \epoc32\include
+USERINCLUDE     \epoc_code\hugs98\src \epoc_code\hugs98\src\epoc
+
+#if defined(MARM)
+LIBRARY			ecrt0.o
+#else
+LIBRARY			ecrt0.obj
+#endif
+
+LIBRARY			estlib.lib euser.lib
+
+// EPOCSTACKSIZE        8192
+EPOCHEAPSIZE         1024    3145728
+
+//START WINS
+        // This seems to be necessary for builds with
+        // visual C++ 6.0 introductory edition to work properly.
+        // Contains a dummy definition of pfnStdChk()
+//        WIN32_LIBRARY \epoc_code\vc6sup\debug\vc6sup.lib
+//END
+

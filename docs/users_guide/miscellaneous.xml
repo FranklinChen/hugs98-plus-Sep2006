@@ -1,0 +1,490 @@
+<chapter id="miscellaneous">
+<title>Miscellaneous</title>
+
+<sect1 id="history">
+<title>Hugs 98 release history</title>
+
+<para>
+These are the release notes for the program since it was renamed Hugs 98,
+reflecting substantial compliance with Haskell 98
+(though with numerous optional extensions).
+Archives of older versions of
+<ulink url="http://www.cse.ogi.edu/~mpj/goferarc/index.html">Gofer</ulink>
+and
+<ulink url="http://www.cse.ogi.edu/~mpj/hugsarc/index.html">Hugs</ulink>
+are still available from Mark Jones's web page.
+</para>
+
+<sect2>
+<title>January 1999 (Beta release)</title>
+
+<para>
+Headline news for this release includes:
+</para>
+
+<itemizedlist>
+<listitem><para>
+Hugs goes Haskell 98!  Hugs 98 is the first released Haskell system
+to support the new standard for Haskell 98.
+</para></listitem>
+
+<listitem><para>
+Hugs goes Open Source!  Hugs 98 is the first Hugs release to be
+distributed as Open source software.  Responding to requests from
+users, this relaxes the conditions of use and distribution of
+previous releases, and will hopefully make it easier to use Hugs
+for a wide range of projects.
+</para></listitem>
+</itemizedlist>
+
+<para>
+This release of Hugs also merges the features of several earlier releases
+into one single system. This includes:
+</para>
+
+<itemizedlist>
+<listitem><para>
+The module system and dynamic linking facilities of Hugs 1.4 (June 1998);
+</para></listitem>
+
+<listitem><para>
+The type system extensions
+(<link linkend="multi-param">multi-parameter classes</link>,
+<link linkend="trex">TREX</link>,
+<link linkend="rank-2-types">rank-2 polymorphism</link>,
+<link linkend="existential-quantification">existentials</link>,
+etc.) of Hugs 1.3c p1 (March 1998);
+</para></listitem>
+
+<listitem><para>
+New features and modifications to support the draft Haskell 98 standard;
+</para></listitem>
+
+<listitem><para>
+A whole range of bug fixes and additions for all of the above.
+</para></listitem>
+</itemizedlist>
+
+</sect2>
+
+<sect2>
+<title>May 1999</title>
+
+<para>
+This release is largely conformant with Haskell 98, including
+monad and record syntax, newtypes, strictness annotations, and
+modules.  In addition, it comes packaged with the libraries defined
+in the most recent version of the Haskell Library Report and with
+extension libraries that are compatible with GHC 3.0 and later.
+</para>
+
+<para>
+Additional features of the system include:
+</para>
+
+<itemizedlist>
+<listitem><para>
+<quote>Import chasing</quote>: a single module may be loaded, and Hugs will
+chase down all imports as long as module names are the same as
+file names and the files are found in the current path.
+</para></listitem>
+
+<listitem><para>
+A simple GUI for Windows to facilitate program development.
+</para></listitem>
+
+<listitem><para>
+Library extensions to support concepts such as concurrency,
+mutable variables and arrays, monadic parsing, tracing (for
+debugging), graphics, and lazy state threads.
+</para></listitem>
+
+<listitem><para>
+A Win32 library for complete access to windows, graphics, and
+other important OS functionalities and a graphics library for
+easy access to Win32 graphics.
+</para></listitem>
+
+<listitem><para>
+A <quote>foreign interface</quote> mechanism to facilitate interoperability
+with C.
+</para></listitem>
+</itemizedlist>
+
+</sect2>
+
+<sect2>
+<title>November 1999</title>
+
+<itemizedlist>
+<listitem><para>
+BSD-style license (replacing the Artistic License)
+</para></listitem>
+
+<listitem><para>
+new commands
+<link linkend="browse-command"><command>:browse</command></link> and
+<link linkend="version-command"><command>:version</command></link>
+</para></listitem>
+
+<listitem><para>
+experimental multi-instance resolution and <command>:xplain</command> command
+</para></listitem>
+
+<listitem><para>
+<link linkend="functional-dependencies">functional dependencies</link>
+</para></listitem>
+
+<listitem><para>
+zero parameter type classes
+</para></listitem>
+
+<listitem><para>
+better handling of overlapping instances
+</para></listitem>
+
+<listitem><para>
+various bug fixes
+</para></listitem>
+</itemizedlist>
+
+<!-- the next two were bugfix releases of Nov99, so make them sub -->
+<!-- sections. -->
+<sect3>
+<title>February 2000</title>
+
+<para>
+This is purely a bug-fix release of Hugs98 November 99.
+It fixes the following problems:
+</para>
+
+<itemizedlist>
+<listitem><para>
+If you defined an instance which inherited a method via a
+superclass, hugs would go into an infinite loop.  Fortunately,
+most people weren't doing this (except Chris Okasaki...).
+</para></listitem>
+
+<listitem><para>
+There were a couple of holes in the implementation of implicit parameters
+(<quote><literal>with</literal></quote> wasn't always being scoped properly,
+sometimes capturing implicit parameters outside of its scope).
+</para></listitem>
+
+<listitem><para>
+Functional dependencies weren't being properly propagated in
+some cases with derived instances
+(<quote><literal>instance P ... =&gt; Q ...</literal></quote>).
+</para></listitem>
+</itemizedlist>
+
+</sect3>
+
+<sect3>
+<title>July 2000</title>
+
+<para>
+This is purely a bug-fix release of Hugs98 February 2000.
+</para>
+
+</sect3>
+
+</sect2>
+
+<sect2>
+<title>February 2001</title>
+
+<para>
+This is a major release that incorporates bug fixes as well as
+several new features and enhancements that have been developed for
+Hugs over the last year. It is announced with the intention that
+it will remain a stable and lightweight implementation of Haskell 98
++ extensions for some considerable time.
+</para>
+
+<para>
+A list of the most important new features looks as follows:
+</para>
+
+<itemizedlist>
+<listitem><para>
+A Foreign Function Interface closely modelled after the one
+provided by GHC.
+</para></listitem>
+
+<listitem><para>
+Built-in, <link linkend="observe">Hood-like debugging support</link>.
+</para></listitem>
+
+<listitem><para>
+<link linkend="zip-comprehension">Parallel list comprehensions</link>,
+a.k.a. zip-comprehensions.
+</para></listitem>
+
+<listitem><para>
+A new syntax for <link linkend="recursive-do">recursive monad bindings</link>.
+</para></listitem>
+
+<listitem><para>
+A new GUI under Windows that doesn't consume all CPU time.
+</para></listitem>
+
+<listitem><para>
+Support for the MacOS platform integrated into the main distribution.
+</para></listitem>
+
+<listitem><para>
+Corrections of all bugs reported for the January 2001 beta
+release.
+</para></listitem>
+</itemizedlist>
+
+</sect2>
+
+<sect2>
+<title>December 2001</title>
+
+<para>
+The most important features of this new release are:
+</para>
+
+<itemizedlist>
+<listitem><para>
+The incompatibilities between Hugs and the Haskell Graphics Library
+have been fixed, and binaries for the HGL are now available on the
+Hugs download page.
+</para></listitem>
+
+<listitem><para>
+The missing standard libraries <literal>Directory</literal>,
+<literal>CPUTime</literal>, <literal>Time</literal> and
+<literal>Locale</literal>
+have been added along with a complete implementation of
+Haskell 98 <literal>IO</literal>.
+</para></listitem>
+
+<listitem><para>
+Hugs is now delivered with most of the <literal>hslibs</literal> libraries
+installed in the <literal>lib/exts/</literal> directory.
+The added modules cover the <literal>Edison</literal>,
+<literal>Parsec</literal>, <literal>HaXml</literal>,
+<literal>QuickCheck</literal>, <literal>concurrent</literal>,
+<literal>monad</literal> and <literal>html</literal> subdirectories
+of <literal>hslibs</literal>.
+</para></listitem>
+
+<listitem><para>
+The <command>:set</command> command now refuses the user to set a module
+search path that doesn't contain the <literal>Prelude</literal>.
+This is to protect users from accidentally rendering their Hugs setups
+unusable, especially on Windows machines where the options persist
+in the Registry.
+</para></listitem>
+
+<listitem><para>
+MacOS X is now one of the supported unix ports, with pre-built
+binaries available on the download page.
+</para></listitem>
+
+<listitem><para>
+Experimental support is provided for hierarchical module names,
+where a module name <literal>A.B.C</literal> is mapped onto the file path
+<literal>A/B/C</literal>{<literal>.hs</literal>,<literal>.lhs</literal>}
+and appended to each of the path prefixes in
+<literal>HUGSPATH</literal> until the name of a readable file is found.
+</para></listitem>
+</itemizedlist>
+
+</sect2>
+
+<sect2>
+<title>November 2002</title>
+
+<para>
+Feature highlights of this new release are:
+</para>
+
+<itemizedlist>
+<listitem><para>
+Much improved FFI support (contributed by Alastair Reid), bringing
+Hugs really very close to the Haskell FFI specification.
+</para></listitem>
+
+<listitem><para>
+Adoption of a significant subset of GHC's hierarchical libraries
+(contributed by Ross Paterson).
+</para></listitem>
+
+<listitem><para>
+An (allegedly) complete implementation of the Haskell98 module
+system (Sigbjorn Finne).
+</para></listitem>
+
+<listitem><para>
+Numerous bug fixes since the previous major release in Dec 2001.
+</para></listitem>
+</itemizedlist>
+
+</sect2>
+
+<sect2>
+<title>November 2003</title>
+
+<para>
+There has been substantial internal restructuring.
+In addition to numerous bug fixes, user-visible changes include:
+</para>
+
+<itemizedlist>
+<listitem><para>
+The beginnings of a User's Guide (though still incomplete).
+</para></listitem>
+
+<listitem><para>
+The <literal>Double</literal> type is now double-precision
+on most architectures.
+</para></listitem>
+
+<listitem><para>
+Hugs now relies on the same hierarchical libraries as GHC and Nhc98,
+and provides almost all of them.
+For now, compatibility with the old libraries is provided by stub
+modules, but users are encouraged to migrate to the new libraries.
+</para></listitem>
+
+<listitem><para>
+Full support for imprecise exceptions (but not asynchronous ones).
+Most runtime errors are now reported by applying <function>print</function>
+to an <literal>Exception</literal>
+(formerly the built-in printer was applied to the faulty redex).
+</para></listitem>
+
+<listitem><para>
+Integrated .NET support (on Windows platforms).
+</para></listitem>
+
+<listitem><para>
+The <option>-e</option>, <option>-f</option>, <option>-i</option>,
+<option>-N</option>, <option>-W</option> and <option>-X</option> options
+and the <command>:project</command> command have been removed.
+</para></listitem>
+
+<listitem><para>
+A searchpath may include an entry of the form
+<quote><replaceable>directory</replaceable><literal>/*</literal></quote>,
+meaning all the immediate subdirectories of <replaceable>directory</replaceable>
+(see <xref linkend="option-search-path"/>).
+</para></listitem>
+</itemizedlist>
+
+</sect2>
+
+<sect2>
+<title>March 2005</title>
+
+<para>
+This release is primarily targeted at Unix systems to gain experience
+with new features.
+The new Cabal-based library build system has the potential to make
+building on Windows easier, but it's not there yet.  Volunteers welcome.
+</para>
+
+<para>
+In addition to numerous bug fixes, user-visible changes include:
+</para>
+
+<itemizedlist>
+
+<listitem><para>
+The default current module is now the empty module <literal>Hugs.Base</literal>
+instead of the <literal>Prelude</literal>
+(see <xref linkend="module-commands"/>).
+</para></listitem>
+
+<listitem><para>
+The <literal>Char</literal> type and the <literal>Char</literal> module
+now support Unicode as specified in the Haskell 98 Report
+(contributed by Dmitry Golubovsky).
+Character oriented I/O uses a byte encoding of characters determined
+by the current locale (see <xref linkend="locale"/>).
+</para></listitem>
+
+<listitem><para>
+The new <link linkend="option-split-options"><option>-X</option></link> option
+can be used to group several options into one argument.
+This is now needed for executable <command>runhugs</command> scripts
+(using the Unix <quote><literal>#!</literal></quote> feature)
+that require two or more options (see <xref linkend="runhugs"/>).
+</para></listitem>
+
+<listitem><para>
+The syntax of the <command>ffihugs</command> command has changed
+(see <xref linkend="ffihugs"/>).
+The <option>+G</option> and <option>+L</option> options are gone,
+and a new <option>-i</option> option can be used to specify include files.
+</para></listitem>
+
+<listitem><para>
+Hugs now has basic support for the
+<ulink url="http://www.haskell.org/cabal/">Cabal</ulink> packaging system
+(see <xref linkend="packages"/>).
+</para></listitem>
+
+</itemizedlist>
+
+</sect2>
+
+<sect2>
+<title>May 2006</title>
+
+<itemizedlist>
+
+<listitem><para>
+The default current module is now the empty module <literal>Hugs</literal>
+(see <xref linkend="module-commands"/>).
+</para></listitem>
+
+<listitem><para>
+The compatibility libraries are no longer included on the default search path.
+You can access them by adding <quote><literal>{Hugs}/oldlib</literal></quote>
+to the search path (see <xref linkend="option-search-path"/>),
+but they will be removed in the next release.
+</para></listitem>
+
+<listitem><para>
+Rewritten graphical Windows interface
+(contributed by Neil Mitchell;
+see <xref linkend="winhugs"/>).
+</para></listitem>
+
+<listitem><para>
+New <link linkend="main-command"><command>:main</command></link> command
+(contributed by Neil Mitchell).
+</para></listitem>
+
+</itemizedlist>
+
+<sect3>
+<title>September 2006</title>
+
+<para>
+This is a minor release fixing bugs in the May 2006 release,
+and including updated libraries matching those of GHC 6.6.
+</para>
+
+<itemizedlist>
+
+<listitem><para>
+The built-in printer is now less verbose, making pattern-match exceptions
+more readable.
+</para></listitem>
+
+</itemizedlist>
+
+</sect3>
+
+</sect2>
+
+</sect1>
+
+</chapter>

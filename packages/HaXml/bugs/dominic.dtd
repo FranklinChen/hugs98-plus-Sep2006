@@ -1,0 +1,7 @@
+<!ENTITY % SVG.path.element "INCLUDE" >
+<![%SVG.path.element;[
+<!ENTITY % SVG.path.content
+    "(( %SVG.Description.class; )*, ( %SVG.Animation.class; )*)"
+>
+<!ELEMENT %SVG.path.qname; %SVG.path.content; >
+]]>

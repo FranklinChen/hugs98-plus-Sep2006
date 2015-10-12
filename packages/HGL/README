@@ -1,0 +1,47 @@
+                           HSHGL 3.00
+                    A Portable Graphics Library
+
+In preparation for a major release of HSHGL, we are making an alpha
+release for folk to play with.  This release only works with X11 and
+GHC (it almost certainly still runs on Hugs too but we haven't tested
+recently).
+
+We welcome bug reports, comments on how the system is packaged, the
+web page, examples, comments from those who build binary and source
+packages, etc. and especially welcome comments accompanied by patches
+or cvs commit messages.
+
+We are pleased to announce a new release of the HGL: a portable
+graphics library.  The HGL gives the programmer access to the most
+interesting and portable parts of the Win32 and X11 library. The
+library is distributed as open source and is suitable for use in
+teaching and applications.
+
+This version supports:
+
+  Filled and unfilled 2-dimensional objects (text, lines, polygons, ellipses).
+  Bitmaps (Win32 version only, for now).
+  Control over text alignment, fonts, color.
+  Simple input events (keyboard, mouse, window resize) to support reactivity.
+  Timers and double-buffering to support simple animation.
+  Use of concurrency to avoid the usual inversion of the code associated 
+   with event-loop programming.
+  Multiple windows may be handled at one time.
+  
+To keep the library simple and portable, the library makes no attempt to 
+support:
+  
+  User interface widgets (menus, toolbars, dialog boxes, etc.)
+  Palette manipulation and other advanced features.
+  Many kinds of input event.
+
+This release is only for X11 and GHC.  We hope to have a Win32 release soon.
+
+The library can be downloaded from: http://www.haskell.org/graphics/.
+You will need GHC 6.0 and HSX11 1.00 to build the library.
+Installation instructions are in HGL-3.00/INSTALL.
+Bug reports should be sent to alastair at reid-consulting-uk.ltd.uk
+
+Enjoy!
+--
+Alastair Reid  http://www.reid-consulting-uk.ltd.uk/

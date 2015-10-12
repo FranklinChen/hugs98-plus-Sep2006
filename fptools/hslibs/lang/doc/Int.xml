@@ -1,0 +1,10 @@
+
+<sect1 id="sec-Int">
+<title><literal>Int</literal>
+<indexterm><primary>Int</primary><secondary>module</secondary></indexterm>
+</title>
+
+  <para>This module has moved to <ulink url="../libraries/base/Data.Int.html"><literal>Data.Int</literal></ulink> in the
+  hierarchical libraries.</para>
+
+</sect1>

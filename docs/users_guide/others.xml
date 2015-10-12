@@ -1,0 +1,272 @@
+<chapter id="others">
+<title>Other ways of running Hugs</title>
+
+<sect1 id="runhugs">
+<title>Running standalone Haskell programs</title>
+
+<cmdsynopsis>
+<command>runhugs</command>
+<arg rep="repeat" choice="opt"><replaceable>option</replaceable></arg>
+<arg choice="plain"><replaceable>file</replaceable></arg>
+<arg rep="repeat" choice="opt"><replaceable>argument</replaceable></arg>
+</cmdsynopsis>
+
+<para>
+The <command>runhugs</command> command is an interpreter for an executable Hugs
+script.
+The first non-option should be the name of a file containing a Haskell
+<literal>Main</literal> module.
+The <command>runhugs</command> command will invoke the
+the <function>main</function> function in this module, with any subsequent
+arguments available through the <function>getArgs</function> action.
+</para>
+
+<para>
+For example, suppose we have a file <filename>echo.hs</filename> containing
+<programlisting>
+module Main where
+
+import System.Environment
+
+main = do
+        args &lt;- getArgs
+        putStrLn (unwords args)
+</programlisting>
+Then we can run this program with the command
+<screen>
+runhugs echo.hs a b c
+</screen>
+We can also test the program from within the interpreter
+using the <function>withArgs</function> function from the
+<literal>System.Environment</literal> module:
+<screen>
+Main> withArgs ["a", "b", "c"] main
+a b c
+</screen>
+</para>
+
+<para>
+On Unix systems, it is possible for an executable file to specify which
+program is used to run it.
+To do this we need to make the module a literate script, like the following:
+<programlisting>
+#! /usr/local/bin/runhugs +l
+
+> module Main where
+
+> import System.Environment
+
+> main = do
+>       args &lt;- getArgs
+>       putStrLn (unwords args)
+</programlisting>
+If this file is called <filename>myecho</filename>, and is executable,
+we can say
+<screen>
+myecho a b c
+</screen>
+This invokes the command
+<screen>
+/usr/local/bin/runhugs +l myecho a b c
+</screen>
+The <link linkend="option-literate"><option>+l</option></link> option tells
+<command>runhugs</command> that <filename>myecho</filename> contains a
+literate script,
+even though its name does not end in <quote><literal>.lhs</literal></quote>.
+</para>
+
+<note>
+<para>
+Unfortunately, the <literal>#!</literal> feature passes additional arguments
+(if any) to the program as a single argument: if the first line were
+<programlisting>
+#! /usr/local/bin/runhugs +l -98
+</programlisting>
+then the first argument to <command>runhugs</command> would be
+<quote><literal>+l -98</literal></quote>.
+You can get around this using the
+<link linkend="option-split-options"><option>-X</option></link> option,
+which asks for the string to be split into options:
+<programlisting>
+#! /usr/local/bin/runhugs -X +l -98
+</programlisting>
+Then the program will read and act on both the <option>+l</option> and
+<option>-98</option> options.
+</para>
+</note>
+
+</sect1>
+
+<sect1 id="ffihugs">
+<title>Compiling modules that use the Foreign Function Interface</title>
+
+<cmdsynopsis>
+<command>ffihugs</command>
+<arg rep="repeat" choice="opt"><replaceable>option</replaceable></arg>
+<arg rep="repeat" choice="opt"><option>-i</option><replaceable>include</replaceable></arg>
+<arg choice="plain"><replaceable>file</replaceable></arg>
+<arg rep="repeat" choice="opt"><replaceable>cc-arg</replaceable></arg>
+</cmdsynopsis>
+
+<para>
+Any module that contains <literal>foreign import</literal> declarations
+must be compiled with <command>ffihugs</command> before it can be loaded
+into Hugs.
+</para>
+
+<para>
+Suppose you have some C functions in <filename>test.c</filename>
+with some <literal>foreign import</literal> declarations for those
+functions in <filename>HTest.hs</filename>,
+and that the code in <filename>test.c</filename> needs to be
+compiled with <option>-lm</option>.
+To use these with Hugs, you must first use <command>ffihugs</command>
+to generate <filename>HTest.c</filename>, compile it and link it against
+<filename>test.c</filename> with <option>-lm</option> to produce
+an object file (<filename>HTest.so</filename> on Unix,
+<filename>HTest.dll</filename> on Windows):
+<screen>
+ffihugs HTest.hs test.c -lm
+</screen>
+Any Hugs options should be placed before the module name, as in
+<screen>
+ffihugs -98 HTest.hs test.c -lm
+</screen>
+Now you can run Hugs as normal:
+<screen>
+hugs -98 HTest.hs
+</screen>
+When <filename>HTest.hs</filename> is loaded, Hugs will load
+the corresponding object file and then use the imported functions.
+(If <filename>HTest.hs</filename> depends on other modules using foreign
+functions, you'll have to have compiled those modules too, but not necessarily
+before compiling <filename>HTest.hs</filename>.)
+</para>
+
+<note>
+<para>
+Because <command>ffihugs</command> generates a C file with the same
+base name as the Haskell source file, any auxiliary C files should
+avoid that name.
+</para>
+</note>
+
+<para>
+In the standard FFI, each <literal>foreign import</literal> declaration
+should name a C header file containing the prototype of the function.
+Because this is often cumbersome, <command>ffihugs</command> provides
+the following additional option:
+</para>
+
+<variablelist>
+
+<varlistentry id="option-include">
+<term><option>-i</option><replaceable>include</replaceable></term>
+<listitem>
+<para>
+Specify an include for the generated C file.
+The <replaceable>include</replaceable> string should be something that
+can follow <quote><literal>#include</literal></quote> in a C program, as in
+<screen>
+ffihugs '-i&lt;math.h&gt;' '-i"mydefs.h"' Test.hs test.c -lm
+</screen>
+Note the necessary quoting of the <option>-i</option> options here.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect1>
+
+<sect1 id="winhugs">
+<title>Graphical interface for Windows</title>
+
+<para>
+<command>WinHugs</command> is a friendly Windows user interface to Hugs.
+In addition to the console commands of Hugs (see <xref linkend="using-hugs"/>),
+it provides:
+</para>
+
+<itemizedlist>
+<listitem>
+<para>
+colorized prompt and various other items to aid reading.
+</para>
+</listitem>
+
+<listitem>
+<para>
+hyperlinks (underlined and in blue); clicking on a hyperlink in an error
+message opens an editor at the offending line.
+</para>
+</listitem>
+
+<listitem>
+<para>
+a convenient dialog for control of options.
+</para>
+</listitem>
+
+<listitem>
+<para>
+menu and button shortcuts for various commands, such as load.
+</para>
+</listitem>
+
+<listitem>
+<para>
+browse commands to view the class hierarchy and items in scope.
+</para>
+</listitem>
+</itemizedlist>
+
+<para>
+In addition, some escape codes are supported, in particular those which
+change the foreground and background color.
+</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="winhugs.png"/>
+</imageobject>
+</mediaobject>
+
+<example>
+<title>Getting started with WinHugs</title>
+
+<para>
+The graphical interface is mostly self-explanatory, but this is a
+small introduction to the most commonly used features.
+</para>
+
+<para>
+Create a file called <filename>Main.hs</filename>, and inside put the text
+<programlisting>
+module Main where
+main = putStrLn "Hello, WinHugs!
+</programlisting>
+Note that this program contains a syntax error: the closing quote
+is missing.  Now run <command>WinHugs</command>, and click on open
+(<menuchoice><guimenu>File</guimenu>
+<guimenuitem>Open</guimenuitem></menuchoice>)
+and browse to the file <filename>Main.hs</filename>.
+When <command>WinHugs</command> loads the file, it reports an error,
+along with a link giving its location.  Click on this link, and the file
+will open in your editor, at the appropriate line.
+(If the file doesn't open at the correct line, visit the
+options, and under the <guilabel>WinHugs</guilabel> tab set the
+<guilabel>Editor</guilabel> value appropriately.)
+</para>
+
+<para>
+After you've fixed the error, save the file, switch back to
+<command>WinHugs</command> and click on the <guibutton>Run</guibutton>
+button. <command>WinHugs</command> will automatically reload your file,
+and you can watch it produce a message.
+</para>
+</example>
+
+</sect1>
+
+</chapter>

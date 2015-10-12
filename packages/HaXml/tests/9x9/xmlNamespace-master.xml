@@ -1,0 +1,75 @@
+<!-- Namespace test cases 
+
+1. simple element
+
+2. simple attribute
+
+3. nested element and attribute
+
+4. default namespace
+
+5. namespace decl is entity ref
+
+6. namespace decl is entity ref containign entity ref
+
+7. namespace decl is partially entity ref
+
+8. inner override
+
+-->
+
+<!DOCTYPE doc [
+<!ELEMENT doc (#PCDATA)>
+<!ENTITY egbase "http://id.example.org/">
+<!ENTITY egns   "http://id.example.org/namespace">
+<!ENTITY egns1  "&egbase;namespace">
+<!ATTLIST doc eg:a1 CDATA "v1">
+<!ATTLIST doc eg:a2 CDATA "v2">
+]>
+<!-- simple element -->
+<eg:doc xmlns:eg="http://id.example.org/namespace">foo</eg:doc>
+
+<!-- simple attribute -->
+<doc xmlns:eg="http://id.example.org/namespace" eg:a1="a1">foo</doc>
+
+<!-- nested element and attribute -->
+<doc xmlns:eg="http://id.example.org/namespace">
+  <eg:inner eg:a2="a2">
+    <eg:deeper eg:a3="a3" />
+  </eg:inner>
+</doc>
+
+<!-- default namespace -->
+<doc xmlns="http://id.example.org/namespace">
+  <inner a2="a2">
+    <deeper a3="a3" />
+  </inner>
+</doc>
+
+<!-- namespace decl uses entity ref -->
+<eg:doc xmlns:eg="&egns;">
+  <eg:inner eg:a2="a2">
+    <eg:deeper eg:a3="a3" />
+  </eg:inner>
+</eg:doc>
+
+<!-- namespace decl uses entity ref with entity ref -->
+<eg:doc xmlns:eg="&egns1;">
+  <eg:inner eg:a2="a2">
+    <eg:deeper eg:a3="a3" />
+  </eg:inner>
+</eg:doc>
+
+<!-- namespace decl is partially entity ref -->
+<eg:doc xmlns:eg="&egbase;namespace">
+  <eg:inner eg:a2="a2">
+    <eg:deeper eg:a3="a3" />
+  </eg:inner>
+</eg:doc>
+
+<!-- inner override -->
+<eg:doc xmlns:eg="&egbase;namespace">
+  <eg:inner xmlns:eg="&egbase;ns1" eg:a2="a2">
+    <eg:deeper xmlns:eg="&egbase;ns2" eg:a3="a3" />
+  </eg:inner>
+</eg:doc>

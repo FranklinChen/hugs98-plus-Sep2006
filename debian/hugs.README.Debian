@@ -1,0 +1,10 @@
+Hugs98 for Debian
+-----------------
+
+This version of Hugs is compiled with GNU readline support.
+
+For information on how to release libraries which work with Hugs, see
+the Haskell Cabal: http://www.haskell.org/cabal and also the Haskell
+Policy: http://urchin.earth.li/~ian/haskell-policy/haskell-policy.html/
+
+ -- Isaac Jones <ijones@debian.org>, Sat Sep  3 13:13:43 2005

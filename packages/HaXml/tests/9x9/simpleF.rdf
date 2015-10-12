@@ -1,0 +1,9 @@
+<?xml version='1.0' ?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	 xmlns:s="http://www.w3.org/2000/01/rdf-schema#"
+  ><!--  A very simple RDF file to test basic parser functionality   -->
+  <rdf:Property rdf:ID="predicate"
+    ><s:comment
+      >Identifies the property used in a statement when representing the statement in reified form"</s:comment
+    ><s:domain rdf:resource="http://www.w3.org/2000/01/rdf-schema#Statement"
+    /><s:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Property"/></rdf:Property></rdf:RDF>

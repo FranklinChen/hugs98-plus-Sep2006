@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+<head>
+<title>Hugs98 for .NET</title>
+<link rel=stylesheet href="style.css">
+</head>
+
+<body>
+<h1>Hugs98 for .NET</h1>
+
+<h2>What is it?</h2>
+
+Hugs98 for .NET is an extension of the <a href="http://haskell.org/hugs">Hugs98</a>
+Haskell interpreter, providing good interoperation between the world of Haskell
+and the world of <a href="http://www.microsoft.com/net/">.NET</a> and
+the <a href="http://msdn.microsoft.com/netframework/">.NET Framework</a>.
+<p>
+The <a href="http://haskell.org/hugs/">Hugs98</a> interpreter has been
+extended with features which lets you instantiate and use .NET objects
+from within Haskell, and vice versa, allows you to call and use
+Haskell functions from any .NET language.
+<p>
+The motivation behind this work is entirely pragmatic -- I want to
+be able to use a great language on an important, new platform laden
+with many great features and libraries. In contrast with other
+attempts at integrating functional languages with the .NET platform,
+Hugs98 for .NET takes a hands-off approach, providing 'just' the ability
+to interoperate well with .NET. That is, it does not try to compile
+Haskell into .NET's IL and have the .NET run-time execute it. Instead
+the Hugs98 interpreter operates side-by-side with the .NET run-time,
+providing code in either world with just the ability to call code in
+the other.
+
+
+<h2>Example</h2>
+
+To give a flavour of what's possible with Hugs98 for .NET, here's 
+how to fetch a URL into a Haskell String:
+
+<pre>
+-- dotnet/examples/basic/Http.hs 
+module Main where
+
+import Dotnet
+
+foreign import dotnet
+  "static System.Net.WebRequest.Create"
+  createURL :: String -> IO (Object ())
+
+fetchURL :: String -> IO String
+fetchURL url = do
+  req <- createURL url
+  when (isNullObj req)
+       (ioError (userError ("Unable to fetch " ++ show url)))
+  rsp <- req # invoke "GetResponse" ()
+  str <- rsp # invoke "GetResponseStream" ()
+  str # slurpString
+</pre>
+
+See the documentation and the distribution, which contains this
+example and many others, for details of what this code is doing.
+
+<h2>Download</h2>
+
+A Windows Installer containing Hugs98 and the .NET extensions is
+available via <a href="http://galois.com/~sof/hugs98.net/hugs98-net.msi">http</a>.
+To use it, you only need to have the .NET Framework installed on your
+machine (i.e., no need for Visual Studio .NET).
+<p>
+Sources are available via CVS.
+
+<h2>Documentation</h2>
+
+For documentation on Haskell, see <a href="http://haskell.org/">haskell.org</a>.
+<p>
+The distribution includes documentation on how to interop with the
+.NET platform, but is also available in on-line form:
+
+<ul>
+<li>Accessing .NET via the <a href="dotnet-ffi.html">FFI</a>.
+<li>The Dotnet library <a href="dotnet-lib.html">documentation</a>.
+<li>Brief <a href="examples.html">overview</a> of the samples included 
+in the distribution.
+</ul>
+
+<h2>Authors</h2>
+
+Info on authors and maintainers of Hugs98 can be found via
+its <a href="http://haskell.org/hugs">homepage</a>.
+
+<p>
+The .NET extensions are by <a href="http://galois.com/~sof/">Sigbjorn
+Finne</a>, with initial encouragement from Erik Meijer.
+
+<h3>Copyright and License</h3>
+
+The Hugs 98 system is Copyright © Mark P Jones, Alastair Reid, the
+Yale Haskell Group, and the Oregon Graduate Institute of Science and
+Technology, 1994-2003, All rights reserved. It is distributed as free
+software under the license in the file "License", which is included in
+the distribution. 
+<p>
+The .NET extensions are Copyright Sigbjorn Finne, 2002-2003, All rights
+reserved. It is distributed as free software under the same license as the
+Hugs98 interpreter (see the file "License.net" included with the distribution.)
+
+<hr>
+<address>
+<!-- hhmts start --> Last modified: Wed Mar 12 21:17:05 Pacific Standard Time 2003 <!-- hhmts end -->
+</address>
+</body> </html>

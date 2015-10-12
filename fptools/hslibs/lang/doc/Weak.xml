@@ -1,0 +1,14 @@
+
+<sect1 id="sec-Weak">
+<title><literal>Weak</literal><indexterm><primary>Weak</primary></indexterm>
+</title>
+
+  <para>This module has moved to <ulink url="../libraries/base/System.Mem.Weak.html"><literal>System.Mem.Weak</literal></ulink> in the
+  hierarchical libraries.</para>
+</sect1>
+<!-- Emacs stuff:
+     ;;; Local Variables: ***
+     ;;; mode:.xml ***
+     ;;;.xml-parent-document: ("../../doc/hslibs.xml" "book" "chapter" "sect1") ***
+     ;;; End: ***
+ -->

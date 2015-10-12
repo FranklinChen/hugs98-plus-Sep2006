@@ -1,0 +1,3 @@
+<?xml version="1.0"?>
+<!-- Check that replacement text strips XML decl -->
+<!ATTLIST doc a2 CDATA #IMPLIED>

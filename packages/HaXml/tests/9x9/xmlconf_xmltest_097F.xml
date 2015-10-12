@@ -1,0 +1,8 @@
+<!DOCTYPE doc  [
+<!ELEMENT doc (#PCDATA)>
+<!ATTLIST doc a1 CDATA "v1">
+<!--  Check that replacement text strips XML decl  -->
+<!ATTLIST doc a2 CDATA #IMPLIED>
+<!ATTLIST doc a3 CDATA "v3">
+]>
+<doc>Check that replacement text above strips XML decl in attribute a2</doc>

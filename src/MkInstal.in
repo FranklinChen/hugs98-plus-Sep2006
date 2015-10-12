@@ -1,0 +1,11 @@
+################################################################
+# Installation (Unix only)
+################################################################
+
+INSTALL		= ../install-sh
+
+install		:: hugs$(EXEEXT) runhugs$(EXEEXT) ffihugs$(EXEEXT)
+		$(INSTALL) -d $(DESTDIR)$(bindir)
+		$(INSTALL) -c hugs$(EXEEXT) $(DESTDIR)$(bindir)
+		$(INSTALL) -c runhugs$(EXEEXT) $(DESTDIR)$(bindir)
+		$(INSTALL) -c ffihugs$(EXEEXT) $(DESTDIR)$(bindir)

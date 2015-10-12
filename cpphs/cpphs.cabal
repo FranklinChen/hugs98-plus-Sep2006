@@ -1,0 +1,51 @@
+Name: cpphs
+Version: 1.2
+Copyright: 2004-6, Malcolm Wallace
+Build-Depends: base, haskell98
+License: LGPL
+License-File: LICENCE-LGPL
+Author: Malcolm Wallace <Malcolm.Wallace@cs.york.ac.uk>
+Maintainer: Malcolm Wallace <Malcolm.Wallace@cs.york.ac.uk>
+Homepage: http://haskell.org/cpphs/
+Synopsis: A liberalised re-implementation of cpp, the C pre-processor.
+Description:
+	Cpphs is a re-implementation of the C pre-processor that is both
+	more compatible with Haskell, and itself written in Haskell so
+	that it can be distributed with compilers.
+	.
+	This version of the C pre-processor is pretty-much
+	feature-complete and compatible with traditional (K&R)
+	pre-processors.  Additional features include: a plain-text mode;
+	an option to unlit literate code files; and an option to turn
+	off macro-expansion.
+Category: Development
+Exposed-Modules:
+	Language.Preprocessor.Cpphs
+	Language.Preprocessor.Unlit
+Other-Modules:
+	Language.Preprocessor.Cpphs.CppIfdef,
+	Language.Preprocessor.Cpphs.HashDefine,
+	Language.Preprocessor.Cpphs.MacroPass,
+	Language.Preprocessor.Cpphs.Options,
+	Language.Preprocessor.Cpphs.Position,
+	Language.Preprocessor.Cpphs.ReadFirst,
+	Language.Preprocessor.Cpphs.RunCpphs,
+	Language.Preprocessor.Cpphs.SymTab,
+	Language.Preprocessor.Cpphs.Tokenise,
+	Text.ParserCombinators.HuttonMeijer
+
+Executable: cpphs
+Main-Is: cpphs.hs
+Other-Modules:
+	Language.Preprocessor.Cpphs
+	Language.Preprocessor.Unlit
+	Language.Preprocessor.Cpphs.CppIfdef,
+	Language.Preprocessor.Cpphs.HashDefine,
+	Language.Preprocessor.Cpphs.MacroPass,
+	Language.Preprocessor.Cpphs.Options,
+	Language.Preprocessor.Cpphs.Position,
+	Language.Preprocessor.Cpphs.ReadFirst,
+	Language.Preprocessor.Cpphs.RunCpphs,
+	Language.Preprocessor.Cpphs.SymTab,
+	Language.Preprocessor.Cpphs.Tokenise,
+	Text.ParserCombinators.HuttonMeijer

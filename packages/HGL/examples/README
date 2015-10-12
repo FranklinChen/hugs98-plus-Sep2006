@@ -1,0 +1,70 @@
+Some tests for the Haskell Graphics Library.
+
+HelloWorld: displays 2 strings, exits on a key press&release.
+
+Tests: four tests:
+    "Test"
+	prompts for keypress
+	keypresses step through outlines: white square,
+		white diamond + red triangle, white diamond,
+		white pentagon, empty
+	then exits
+
+    "Animation"
+	prompts for keypress
+	keypresses step through white outline polygons, up to 20 sides
+	then exits
+
+    "Font demo"
+	"Font Test1" in square Courier, red, rotated (Win32 only)
+	"Font Test2" in Lucida italic, blue on green, rotated (Win32 only)
+	exits on left mouse button press
+
+    "Font demo 2"
+	displays 9 texts with different alignments relative to points
+	exits on a left mouse button press
+
+GTest: a bunch of tests:
+
+    "My First Graphics Program":
+	displays text
+	waits for a left mouse button press
+	prompts for 2 keypresses and then exits
+
+    "My Second Graphics Program"
+	displays text
+	waits for a right mouse button press
+	prompts for 2 keypresses and then exits
+
+    "Regions demo"
+	draws 4 monochrome pictures, stepped with left mouse button presses
+	prompts for a keypress and then exits
+
+    "Multiwindow demo 1"+"Multiwindow demo 2"
+	displays text in each window
+	prompts for a keypress in each window and then exits
+
+    "Picture demo"
+	draws picture in red, green and blue on black background
+	waits for a left mouse button press
+	prompts for a keypress and then exits
+
+    "Animation demo"
+	rotating red&green picture, stepped with left mouse button presses
+	freezes after 21 steps
+
+    "Timer demo"
+	the same animation as above, but on a timer
+
+    "Font demo"
+	"Font Test1" in square Helvetica, red, rotated (Win32 only)
+	"Font Test2" in Times italic, blue on green, rotated (Win32 only)
+	exits on left mouse button press
+
+    "Error recovery demo"
+	left mouse button press does error "foo1"
+
+    "My First Incremental Graphics Program"
+	starts with a red diagonal line
+	mouse button clicks add red lines to the picture
+	you can also draw by dragging

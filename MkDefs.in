@@ -1,0 +1,27 @@
+##########################################################################
+# @configure_input@
+# Makefile definitions also used by the libraries
+
+# These variables determine where various parts of the Hugs system are
+# installed.  (They are ignored in Windows or DOS.)
+# Binaries are installed in $(bindir); libraries go in $(hugsdir)/libraries
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
+bindir		= @bindir@
+libdir		= @libdir@
+datarootdir	= @datarootdir@
+datadir		= @datadir@
+mandir          = @mandir@
+hugsdir		= @hugsdir@
+
+RM		= @RM@
+CP		= @CP@
+
+HOST		= @HostPlatform@
+HOST_OS		= @HostOS_CPP@
+HOST_ARCH	= @HostArch_CPP@
+
+DLL		= @DLL@
+BAT		= @BAT@
+# end of @configure_input@
+##########################################################################

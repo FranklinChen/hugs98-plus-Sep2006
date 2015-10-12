@@ -1,0 +1,42 @@
+Patch to make Hugs output more suitable for use with hugs-hc and the
+fptools testsuite:
+
+* show less detail about pattern match failures to make output less brittle.
+
+* print top-level exceptions in the same way as GHC-generated programs do.
+
+--- Hugs/Prelude.hs	2005-04-14 12:42:12.000000000 +0100
++++ Hugs/Prelude.hs.new	2005-04-22 15:17:26.000000000 +0100
+@@ -1618,7 +1618,7 @@
+   showsPrec _ (IOException err)	  = shows err
+   showsPrec _ (NoMethodError s)   = showException "undefined member" s
+   showsPrec _ NonTermination	  = showString "<<loop>>"
+-  showsPrec _ (PatternMatchFail s) = showException "pattern match failure" s
++  showsPrec _ (PatternMatchFail s) = showString "pattern match failure"
+   showsPrec _ (RecConError s)     = showException "undefined field" s
+   showsPrec _ (RecSelError s)     = showException "select of missing field" s
+   showsPrec _ (RecUpdError s)     = showException "update of missing field" s
+@@ -1914,11 +1914,20 @@
+   exceptionHandler (ExitException ExitSuccess) = primExitWith 0
+   exceptionHandler (ExitException (ExitFailure n)) = primExitWith n
+   exceptionHandler err = runAndShowError $ do
+-	putChar '\n'
+-	putStr "Program error: "
+-	putStrLn (show err)
++	pname <- getProgName
++	let shortName = reverse $ takeWhile (/= '/') $ tail $
++				dropWhile (/= '.') $ reverse pname
++	hPutStr stderr shortName
++	hPutStr stderr ": "
++	hPutStr stderr (show err)
++	hPutChar stderr '\n'
+ 	primExitWith 1
+ 
++primitive getProgName "primGetProgName" :: IO String
++primitive stderr        :: Handle
++primitive hPutChar      :: Handle -> Char -> IO ()
++primitive hPutStr       :: Handle -> String -> IO ()
++
+ basicIORun :: IO a -> IOFinished a
+ basicIORun (IO m) = loop [m hugsReturn]
+ 

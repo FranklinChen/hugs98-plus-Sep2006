@@ -1,0 +1,109 @@
+The following notes may provide some guidance in figuring out how to
+do dynamic linking on various platforms.  Our goal is to transfer any
+useful information into the configure script (and delete the rest).
+
+
+Comments from the HGL Makefile
+
+# The following choices have been found to be appropriate for building
+# shared object files on various systems.
+# Please let us know if these don't work or if you know the appropriate
+# choice for other systems.
+LDFLAGS_MKSO.Linux    = -shared
+LDFLAGS_MKSO.FreeBSD  = -shared
+LDFLAGS_MKSO.NetBSD   = -shared
+LDFLAGS_MKSO.SunOS    = -G
+LDFLAGS_MKSO.MacOSX   = -bundle -lc
+LDFLAGS_MKSO.Unixlike = -shared
+
+Comments from the Win32 sources
+
+\section{Building dlls}
+
+It is very hard to find decent documentation about how to construct a DLL.
+This is some of what I found out.
+
+\subsection{Perl configuration}
+
+Perl's Configure script has this to say:
+
+    Some systems may require passing special flags to ld to create a
+    library that can be dynamically loaded.  If your ld flags include
+    -L/other/path options to locate libraries outside your loader's normal
+    search path, you may need to specify those -L options here as well.  To
+    use no flags, say "none".
+
+\begin{verbatim}
+      case "$osname" in
+      hpux)        dflt='-b' ;;
+      linux)       dflt='-shared' ;;
+      next)        dflt='none' ;;
+      solaris)     dflt='-G' ;;
+      sunos)       dflt='-assert nodefinitions' ;;
+      svr4*|esix*) dflt="-G $ldflags" ;;
+      *)           dflt='none' ;;
+      esac
+\end{verbatim}
+
+    Some systems use ld to create libraries that can be dynamically loaded,
+    while other systems (such as those using ELF) use cc.
+
+
+
+    Some systems may require passing special flags to cc to indicate that
+    the resulting executable will use dynamic linking.  To use no flags,
+    say "none".
+\begin{verbatim}
+      case "$osname" in
+      hpux)     dflt='-Wl,-E' ;;
+      linux)    dflt='-rdynamic' ;;
+      next)     dflt='none' ;;
+      sunos)    dflt='none' ;;
+      *)        dflt='none' ;;
+      esac ;;
+\end{verbatim}
+
+\subsection{Hugs configuration}
+
+This quote from Hugs/Install describes what little I could find out about
+dynamic linking.  I wish I'd looked at perl earlier.
+
+\begin{verbatim}
+  Here's a list of what to do on the compilers we know about.
+
+  Visual C++ (4.2 and 5.0):
+    Nothing to do: the distributed Makefile uses DLL_FLAGS=/LD
+
+  Borland C:
+    ??? We couldn't figure out how to make DLLs with Borland C.
+
+  Linux + gcc 2.7.2:
+    env "DLL_FLAGS=-shared -nostdlib" ./configure --with-plugins
+
+  Solaris + gcc (2.6.3 and 2.7.2):
+     env "DLL_FLAGS=-shared -nostdlib -fPIC" ./configure --with-plugins
+
+  Solaris + /opt/SUNWspro/bin/cc:
+          env "DLL_FLAGS=-G" ./configure --with-plugins
+
+  Here's what little we know about building shared object files on
+  other machines.  We'd be delighted if you could tell us what changes
+  you need to make to the Makefile to build a working Xlib.so file.
+  (And don't forget that static linking is a viable option!)
+
+  ??? Sunos4 + gcc 2.4.5:
+          env "DLL_FLAGS=-r" ./configure --with-plugins
+          cd ..
+          make Xlib.so
+          chmod 111 Xlib.so
+
+  ??? Sunos4 + acc
+          acc -pic -c Foo.c
+          ld -assert pure-text Foo.o -o Foo.so
+
+  ??? HPUX + cc
+          cc -D_HPUX_SOURCE -Aa +z -c Foo.c
+          ld -b Foo.o -o Foo.so
+\end{verbatim}
+
+

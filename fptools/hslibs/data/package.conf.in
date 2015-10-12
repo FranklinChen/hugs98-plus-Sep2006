@@ -1,0 +1,73 @@
+#include "ghcconfig.h"
+
+name:		PACKAGE
+version:	VERSION
+license:	BSD3
+maintainer:	libraries@haskell.org
+exposed:	False
+
+exposed-modules:
+        FiniteMap,
+        Set,
+        Assoc,
+        AssocDefaults,
+        AssocList,
+        PatriciaLoMap,
+        EdisonPrelude,
+        Collection,
+        CollectionDefaults,
+        CollectionUtils,
+        LazyPairingHeap,
+        LeftistHeap,
+        MinHeap,
+        SkewHeap,
+        SplayHeap,
+        TestOrdBag,
+        TestOrdSet,
+        UnbalancedSet,
+        BankersQueue,
+        BinaryRandList,
+        BraunSeq,
+        JoinList,
+        ListSeq,
+        MyersStack,
+        RandList,
+        RevSeq,
+        Sequence,
+        SequenceDefaults,
+        SimpleQueue,
+        SizedSeq,
+        TestSeq
+
+hidden-modules:
+
+#ifdef INSTALLING
+import-dirs: 	PKG_LIBDIR"/hslibs-imports/data"
+#else
+import-dirs:	FPTOOLS_TOP_ABS"/hslibs/data"
+		, FPTOOLS_TOP_ABS"/hslibs/data/edison"
+		, FPTOOLS_TOP_ABS"/hslibs/data/edison/Assoc"
+		, FPTOOLS_TOP_ABS"/hslibs/data/edison/Coll"
+		, FPTOOLS_TOP_ABS"/hslibs/data/edison/Seq"
+#endif
+
+#ifdef INSTALLING
+library-dirs:	PKG_LIBDIR
+#else
+library-dirs:	FPTOOLS_TOP_ABS"/hslibs/data"
+#endif
+
+hs-libraries:   "HSdata"
+extra-libraries:
+
+include-dirs:
+includes:		
+depends:	haskell98, lang, util
+hugs-options:
+cc-options:
+ld-options:
+framework-dirs:
+frameworks:
+haddock-interfaces:
+haddock-html:
+

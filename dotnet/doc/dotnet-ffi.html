@@ -1,0 +1,253 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html> <head>
+<title>Accessing .NET via the FFI</title>
+<link rel=stylesheet href="style.css">
+</head>
+
+<body>
+<!-- *********************************** -->
+<h1>Accessing .NET via the FFI</h1>
+
+<p>
+Access to .NET functionality is provided via Haskell's 
+<a href="http://haskell.org/definition/">FFI declarations</a>.
+For example, to use the .NET Framework's static method
+for looking up environment variables, you'd write the following FFI
+declaration:
+
+<pre>
+module Env where
+import Dotnet
+
+foreign import dotnet
+  "static System.Environment.GetEnvironmentVariable"
+  getEnv :: String -> IO String
+</pre>
+
+<p>
+It declares the IO action <tt>getEnv</tt> which given the name of
+an environment variable will look it up by calling
+<tt>System.Environment</tt>'s static method. The result is whatever
+the variable maps to, or the empty string if the variable isn't
+present in the environment block.
+
+<p>
+<tt>getEnv</tt> is bound to its .NET method via a specification
+string. The qualifier, <tt>static</tt>, indicates that we're
+binding to a static method; the second part gives the fully
+qualified name of the static method we're binding to. To tell the FFI
+implementation that we're accessing .NET code, the <tt>dotnet</tt>
+calling convention qualifier is used (and required.)
+
+<p>
+Along with the specification string goes the Haskell type given
+to the method. Clearly, this type has to be <em>compatible</em> with
+the corresponding .NET type. If not, method invocation will
+fail and a Haskell IO exception is raised.
+
+<p>
+Binding isn't limited to methods; to access a field you'd
+write the following:
+
+<pre>
+module Math where
+import Dotnet
+
+foreign import dotnet
+  "static field System.Math.PI"
+  piVal :: Double
+</pre>
+
+<p>
+which binds <tt>piVal</tt> to the value of the static
+field <tt>System.Math.PI</tt> -- making the (quite reasonable!)
+assumption that the value is indeed constant. If it hadn't
+been constant, giving <tt>piVal</tt> the type <tt>(IO Double)</tt>
+would have been more appropriate.
+
+<p>
+The above FFI declaration uses the <tt>field</tt> qualifier in its
+specification string to indicate that we're binding to a field
+and not a method. The Hugs98.net implementation looks at the
+result type of a declaration using <tt>field</tt> to determine whether
+the field access is a read or write operation. If the result is of
+the form <tt>(IO ())</tt> (or <tt>()</tt)), a field 'setter' is being
+defined; anything else is a field 'getter' (like <tt>piVal</tt> above.)
+For instance, to provide a way to update the <tt>PI</tt> field:
+
+<pre>
+foreign import dotnet
+  "static field System.Math.PI"
+  setPiVal :: Double -> IO ()
+</pre>
+
+<p>
+This will actually fail should you attempt to use it, as the field is
+read-only, but demonstrates how to use an FFI declaration to provide
+field update functions.
+
+<!-- *********************************** -->
+<h2>Creating and representing objects</h2>
+
+<p>
+Object constructors are accessed along similar lines:
+
+<pre>
+foreign import dotnet
+  "ctor System.Object"
+  newObject :: IO (Object a)
+</pre>
+
+<p>
+The <tt>ctor</tt> in the specification string signals that we're
+binding to a constructor; in this case the default constructor for 
+<tt>System.Object</tt>. Object references are represented using
+the type <tt>Object</tt>. It is parameterised over the type of the
+class the reference is an instance of. This typed representation of 
+object references lets us use the standard 'trick' of encoding
+single-inheritance object type hierarchies:
+
+<pre>
+-- System.Xml.XmlNode
+data XmlNode_ a
+type XmlNode a = Object (XmlNode_ a)
+
+-- System.Xml.XmlDocument; sub-class of XmlNode
+data XmlDocument_ a
+type XmlDocument a = XmlNode (XmlDocument_ a)
+
+-- System.Xml.XmlDataDocument; sub-class of XmlDocument
+data XmlDataDocument_ a
+type XmlDataDocument a = XmlDocument (XmlDataDocument_ a)
+
+obj1 :: XmlDataDocument () -- a reference to an instance of XmlDataDocument
+obj2 :: XmlNode a  -- a reference to an object that's at least an XmlNode.
+
+</pre>
+
+<p>
+This nesting of the inheritance chain in the type argument helps
+preserve type safety in Haskell:
+
+<pre>
+foreign import dotnet
+  "method System.Xml.XmlDocument.Load"
+  load :: String{-URL-} -> XmlDocument a -> IO ()
+</pre>
+
+<p>
+The <tt>this</tt> pointer is here constrained to be <tt>(Object
+(XmlNode (XmlDocument_ a))</tt>, i.e., it needs to at least implement
+<tt>System.Xml.XmlDocument</tt>, which precisely captures the
+type constraint on the method.
+
+<p>
+Clearly this is all dependent on the user being precise when encoding
+the class hierarchies using types like in the above example. To
+help writing out FFI declarations and give these appropriate Haskell
+types, the hugs98.net distribution comes with a tool,
+<tt>hswrapgen</tt>, for generating FFI declarations and object types
+for a .NET class (see <tt>dotnet/tools</tt> in the distribution.)
+
+<p>
+To return to the above FFI declaration, it also demonstrates how to
+bind to non-static methods. Apart from using the <tt>method</tt>
+qualifier in the specification string, method bindings take the
+'this' pointer as their last argument. This is so that you can
+write OO-looking code using the <tt>(#)</tt> from the <tt>Dotnet</tt>
+library:
+
+<pre>
+createDoc url = do
+  d <- newDoc 
+  d # load url
+  return d
+</pre>
+
+<p>
+So given the above declaration along with:
+
+<pre>
+foreign import dotnet
+  "ctor System.Xml.XmlDocument"
+  newDoc :: IO (XmlDocument ())
+</pre>
+
+<p>
+you're all set to manipulate XML documents. Notice the type argument
+to <tt>XmlDocument</tt> for the constructor, <tt>()</tt>, capturing
+the fact that the constructor is returning a specific instance.
+
+<p>
+One final word on constructors; binding to parameterised constructors
+is straightforward also:
+
+<pre>
+foreign import dotnet
+  "ctor System.Drawing.Icon"
+  newIcon :: String -> IO (Icon ()) 
+     -- assuming you've defined the Icon object type.
+</pre>
+
+<!-- *********************************** -->
+<h2>FFI summary</h2>
+
+<p>
+The .NET <tt>foreign import</tt> declarations have the following
+form:
+
+<pre>
+ffidecl : ...
+        | 'foreign' 'import' 'dotnet'
+	      "spec-string" varName '::' ffiType
+
+spec-string : ('static')? 
+              ('field'|'ctor'|'method')?
+	      ('[' assemblyName ']')?
+	      .NETName
+
+ffiType : PrimType -> ffiType
+        | IO PrimType
+	| PrimType
+
+PrimType = standard FFI types + Object a + String
+</pre>
+
+<p>
+i.e., a standard <tt>foreign import</tt> in Haskell, but with
+a specification string that lets you unambiguously declare what
+.NET entity that's being <em>imported</em> / bound to. The first
+two (optional) entries in the specification string qualifies
+what kind of entity we're binding to. If they're both omitted,
+this is equivalent to using <tt>method</tt>.
+
+<p>
+By default, the hugs98.net implementation will consult the .NET
+'standard' assemblies (i.e., assemblies installed in the same
+directory as your copy of <tt>mscorlib.dll</tt>) when attempting to
+bind to the .NET entity. If its class is part of some other assembly,
+you may prefix the fully-qualified class name with the name of the 
+assembly,
+
+<pre>
+foreign import dotnet
+  "static [foo.dll]Foo.bar"
+  bar :: Int -> IO Int
+</pre>
+
+<p>
+Assuming <tt>foo.dll</tt> can be located by the .NET run-time via its
+assembly search path, <tt>foo.dll:Foo.bar</tt> can now be accessed.
+
+<p>
+The range of types supported as arguments to and results of
+<tt>foreign import</tt>ed .NET entities are those of the Haskell FFI,
+but extended with support for both passing and returning .NET object
+references (<tt>Object</tt>) together with Haskell strings.
+
+<hr>
+<address>
+<a href="mailto:sof@galois.com">&lt;sof@galois.com&gt;</a>
+</address>
+<!-- hhmts start --> Last modified: Wed Mar 12 07:51:36 Pacific Standard Time 2003 <!-- hhmts end -->
+</body> </html>

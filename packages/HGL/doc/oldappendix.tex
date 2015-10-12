@@ -1,0 +1,193 @@
+\modName{HGL.Graphics.Core} % accurate 16/1/2000
+
+\begin{verbatim}
+> type Title = String
+> type Point = (Int,Int)
+> type Size  = (Int,Int)
+> type Angle = Double
+> type Time  = Word32 -- milliseconds
+> data RGB = RGB Word8 Word8 Word8
+> data BkMode = Opaque | Transparent
+> 
+> type Alignment = (HAlign, VAlign)
+> -- names have a tick to distinguish them from Prelude names (blech!)
+> data HAlign = Left' | Center   | Right'
+>  deriving (Enum, Eq, Ord, Ix, Show)
+> data VAlign = Top   | Baseline | Bottom
+>  deriving (Enum, Eq, Ord, Ix, Show)
+> 
+> data Style
+>   = Solid 
+>   | Dash        -- "-------"
+>   | Dot         -- "......."  
+>   | DashDot     -- "_._._._"  
+>   | DashDotDot  -- "_.._.._"  
+>   | Null
+>   | InsideFrame
+> 
+> runGraphics      :: IO () -> IO ()
+> getTime          :: IO Time
+> 
+> data Window  
+> openWindowEx     :: Title -> Maybe Point -> Size -> 
+>                     RedrawMode -> Maybe T.Time -> IO Window
+>                  
+> closeWindow      :: Window -> IO ()
+> getWindowRect    :: Window -> IO (Point,Point)
+> getWindowEvent   :: Window -> IO Event
+> getWindowTick    :: Window -> IO ()
+> maybeGetWindowEvent :: Window -> IO (Maybe Event)
+> 
+> type Graphic = Draw ()
+> setGraphic       :: Window -> Graphic -> IO ()
+> getGraphic       :: Window -> IO Graphic
+> modGraphic       :: Window -> (Graphic -> Graphic) -> IO ()
+> directDraw       :: Window -> Graphic -> IO ()
+>                  
+> selectFont       :: Font          -> Draw Font  
+> setTextColor     :: RGB           -> Draw RGB
+> setTextAlignment :: Alignment     -> Draw Alignment
+> setBkColor       :: RGB           -> Draw RGB
+> setBkMode        :: BkMode        -> Draw BkMode
+> selectPen        :: Pen           -> Draw Pen  
+> selectBrush      :: Brush         -> Draw Brush
+> 
+> bracket          :: Draw a -> (a -> Draw b) -> (a -> Draw c) -> Draw c
+> bracket_         :: Draw a -> (a -> Draw b) -> Draw c -> Draw c
+>                  
+> data Font        
+> createFont       :: Point -> Angle -> Bool -> Bool -> String -> IO Font
+> deleteFont       :: Font -> IO ()
+> 
+> data Brush
+> mkBrush          :: RGB                 -> (Brush -> Draw a) -> Draw a
+>                  
+> data Pen         
+> mkPen            :: Style -> Int -> RGB -> (Pen   -> Draw a) -> Draw a
+> createPen        :: Style -> Int -> RGB -> IO Pen
+> 
+> arc              :: Point -> Point -> Angle -> Angle -> Graphic  -- unfilled
+> line             :: Point -> Point                   -> Graphic  -- unfilled
+> polyline         :: [Point]                          -> Graphic  -- unfilled
+> ellipse          :: Point -> Point                   -> Graphic  -- filled
+> shearEllipse     :: Point -> Point -> Point          -> Graphic  -- filled
+> polygon          :: [Point]                          -> Graphic  -- filled
+> text             :: Point -> String                  -> Graphic  -- filled
+> 
+> data Region
+> emptyRegion      :: Region
+> rectangleRegion  :: Point -> Point -> Region
+> ellipseRegion    :: Point -> Point -> Region
+> polygonRegion    :: [Point] -> Region
+> intersectRegion  :: Region -> Region -> Region
+> unionRegion      :: Region -> Region -> Region
+> subtractRegion   :: Region -> Region -> Region
+> xorRegion        :: Region -> Region -> Region
+> regionToGraphic  :: Region -> Graphic
+> 
+> data Event 
+>   = Key       { char :: Char, isDown :: Bool }
+>   | Button    { pt :: Point, isLeft, isDown :: Bool }
+>   | MouseMove { pt :: Point }
+>   | Resize
+>   | Closed
+>  deriving Show 
+\end{verbatim}
+
+
+\modName{HGL.Graphics.Utils} % accurate 16/1/2000
+
+Note that this document repeats the definitions of all the functions
+defined in \module{HGL.Graphics.Utils}.
+
+
+\begin{verbatim}
+> -- Reexports HGL.Graphics.Core
+>
+> openWindow        :: Title -> Size -> IO Window
+> clearWindow       :: Window -> IO ()
+> drawInWindow      :: Window -> Graphic -> IO ()
+> 
+> getWindowSize     :: Window -> IO Size
+> getLBP            :: Window -> IO Point
+> getRBP            :: Window -> IO Point
+> getButton         :: Window -> Bool -> Bool -> IO Point
+> getKey            :: Window -> IO Char
+> getKeyEx          :: Window -> Bool -> IO Char
+> 
+> emptyGraphic      :: Graphic
+> overGraphic       :: Graphic -> Graphic -> Graphic
+> overGraphics      :: [Graphic] -> Graphic
+> 
+> withFont          :: Font      -> Graphic -> Graphic
+> withTextColor     :: RGB       -> Graphic -> Graphic
+> withTextAlignment :: Alignment -> Graphic -> Graphic
+> withBkColor       :: RGB       -> Graphic -> Graphic
+> withBkMode        :: BkMode    -> Graphic -> Graphic
+> withPen           :: Pen       -> Graphic -> Graphic
+> withBrush         :: Brush     -> Graphic -> Graphic
+> withRGB           :: RGB       -> Graphic -> Graphic
+> 
+> data Color 
+>   = Black
+>   | Blue
+>   | Green 
+>   | Cyan
+>   | Red 
+>   | Magenta
+>   | Yellow
+>   | White
+>  deriving (Eq, Ord, Bounded, Enum, Ix, Show, Read)
+> 
+> colorList         :: [(Color, RGB)]
+> colorTable        :: Array Color RGB
+> withColor         :: Color -> Graphic -> Graphic
+> 
+> par               :: IO a -> IO b -> IO (a,b)
+> par_              :: IO a -> IO b -> IO ()
+> parMany           :: [IO ()] -> IO ()
+\end{verbatim}
+
+\subsection{Portability notes}
+
+\begin{itemize}
+\item \NotInX{\fun{polyBezier}}
+\item \fun{shearEllipse} is implemented by polygons on both Win32 and X11.
+\item X11 does not directly support font rotation so \fun{mkFont}
+always ignores the rotation angle argument in the X11 implementation
+of this library.
+
+\item Many of the font families typically available on Win32 are not
+available on X11 (and {\it vice-versa\/}).  In our experience, the
+font families ``courier,'' ``helvetica'' and ``times'' are somewhat
+portable.
+\item
+  On Win32, the pen is also used to draw a line round all
+  the filled shapes --- so the pen color also affects how
+  polygons, ellipses and regions are drawn.
+
+\item
+  One of the Win32 ``gotchas'' is that the choice of \type{Style}
+  only applies if the width is 1 or less.  With greater widths,
+  the pen style will always be \fun{Solid} no matter what you try to
+  select.  This problem does not apply to X11.
+\item The Bitmap functions are not currently provided in the X11
+implementation of this library.
+\item \fun{shearBitmap} is supported on Win'NT but not Win'95.
+\item \NotInWin{\fun{emptyRegion}}
+It is possible to use an empty rectangle region instead
+\item \fun{ellipseRegion} is implemented using polygons in the X11
+implementation of the library.
+\item
+  Programmers should assume that the \type{Event} datatype will be extended in the
+  not-too-distant future and that individual events may change slightly.
+  As a minimum, you should add a ``match anything'' alternative to
+  any function which pattern matches against \type{Event}s.
+
+\item
+X11 systems typically have three button mice.  Button 1 is used as the
+left button, button 3 as the right button and button 2 (the middle
+button) is ignored.
+
+\end{itemize}
+

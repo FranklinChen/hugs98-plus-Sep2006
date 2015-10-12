@@ -1,0 +1,130 @@
+/* include/ghcconfig.h.in.  Generated from configure.ac by autoheader.  */
+
+/* platform-specific defines */
+#include "platform.h"
+
+/* The alignment of a `char'. */
+#undef ALIGNMENT_CHAR
+
+/* The alignment of a `double'. */
+#undef ALIGNMENT_DOUBLE
+
+/* The alignment of a `float'. */
+#undef ALIGNMENT_FLOAT
+
+/* The alignment of a `int'. */
+#undef ALIGNMENT_INT
+
+/* The alignment of a `long'. */
+#undef ALIGNMENT_LONG
+
+/* The alignment of a `long long'. */
+#undef ALIGNMENT_LONG_LONG
+
+/* The alignment of a `short'. */
+#undef ALIGNMENT_SHORT
+
+/* The alignment of a `unsigned char'. */
+#undef ALIGNMENT_UNSIGNED_CHAR
+
+/* The alignment of a `unsigned int'. */
+#undef ALIGNMENT_UNSIGNED_INT
+
+/* The alignment of a `unsigned long'. */
+#undef ALIGNMENT_UNSIGNED_LONG
+
+/* The alignment of a `unsigned long long'. */
+#undef ALIGNMENT_UNSIGNED_LONG_LONG
+
+/* The alignment of a `unsigned short'. */
+#undef ALIGNMENT_UNSIGNED_SHORT
+
+/* The alignment of a `void *'. */
+#undef ALIGNMENT_VOID_P
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H
+
+/* Define to 1 if the system has the type `long long'. */
+#undef HAVE_LONG_LONG
+
+/* Define to 1 if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H
+
+/* Define to 1 if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#undef HAVE_STRING_H
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
+
+/* Define to the address where bug reports for this package should be sent. */
+#undef PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#undef PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#undef PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#undef PACKAGE_TARNAME
+
+/* Define to the version of this package. */
+#undef PACKAGE_VERSION
+
+/* The size of `char', as computed by sizeof. */
+#undef SIZEOF_CHAR
+
+/* The size of `double', as computed by sizeof. */
+#undef SIZEOF_DOUBLE
+
+/* The size of `float', as computed by sizeof. */
+#undef SIZEOF_FLOAT
+
+/* The size of `int', as computed by sizeof. */
+#undef SIZEOF_INT
+
+/* The size of `long', as computed by sizeof. */
+#undef SIZEOF_LONG
+
+/* The size of `long long', as computed by sizeof. */
+#undef SIZEOF_LONG_LONG
+
+/* The size of `short', as computed by sizeof. */
+#undef SIZEOF_SHORT
+
+/* The size of `unsigned char', as computed by sizeof. */
+#undef SIZEOF_UNSIGNED_CHAR
+
+/* The size of `unsigned int', as computed by sizeof. */
+#undef SIZEOF_UNSIGNED_INT
+
+/* The size of `unsigned long', as computed by sizeof. */
+#undef SIZEOF_UNSIGNED_LONG
+
+/* The size of `unsigned long long', as computed by sizeof. */
+#undef SIZEOF_UNSIGNED_LONG_LONG
+
+/* The size of `unsigned short', as computed by sizeof. */
+#undef SIZEOF_UNSIGNED_SHORT
+
+/* The size of `void *', as computed by sizeof. */
+#undef SIZEOF_VOID_P
+
+/* Define to 1 if you have the ANSI C header files. */
+#undef STDC_HEADERS

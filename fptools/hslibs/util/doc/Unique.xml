@@ -1,0 +1,18 @@
+<sect1 id="sec-Unique">
+  <title><literal>Unique</literal>: Generating unique symbols</title>
+  <indexterm><primary><literal>Unique</literal></primary>
+    <secondary>module</secondary>
+  </indexterm>
+
+  <para>The <literal>Unique</literal> library has been moved to the
+  hierarchical libraries; it can be found in <ulink
+  url="../libraries/base/Data.Unique.html"><literal>Data.Unique</literal></ulink>
+  in the <literal>base</literal> package.</para>
+
+</sect1>
+<!-- Emacs stuff:
+     ;;; Local Variables: ***
+     ;;; mode:.xml ***
+     ;;;.xml-parent-document: ("../../doc/hslibs.xml" "book" "chapter" "sect1") ***
+     ;;; End: ***
+ -->

@@ -1,0 +1,331 @@
+hugs98 (98.200503.08-4) unstable; urgency=low
+
+  * Added buid-depends on gzip (Closes: #336201).
+
+ -- Isaac Jones <ijones@debian.org>  Sat, 29 Oct 2005 22:34:02 -0700
+
+hugs98 (98.200503.08-3) unstable; urgency=low
+
+  * New build-depends, libreadline5 (Closes: #326105, Closes: #326344).
+  * Changed a build-conflicts on byacc to build-depends on bison (Closes: #271124).
+  * Updated README.debian (Closes: #299777).
+
+ -- Isaac Jones <ijones@debian.org>  Sat,  3 Sep 2005 12:58:57 -0700
+
+hugs98 (98.200503.08-2) unstable; urgency=low
+  * Bugfixes from: Arjan Oosting <arjanoosting@home.nl>
+  * Install menu file in /usr/share/menu.
+  * Add HaXml copyright and license information to debian/copyright
+    and remove the license and copyright files COPYRIGHT, LICENCE-GPL, 
+    LICENCE-LGPL of HaXml from the binary package.
+  * Add lintian and linda overrides to suppress warning about extra
+    license file usr/lib/hugs/packages/Cabal/Distribution/License.hs.
+  * Set Standards-Version to 3.6.2. No changes needed.
+  * Fix debian/rules to use --enable-debug when DEB_BUILD_OPTIONS
+    contains noopt not the other way around.
+  * Fix debian/rules to stop stripping binaries when DEB_BUILD_OPTIONS
+    contains nostrip.
+  * Added missing build dependencies on xlibmesa-gl-dev and freeglut3-
+    dev and libxt-dev.
+
+ -- Isaac Jones <ijones@debian.org>  Wed, 29 Jun 2005 23:27:54 +0200
+
+hugs98 (98.200503.08-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Isaac Jones <ijones@debian.org>  Tue,  8 Mar 2005 20:57:39 -0800
+
+hugs98 (98.200502-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Isaac Jones <ijones@debian.org>  Tue,  1 Mar 2005 13:53:52 -0800
+
+hugs98 (98.200311-4) unstable; urgency=low
+
+  * Applied patch to use -fPIC to create a shared lib.  Will probably
+    close #253002, but I'll wait to see the logs.
+
+ -- Isaac Jones <ijones@debian.org>  Mon,  6 Dec 2004 15:42:02 -0800
+
+hugs98 (98.200311-3) unstable; urgency=low
+
+  * Added watchfile
+  * Changed my email address
+  * Added quoted string to menu item per lintian warning.
+
+ -- Isaac Jones <ijones@debian.org>  Sat, 20 Nov 2004 14:33:45 -0800
+
+hugs98 (98.200311-2) unstable; urgency=low
+
+  * Added build-conflicts for byacc (Closes: #271124)
+
+ -- Isaac Jones <ijones@debian.org>  Sun, 12 Sep 2004 13:18:45 -0400
+
+hugs98 (98.200311-1) unstable; urgency=low
+
+  * New upstream release
+    - More of the hierarchical libraries, including imprecise exceptions
+      and unboxed arrays, giving greater compatibility with GHC.
+      For now, compatibility with the old libraries is provided by stub
+      modules, but users are encouraged to migrate to the new libraries.
+    - The Double type is now double-precision on most architectures.
+    - The -e, -f, -i, -N, -W and -X options are gone, as is the :project
+      command.
+    - Integrated .NET support (on Windows).
+    - The beginnings of a User's Guide (still somewhat incomplete).
+    - Numerous bug fixes since the previous major release in Nov 2002.
+  * Control
+    - Removed depends on hugs-doc
+    - Removed pre-depends on autoconf (where did this come from?) (Closes: #211444)
+    - Added build-depends on docbook-utils
+    - Updated standards-version
+  * Rules
+    - Improvements in the upstream Makefile cause some cleanup
+    - fix for configure line (Closes: #208363)
+    - Changed strip rule for new binaries
+    - Added gzip for new haskell-pkg man page
+    - Removed mkdir of (unused) /usr/share/hugs98 (Closes: #197554)
+  * Misc
+    - added -Wall to CFLAGS to conform to standards version 3.5.7.0
+
+ -- Isaac Jones <ijones@syntaxpolice.org>  Thu, 27 Nov 2003 00:27:54 -0500
+
+hugs98 (98.200211-3) unstable; urgency=low
+
+  * libraries/Hugs
+    - Patched Word.hs and Int.hs to include 64 bit numbers (for building
+    on ia64)
+  * src/unix
+    - patched configure.in and aclocal.a4 to fix quoting error and add
+    checking for ia64's detection for building shared libraries (Closes: #191033)
+
+ -- Isaac Jones <ijones@syntaxpolice.org>  Tue,  6 May 2003 19:08:59 -0400
+
+hugs98 (98.200211-2) unstable; urgency=low
+
+  * debian/rules
+    - Fixed broken manpage symlink install lines (Closes: #190905)
+  * debian/control
+    - Removed spurious build-depends on autoconf
+  * src
+    - removed src/options.h.in~
+
+ -- Isaac Jones <ijones@syntaxpolice.org>  Sun, 27 Apr 2003 22:58:32 -0400
+
+hugs98 (98.200211-1) unstable; urgency=low
+
+  * New maintainer.
+  * New upstream version (Closes: #187095)
+    - Fixes signed char issue in reading (Closes: #154274, #162471)
+  * debian/rules:
+    - Implemented latest DEB_BUILD_OPTIONS noopt,nostrip bits.
+    - Cleaned out copied Haskell source files.
+    - Moved (now) arch-specific files from /usr/share/hugs98 to /usr/lib/hugs.
+    - Moved documentation from /usr/lib/hugs/ and /usr/lib/hugs/docs into
+    /usr/share/doc/hugs.
+  * debian/README.Debian:
+    - No longer lies (Closes: #157177)
+  * Sets double precision flag (Closes: #129016)
+
+ -- Isaac Jones <ijones@syntaxpolice.org>  Wed, 29 Jan 2003 20:27:03 -0500
+
+hugs98 (98.200112-2) unstable; urgency=low
+
+  * Add missing build-depends on autoconf.
+  * Closes: #111773
+
+ -- William Lee Irwin III <wli@holomorphy.com>  Sun, 14 Jul 2002 16:07:12 -0700
+
+hugs98 (98.200112-1) unstable; urgency=low
+
+  * Update to Dec2001
+  * Closes: #139381 (new upstream version)
+  * debian/control: Standards-Version 3.5.6.1
+
+ -- William Lee Irwin III <wli@holomorphy.com>  Sun, 14 Jul 2002 10:15:39 -0700
+
+hugs98 (98.200109-3) unstable; urgency=low
+
+  * Closes: #11343 (tries writing to /usr/local)
+  * Closes: #11373 (missing build-depends on autoconf)
+  * nuked the ungzipped manpages
+
+ -- William Lee Irwin III <wli@holomorphy.com>  Sun,  9 Sep 2001 15:34:36 -0700
+
+hugs98 (98.200109-2) unstable; urgency=low
+
+  * Fixed rules file so the thing actually builds after make clean
+  * Closes: #111265 (tries to install into the root fs during build)
+  * Fixed lintian warnings regarding .comment and .note sections
+
+ -- William Lee Irwin III <wli@holomorphy.com>  Wed,  5 Sep 2001 01:48:38 -0700
+
+hugs98 (98.200109-1) unstable; urgency=low
+
+  * Updated to Feb2001 version.
+  * Closes: #110703 (New upstream release)
+
+ -- William Lee Irwin III <wli@holomorphy.com>  Tue,  4 Sep 2001 01:31:05 -0700
+
+hugs98 (98.200002-3) unstable; urgency=low
+
+  * Fixed changelog so the bug would close.
+  * Closes: #43666 (runhugs has no manpage)
+  * Closes: #68186 (ITA hugs by Antti-Juhani Kaijanaho)
+ -- William Lee Irwin III <wli@holomorphy.com>  Sat, 13 Jan 2001 13:54:11 -0800
+
+hugs98 (98.200002-2) unstable; urgency=low
+
+  * Added manpage for runhugs. Closes #43666.
+  * Fixed some compilation errors with the new glibc.
+  * New maintainer.
+
+ -- William Lee Irwin III <wli@holomorphy.com>  Wed, 10 Jan 2001 18:40:59 -0800
+
+hugs98 (98.200002-1) unstable; urgency=low
+
+  * New upstream release.
+  * Use libreadline4 and libncurses5.
+
+ -- Antti-Juhani Kaijanaho <ajk@debian.org>  Sun,  9 Apr 2000 15:02:31 +0300
+
+hugs98 (98.199911-1) unstable; urgency=low
+
+  * New upstream release
+  * debian/control: Standards-Version 3.1.1
+      + debian/control: Add a Build-Depends line.
+      + debian/rules: Remove the build-depends check.
+      + debian/check-sourcedeps: Removed.
+  * debian/control [Description]: Edited slightly.
+  * debian/copyright: Updated source download information.
+  * src/Makefile.in: make veryclean not remove configure
+
+ -- Antti-Juhani Kaijanaho <ajk@debian.org>  Wed, 17 Nov 1999 22:34:47 +0200
+
+hugs98 (98.199909.0.19991020-1) unstable; urgency=low
+
+  * New upstream minor bugfix release.  Upstream changed the tarball without
+    changing  the version.  Just great.  
+  * debian/rules: No need to make src/unix/configure executable anymore.
+  * debian/control: Standards-Version 3.0.1, required changes already made
+    earlier.
+
+ -- Antti-Juhani Kaijanaho <ajk@debian.org>  Wed, 20 Oct 1999 15:15:36 +0300
+
+hugs98 (98.199909-2) unstable; urgency=low
+
+  * debian/rules: Make src/unix/configure executable before calling it.
+    Closes: #47523.
+
+ -- Antti-Juhani Kaijanaho <ajk@debian.org>  Sat, 16 Oct 1999 12:40:32 +0300
+
+hugs98 (98.199909-1) unstable; urgency=low
+
+  * New upstream release (Hugs 98 / September 1999).
+      + Fixes a segfault reported by Havoc Pennington.  Closes: #45546.
+      + New license (BSD-like without advertising clause).
+  * debian/rules (debian/build.stamp): Build with GNU readline support,
+    since the new license allows this.  Closes: #46155.
+  * debian/README.Debian: Remove the note about no readline support,
+    instead just state that we have it.
+  * debian/copyright: Update the copyright license information.
+  * debian/check-sourcedeps: New file.
+  * debian/rules: Check build-time dependencies (libreadlineg2-dev).
+  * src/hugs.c: To comply with Debian policy, check VISUAL in addition
+    to EDITOR.
+  * debian/rules: Move docs to /usr/share/doc.
+  * debian/{prerm,postinst}: Implement the /usr/doc transition.
+
+ -- Antti-Juhani Kaijanaho <ajk@debian.org>  Thu, 14 Oct 1999 17:55:53 +0300
+
+hugs98 (98.199905-4) unstable; urgency=low (medium for >= 98.199905-2)
+
+  * debian/postinst: /usr/local subdirs should be group "staff".
+  * debian/postinst: Don't create the /usr/local dirs if upgrading
+    from >> 98.199905-3.
+  * debian/prerm: Don't remove the /usr/local dirs on upgrade
+  * debian/rules: Link from undocumented to runhugs.1.gz, not runhugs.1
+
+ -- Antti-Juhani Kaijanaho <ajk@debian.org>  Sun, 29 Aug 1999 13:50:18 +0300
+
+hugs98 (98.199905-3) unstable; urgency=low
+
+  * debian/rules: WRT bug#43666, install an undocumented(7) symlink
+    for runhugs(1).
+
+ -- Antti-Juhani Kaijanaho <ajk@debian.org>  Sat, 28 Aug 1999 23:57:19 +0300
+
+hugs98 (98.199905-2) unstable; urgency=low
+
+  * src/unix/acconfig.h: Define DEBIAN.
+  * Ran src/unix/mkconfig so that the earlier EDITOR change
+    can take effect.
+  * debian/rules: Updated to match my latest preferences
+       + factorize the install command into a variable
+       + don't use install_zipped
+       + use stamp files
+       + use target-specific vars and lazy vars to create the
+         directory name variables
+       + don't test for rootness
+       + separate clean target into clean-{build,binary}
+       + remove the package root dir at the start of the binary targets
+  * debian/rules: Install GreenCard.h into /usr/include/hugs
+  * debian/README.Debian: Document the location of GreenCard.h.
+  * debian/README.Debian: Added an extension module policy.
+  * src/unix/configure: Add a new search path which conforms with the extension
+    module policy, conditional to building on a Debian system.
+  * Ran src/unix/mkconfig.
+  * debian/postinst: Added commands to install /usr/local dirs as required.
+  * debian/prerm: Removed the alternatives code as useless.
+  * debian/preinst: Guarded the alternative removing code so that upgrading from
+    98.199905-1 or later does not cause alternatives being removed.
+  * debian/prerm: Remove the /usr/local dirs as required.
+  * debian/rules: Install debian/prerm.
+  * docs/hugs.1: Updated to Hugs 98 (changes will be sent to upstream).
+  * debian/rules: Install the manual page.
+
+ -- Antti-Juhani Kaijanaho <ajk@debian.org>  Sat, 28 Aug 1999 20:27:34 +0300
+
+hugs98 (98.199905-1) unstable; urgency=low
+
+  * New upstream release: Official Hugs98!
+  * This release supersedes Hugs 1.4:
+      + Rename the binary package to hugs.
+      + Conflict/Replace/Provide hugs98.
+      + Remove alternatives support.
+      + Now install a symlink (run)?hugs98 -> \1hugs to keep the impact
+        on user setups as minimal as possible.
+  * Use -isp with gencontrol.
+  * Suggest hugs-doc.
+
+ -- Antti-Juhani Kaijanaho <ajk@debian.org>  Thu, 10 Jun 1999 14:35:25 +0300
+
+hugs98 (990319-2) unstable; urgency=low
+
+  * Suggest haskell-doc, now that it is available.
+  * Rewrote the description.
+  * Gave credit to gorgo for what he did with hugs before me.
+  * Use /usr/bin/editor as a default if building on a Debian system.
+  * Add a guard to prerm not to remove the alternatives provided
+    when upgrading.
+  * Added the same kind of ease to build a readline version as there is in
+    gorgo's original hugs package.
+
+ -- Antti-Juhani Kaijanaho <ajk@debian.org>  Sat, 15 May 1999 15:31:50 +0300
+
+hugs98 (990319-1) unstable; urgency=low
+
+  * New upstream release.
+  * Conflict with non-alternatives-aware hugs 1.4.
+  * Use alternatives for hugs and runhugs.
+
+ -- Antti-Juhani Kaijanaho <ajk@debian.org>  Wed, 28 Apr 1999 15:29:58 +0300
+
+hugs98 (990222-1) unstable; urgency=low
+
+  * Initial release.
+
+ -- Antti-Juhani Kaijanaho <ajk@debian.org>  Tue, 27 Apr 1999 23:15:43 +0300
+

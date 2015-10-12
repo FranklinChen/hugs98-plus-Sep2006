@@ -1,0 +1,9 @@
+cd /tmp
+cvs -d:ext:reid@cvs.haskell.org:/home/cvs/root checkout HSHGL
+(cd HSHGL/fptools; autoconf)
+mv HSHGL HSHGL-3.00
+tar zcf HSHGL-3.00.tar.gz HSHGL-3.00
+mkdir /tmp/graphics
+(cd /tmp/graphics; runhugs /tmp/HSHGL-3.00/distrib/Webpage.hs)
+cp HSHGL-3.00.tar.gz /tmp/graphics
+scp -r /tmp/graphics reid@haskell.org:/home/haskell

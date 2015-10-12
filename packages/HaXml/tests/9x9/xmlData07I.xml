@@ -1,0 +1,6 @@
+<!DOCTYPE doc [
+<!ELEMENT doc (#PCDATA)>
+<!ENTITY % e "CDATA">
+<!ATTLIST doc a2 %e; "v1">
+]>
+<doc></doc>

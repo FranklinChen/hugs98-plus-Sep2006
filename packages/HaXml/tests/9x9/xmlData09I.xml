@@ -1,0 +1,14 @@
+> ]
+<!-- Attempt to break lexer module
+
+If the parser attempts to look beyond the first token, 
+the lexer may attempt to evaluate (tail []).  Currently,
+the parser stops with the first token.
+
+Cf. Lex.hs:
+
+xmlAny w p ('>':ss) = emit TokAnyClose p:       xmlAny (tail w) (addcol 1 p) ss
+
+and other expressions nearby that evaluate tail w.
+
+-->

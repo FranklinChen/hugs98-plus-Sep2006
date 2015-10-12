@@ -1,0 +1,37 @@
+#! /bin/sh
+# This script should be run on Windows
+
+# set DOITPROG to echo to test this script
+doit="${DOITPROG-}"
+
+build() {
+  echo "# Configuring $1"
+  ${doit} cd ../$1
+  shift
+  ${doit} rm -f config.cache
+  ${doit} ./config.sh $*
+  # echo "Copying ../Makefile, ../config.h and ../options.h to ." 
+  ${doit} cp -f ../Makefile ../config.h ../options.h . 
+  ${doit} cd ../unix
+}
+
+################################################################
+# Start
+################################################################
+
+# No - doesn't work properly on Windows
+# ${doit} ./mkconfig
+
+build msc   --with-plugins --with-nmake
+build bcc32 
+build win32 
+# build bcc16 --datadir="c:" --enable-path-canonicalization
+# build win16 --datadir="c:" --enable-path-canonicalization
+
+echo "
+
+Don't forget you have to update the djgpp2 files.
+
+"
+
+################################################################

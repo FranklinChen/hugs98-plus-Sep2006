@@ -1,0 +1,565 @@
+<chapter id="using-hugs">
+<title>Using Hugs</title>
+
+<para>
+The interpreter may be started with a command line of the form
+<cmdsynopsis>
+<command>hugs</command>
+<arg rep="repeat" choice="opt"><replaceable>option</replaceable></arg>
+<arg rep="repeat" choice="opt"><replaceable>file</replaceable></arg>
+</cmdsynopsis>
+On many systems it can also be found in the system menus,
+and may be started by (double) clicking on a file with a
+<quote><literal>.hs</literal></quote> or
+<quote><literal>.lhs</literal></quote> extension.
+</para>
+
+<para>
+Hugs takes options from the command line and elsewhere
+(see <xref linkend="options-list"/>),
+and then loads the Haskell <literal>Prelude</literal> module,
+as well as as any modules specified on the command line.
+</para>
+
+<para>
+Hugs starts with a banner like
+<screen>
+__   __ __  __  ____   ___      _________________________________________
+||   || ||  || ||  || ||__      Hugs 98: Based on the Haskell 98 standard
+||___|| ||__|| ||__||  __||     Copyright (c) 1994-2005
+||---||         ___||           World Wide Web: http://haskell.org/hugs
+||   ||                         Bugs: http://hackage.haskell.org/trac/hugs
+||   || Version:    March 2005  _________________________________________
+
+Haskell 98 mode: Restart with command line option -98 to enable extensions
+
+Type :? for help
+Hugs>
+</screen>
+The prompt string <prompt>Hugs></prompt> indicates that the current
+module is an empty module called <literal>Hugs</literal>
+(assuming no modules were specified on the command line).
+At this prompt, you can type Haskell expressions to be evaluated,
+and also enter commands of the form
+<quote><literal>:<replaceable>cmd</replaceable></literal></quote>,
+where <replaceable>cmd</replaceable> may be abbreviated to a single letter.
+</para>
+
+<sect1 id="basic-commands">
+<title>Basic operation</title>
+<variablelist>
+
+<varlistentry id="eval-command">
+<term>
+<cmdsynopsis>
+<arg choice="plain"><replaceable>expr</replaceable></arg>
+</cmdsynopsis>
+</term>
+
+<listitem>
+<para>
+Evaluate a Haskell expression.
+The expression cannot be broken over multiple lines.
+Usually, the value is simply converted to a string
+(using <function>show</function>) and printed:
+<screen>
+Hugs> 1+2
+3
+</screen>
+The printing style can be changed with the
+<link linkend="option-use-show"><option>-u</option></link> option
+(see <xref linkend="options-evaluation"/>).
+</para>
+
+<para>
+However, if <replaceable>expr</replaceable> has type
+<literal>IO</literal> <replaceable>t</replaceable>
+for some type <replaceable>t</replaceable>,
+the resulting IO action is performed:
+<screen>
+Hugs> print (1+2) >> putStrLn "bye"
+3
+bye
+</screen>
+Usually the value produced by this action is ignored,
+but this can be changed with the
+<link linkend="option-display-io"><option>+I</option></link> option
+(see <xref linkend="options-evaluation"/>).
+</para>
+
+<note>
+<title>On ambiguous types</title>
+<para>
+If the type of <replaceable>expr</replaceable> is ambiguous,
+defaulting is applied to each ambiguous
+type variable <replaceable>v</replaceable>
+whose constraints all have the form
+<replaceable>C</replaceable> <replaceable>v</replaceable>
+where <replaceable>C</replaceable> is a standard class,
+and at least one of these classes is a numeric class, or is
+<literal>Show</literal>, <literal>Eq</literal> or <literal>Ord</literal>.
+(This is an extension of the Haskell 98 rule applied to top-level definitions
+in modules, which requires a numeric class.)
+It is an error if any ambiguous type variables cannot be handled in this way.
+For example, consider
+<screen>
+Hugs> reverse []
+[]
+</screen>
+Here a <literal>Show</literal> constraint on the list elements arises
+from Hugs's use of <function>show</function> to display the result,
+so the type of the elements defaults to <literal>Integer</literal>,
+removing the ambiguity.
+</para>
+</note>
+</listitem>
+</varlistentry>
+
+<varlistentry id="type-command">
+<term>
+<cmdsynopsis>
+<command>:type</command> <arg choice="plain"><replaceable>expr</replaceable></arg>
+</cmdsynopsis>
+</term>
+
+<listitem>
+<para>
+Print the type of <replaceable>expr</replaceable>,
+without evaluating it.
+Usually the defaulting rules (discussed above) are not applied to the type
+before printing,
+but this can be changed with the
+<link linkend="option-default-types"><option>+T</option></link> option
+(see <xref linkend="options-evaluation"/>).
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="set-command">
+<term>
+<cmdsynopsis>
+<command>:set</command> <arg rep="repeat"><replaceable>option</replaceable></arg>
+</cmdsynopsis>
+</term>
+
+<listitem>
+<para>
+Set command line options.
+See <xref linkend="options-list"/> for a list of available options.
+On Win32, the new option settings are saved to the registry
+under the <literal>HKEY_CURRENT_USER</literal> key,
+and so persist across Hugs sessions.
+To make settings persistent on other systems,
+put them in the <envar>HUGSFLAGS</envar> environment variable.
+</para>
+<para>
+If no options are given, list the available options and their current settings.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="main-command">
+<term>
+<cmdsynopsis>
+<command>:main</command> <arg rep="repeat"><replaceable>argument</replaceable></arg>
+</cmdsynopsis>
+</term>
+
+<listitem>
+<para>
+Run the <function>main</function> function,
+with the <function>getArgs</function> function
+returning the values specified for the arguments.
+This is useful for testing programs from the interpreter.
+</para>
+
+<para>
+If your <literal>Main</literal> module imports
+<literal>System.Environment</literal>,
+you can get the same effect using <function>withArgs</function>, e.g.
+</para>
+<screen>
+withArgs ["Hello", "World"] main
+</screen>
+</listitem>
+</varlistentry>
+
+<varlistentry id="quit-command">
+<term>
+<cmdsynopsis>
+<command>:quit</command>
+</cmdsynopsis>
+</term>
+
+<listitem>
+<para>
+Exit the interpreter.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+</sect1>
+
+<sect1 id="module-commands">
+<title>Loading and editing Haskell module files</title>
+
+<para>
+The Hugs prompt accepts expressions, but not Haskell definitions.
+These should be placed in text files containing Haskell modules,
+and these modules loaded into Hugs either by listing them on the command line,
+or by using the commands listed here.
+Hugs assumes that each Haskell module is in a separate file.
+You can load these files by name, or by specifying a module name.
+</para>
+
+<para>
+Hugs maintains a notion of a <firstterm>current module</firstterm>,
+initially the empty module <literal>Hugs</literal>
+and normally indicated by the prompt.
+Expressions presented to Hugs are interpreted within the scope of the
+current module, i.e. they may refer to unexported names within the module.
+</para>
+
+<variablelist>
+
+<varlistentry id="load-command">
+<term>
+<cmdsynopsis>
+<command>:load</command>
+<arg rep="repeat"><replaceable>file-or-module</replaceable></arg>
+</cmdsynopsis>
+</term>
+
+<listitem>
+<para>
+Clear all files except the empty module <literal>Hugs</literal>,
+the Haskell 98 <literal>Prelude</literal> and modules it uses,
+and then load the specified files or modules (if any).
+The last module loaded becomes the current module.
+</para>
+
+<para>
+You may specify a literal filename.
+The named file may contain a Haskell module with any name,
+but you can't load two modules with the same name together.
+To include a literal space in a filename, either precede it with a backslash
+or wrap the whole filename double quotes.
+Double quoted filenames may also contain the escape sequences
+<quote><literal>\ </literal></quote>,
+<quote><literal>\"</literal></quote> and
+<quote><literal>\\</literal></quote>.
+Other backslashes are interpreted literally.
+</para>
+
+<para>
+When asked to load a module <replaceable>M</replaceable>,
+Hugs looks for a file
+<filename><replaceable>dir</replaceable>/<replaceable>M</replaceable>.hs</filename>
+or
+<filename><replaceable>dir</replaceable>/<replaceable>M</replaceable>.lhs</filename>,
+where <replaceable>dir</replaceable> is a directory in its search path.
+(The <quote><literal>/</literal></quote> is used on Unix systems;
+Windows systems use <quote><literal>\</literal></quote>.)
+The search path may be changed using the
+<link linkend="option-search-path"><option>-P</option></link> option,
+while the set of suffixes tried may be changed using the
+<link linkend="option-suffixes"><option>-S</option></link> option
+(see <xref linkend="options-loading"/>).
+The file found should contain a Haskell module called
+<replaceable>M</replaceable>.
+</para>
+
+<para>
+In mapping compound module names like <literal>A.B.C</literal> to files,
+the dots are interpreted as slashes, leading to filenames
+<filename><replaceable>dir</replaceable>/A/B/C.hs</filename>
+or
+<filename><replaceable>dir</replaceable>/A/B/C.lhs</filename>.
+</para>
+
+<para>
+Modules imported by Haskell modules are resolved to filenames in the same way,
+except that an extra directory is searched first when
+</para>
+<itemizedlist>
+<listitem>
+<para>
+the importing module was loaded by specifying a filename in that directory, or
+</para>
+</listitem>
+
+<listitem>
+<para>
+the importing module was found relative to that directory.
+</para>
+</listitem>
+</itemizedlist>
+<para>
+This fits nicely with the scenario where you load a module
+<screen>
+Hugs> :load /path/to/my/project/code.hs
+Main>
+</screen>
+where the directory <literal>/path/to/my/project</literal> contains other
+modules used directly or indirectly by the module <literal>Main</literal>
+in <filename>code.hs</filename>.
+For example, suppose <literal>Main</literal> imports <literal>A.B.C</literal>,
+which in turn imports <literal>D</literal>.
+These may be resolved to filenames
+<filename>/path/to/my/project/A/B/C.hs</filename>,
+and (assuming that is found), <filename>/path/to/my/project/D.hs</filename>.
+However imports from modules found on the search path do not use the extra
+directory.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="also-command">
+<term>
+<cmdsynopsis>
+<command>:also</command>
+<arg rep="repeat"><replaceable>file-or-module</replaceable></arg>
+</cmdsynopsis>
+</term>
+
+<listitem>
+<para>
+Read the specified additional files or modules.
+The last module loaded becomes the current module.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="reload-command">
+<term>
+<cmdsynopsis>
+<command>:reload</command>
+</cmdsynopsis>
+</term>
+
+<listitem>
+<para>
+Clear all files except the empty module <literal>Hugs</literal>,
+the Haskell 98 <literal>Prelude</literal> and modules it uses,
+and then reload all the previously loaded modules.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="module-command">
+<term>
+<cmdsynopsis>
+<command>:module</command> <arg choice="plain"><replaceable>module</replaceable></arg>
+</cmdsynopsis>
+</term>
+
+<listitem>
+<para>
+Set the current module for evaluating expressions.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="edit-command">
+<term>
+<cmdsynopsis>
+<command>:edit</command> <arg choice="opt"><replaceable>file</replaceable></arg>
+</cmdsynopsis>
+</term>
+
+<listitem>
+<para>
+The <command>:edit</command> command starts an editor program to modify
+or view a Haskell module.
+Hugs suspends until the editor terminates,
+and then reloads the currently loaded modules.
+The <option>-E</option> option (see <xref linkend="options-editor"/>)
+can be used to configure Hugs to your editor of choice.
+</para>
+
+<para>
+If no filename is specified, Hugs edits the current module.
+</para>
+
+</listitem>
+</varlistentry>
+
+<varlistentry id="find-command">
+<term>
+<cmdsynopsis>
+<command>:find</command> <arg choice="plain"><replaceable>name</replaceable></arg>
+</cmdsynopsis>
+</term>
+
+<listitem>
+<para>
+Edit the module containing the definition of <replaceable>name</replaceable>.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+</sect1>
+
+<sect1 id="info-commands">
+<title>Getting information</title>
+<variablelist>
+
+<varlistentry id="help-command">
+<term>
+<cmdsynopsis>
+<command>:?</command>
+</cmdsynopsis>
+</term>
+
+<listitem>
+<para>
+Display a brief summary of the commands listed here.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="names-command">
+<term>
+<cmdsynopsis>
+<command>:names</command> <arg rep="repeat" choice="opt"><replaceable>pattern</replaceable></arg>
+</cmdsynopsis>
+</term>
+
+<listitem>
+<para>
+List names that match any of the listed patterns
+and are defined in any of the currently loaded modules.
+Patterns resemble filename patterns:
+<literal>*</literal> matches any substring,
+<literal>?</literal> matches any character,
+<literal>[</literal><replaceable>chars</replaceable><literal>]</literal>
+matches any of <replaceable>chars</replaceable>,
+with <replaceable>char</replaceable><literal>-</literal><replaceable>char</replaceable>
+standing for a range of characters, and
+<literal>\</literal><replaceable>char</replaceable> matches <replaceable>char</replaceable>.
+</para>
+
+<para>
+If no patterns are given,
+all names defined in any of the currently loaded modules are listed.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="info-command">
+<term>
+<cmdsynopsis>
+<command>:info</command> <arg choice="opt"><replaceable>name</replaceable></arg>
+</cmdsynopsis>
+</term>
+
+<listitem>
+<para>
+Describe the named objects.
+Qualified names may be used for
+objects defined or imported in any loaded module other than the current one.
+</para>
+
+<para>
+If no arguments are given, the names of all currently loaded files are printed.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="browse-command">
+<term>
+<cmdsynopsis>
+<command>:browse</command> <arg choice="opt"><option>all</option></arg> <arg rep="repeat" choice="opt"><replaceable>module</replaceable></arg>
+</cmdsynopsis>
+</term>
+
+<listitem>
+<para>
+List names exported by the specified modules (which must already be loaded).
+If <quote><option>all</option></quote> is given,
+list all names in scope inside the modules.
+If no modules are given, it describes the current module.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="version-command">
+<term>
+<cmdsynopsis>
+<command>:version</command>
+</cmdsynopsis>
+</term>
+
+<listitem>
+<para>
+Print the version of the Hugs interpreter.
+Major releases of Hugs are identified by a month and year:
+<screen>
+Hugs> :version
+-- Hugs Version November 2003
+</screen>
+Development snapshots are identified by a date in
+<replaceable>YYYYMMDD</replaceable> form.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+</sect1>
+
+<sect1 id="misc-commands">
+<title>Miscellaneous commands</title>
+<variablelist>
+
+<varlistentry id="shell-command">
+<term>
+<cmdsynopsis>
+<command>:!</command><arg choice="opt"><replaceable>command</replaceable></arg>
+</cmdsynopsis>
+</term>
+
+<listitem>
+<para>
+Shell escape.
+If the <replaceable>command</replaceable> is omitted, run a shell.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="cd-command">
+<term>
+<cmdsynopsis>
+<command>:cd</command> <arg choice="plain"><replaceable>dir</replaceable></arg>
+</cmdsynopsis>
+</term>
+
+<listitem>
+<para>
+Change the working directory of Hugs to <replaceable>dir</replaceable>.
+If <replaceable>dir</replaceable> begins with
+<quote><literal>~/</literal></quote>,
+the <quote><literal>~</literal></quote> is replaced by your home directory.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="gc-command">
+<term>
+<cmdsynopsis>
+<command>:gc</command>
+</cmdsynopsis>
+</term>
+
+<listitem>
+<para>
+Force a garbage collection.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+</sect1>
+
+</chapter>

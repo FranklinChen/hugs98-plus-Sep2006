@@ -1,0 +1,401 @@
+<sect1 id="sec-IOExts">
+<title><literal>IOExts</literal><indexterm><primary>IOExts</primary></indexterm>
+</title>
+
+<para>
+This library is the home for miscellaneous IO-related extensions.
+</para>
+
+<sect2>
+<title>IO monad extensions</title>
+
+<variablelist>
+<varlistentry>
+<term><literal>fixIO :: (a -&#62; IO a) -&#62; IO a</literal>
+<indexterm><primary><literal>fixIO</literal></primary></indexterm></term>
+<listitem>
+<para>
+<literal>fixIO</literal> allows recursive IO operations to be defined.
+The first argument to <literal>fixIO</literal> should be a function
+that takes its own output as an argument (sometimes called "tying the
+knot").
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><literal>unsafePerformIO :: IO a -&#62; a</literal>
+<indexterm><primary><literal>unsafePerformIO</literal></primary></indexterm></term>
+<listitem>
+<para>
+This is the "back door" into the <literal>IO</literal> monad, allowing
+<literal>IO</literal> computation to be performed at any time.  For
+this to be safe, the <literal>IO</literal> computation should be
+free of side effects and independent of its environment.
+</para>
+
+<para>
+If the I/O computation wrapped in <function>unsafePerformIO</function>
+performs side effects, then the relative order in which those side
+effects take place (relative to the main I/O trunk, or other calls to
+<function>unsafePerformIO</function>) is indeterminate.  
+</para>
+
+<para>
+However, it is less well known that
+<function>unsafePerformIO</function> is not type safe.  For example:
+
+<programlisting>
+test :: IORef [a]
+test = unsafePerformIO $ newIORef []
+
+main = do
+        writeIORef test [42]
+        bang &#60;- readIORef test
+        print (bang :: [Char])
+</programlisting>
+
+This program will core dump.  This problem with polymorphic references is
+well known in the ML community, and does not arise with normal monadic use
+of references.  There is no easy way to make it impossible once you use
+<function>unsafePerformIO</function>.  Indeed, it is possible to write
+<literal>coerce :: a -&#62; b</literal> with the help of <function>unsafePerformIO</function>.
+So be careful!
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><literal>unsafeInterleaveIO :: IO a -&#62; IO a</literal>
+<indexterm><primary><literal>unsafeInterleaveIO</literal></primary></indexterm></term>
+<listitem>
+<para>
+<literal>unsafeInterleaveIO</literal> allows <literal>IO</literal>
+computation to be deferred lazily.  When passed a value of type
+<literal>IO a</literal>, the <literal>IO</literal> will only be
+performed when the value of the <literal>a</literal> is demanded.
+This is used to implement lazy file reading, see
+<literal>IO.hGetContents</literal>.
+
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</sect2>
+
+<sect2>
+<title>Mutable Variables</title>
+<indexterm><primary>mutable variables</primary></indexterm>
+
+<programlisting>
+data IORef      -- instance of: Eq
+newIORef        :: a -&#62; IO (IORef a)
+readIORef       :: IORef a -&#62; IO a
+writeIORef      :: IORef a -&#62; a -&#62; IO ()
+modifyIORef     :: IORef a -&#62; (a -&#62; a) -&#62; IO ()
+mkWeakIORef     :: IORef a -&#62; IO () -&#62; IO (Weak (IORef a))
+
+-- deprecated, use modifyIORef
+updateIORef     :: IORef a -&#62; (a -&#62; a) -&#62; IO ()
+</programlisting>
+<indexterm><primary><literal>IORef</literal> type</primary></indexterm>
+<indexterm><primary><literal>newIORef</literal></primary></indexterm>
+<indexterm><primary><literal>readIORef</literal></primary></indexterm>
+<indexterm><primary><literal>writeIORef</literal></primary></indexterm>
+<indexterm><primary><literal>modifyIORef</literal></primary></indexterm>
+
+</sect2>
+
+<sect2 id="sec-IOArray">
+<title>Mutable Arrays</title>
+<indexterm><primary>mutable arrays</primary></indexterm>
+
+<programlisting>
+data IOArray          -- instance of: Eq
+newIOArray            :: Ix ix => (ix,ix) -&#62; elt -&#62; IO (IOArray ix elt)
+boundsIOArray       :: Ix ix => IOArray ix elt -&#62; (ix, ix)
+readIOArray         :: Ix ix => IOArray ix elt -&#62; ix -&#62; IO elt
+writeIOArray        :: Ix ix => IOArray ix elt -&#62; ix -&#62; elt -&#62; IO ()
+freezeIOArray       :: Ix ix => IOArray ix elt -&#62; IO (Array ix elt)
+thawIOArray         :: Ix ix => Array ix elt -&#62; IO (IOArray ix elt)
+unsafeFreezeIOArray :: Ix ix => IOArray ix elt -&#62; IO (Array ix elt)
+unsafeThawIOArray   :: Ix ix => Array ix elt -&#62; IO (IOArray ix elt)
+</programlisting>
+<indexterm><primary><literal>IOArray</literal></primary></indexterm>
+<indexterm><primary><literal>newIOArray</literal></primary></indexterm>
+<indexterm><primary><literal>boundsIOArray</literal></primary></indexterm>
+<indexterm><primary><literal>readIOArray</literal></primary></indexterm>
+<indexterm><primary><literal>writeIOArray</literal></primary></indexterm>
+<indexterm><primary><literal>freezeIOArray</literal></primary></indexterm>
+<indexterm><primary><literal>thawIOArray</literal></primary></indexterm>
+<indexterm><primary><literal>unsafeFreezeIOArray</literal></primary></indexterm>
+<indexterm><primary><literal>unsafeThawIOArray</literal></primary></indexterm>
+
+<para>
+Note: <literal>unsafeFreezeIOArray</literal> and
+<literal>unsafeThawIOArray</literal> are not provided by Hugs.
+</para>
+
+</sect2>
+
+<sect2>
+<title>Extended file modes</title>
+<indexterm><primary>file modes</primary><secondary>extended</secondary></indexterm>
+
+<programlisting>
+  data IOModeEx 
+   = BinaryMode IOMode
+   | TextMode   IOMode
+     deriving (Eq, Read, Show)
+
+  openFileEx         :: FilePath -&#62; IOModeEx -&#62; IO Handle
+  hSetBinaryMode     :: Handle -&#62; Bool -&#62; IO Bool
+</programlisting>
+<indexterm><primary><literal>IOModeEx</literal></primary></indexterm>
+<indexterm><primary><literal>BinaryMode</literal></primary></indexterm>
+<indexterm><primary><literal>TextMode</literal></primary></indexterm>
+<indexterm><primary><literal>openFileEx</literal></primary></indexterm>
+<indexterm><primary><literal>hSetBinaryMode</literal></primary></indexterm>
+
+<para>
+GHC's implementation of the IO library distinguishes between 
+binary- and text-mode files.  This unfortunate hack is imposed on us
+by the need to support Win32 platforms.
+</para>
+<para>
+On Win32, files opened in text mode are subject to CR-LF translation.
+When reading a handle in text mode, CR-LF sequences in the physical
+file are translated into lone LFs in the stream presented to the
+Haskell program.  Writes to a text mode handle are subject to the
+inverse transformation.
+</para>
+<para>
+On Unix platforms there is no such translation.  What you get is
+exactly the contents of the file, and vice versa.
+</para>
+<para>
+Unfortunately this behaviour makes it difficult to correctly implement
+file-positioning operations in text mode on Win32.  If you want to use such
+operations, you must first place the handle in binary mode.  Failure
+to do so results in IO exceptions being raised.  This applies only to
+Win32, and not to any other platforms.  If your programs use seek
+operations and you want them to be portable between Unix and Win32,
+you need to ensure the relevant handles are in binary mode.
+</para>
+<para>
+You can get hold of a binary-mode file handle one of two ways.  Either 
+open the file with <function>openFileEx</function>, which allows the 
+mode to be specified.  Or, if you already have an open handle, 
+use <function>hSetBinaryMode</function> to change its mode.
+</para>
+<para>
+Also as a result of this, note that on Win32 there are also several
+operations which, whist still allowed, may give different results in
+text mode than their Unix counterparts.  These are: changing buffering
+modes of a handle (<literal>hSetBuffering</literal>), and writing to a
+read-write handle.  In both cases, the read-buffer associated with the
+handle needs to be flushed, and, due to the Win32 text mode
+translation, the resulting physical file position following the flush
+may be wrong.
+</para>
+<para>
+This issue of seeking in the presence of a non-identity transform
+between file and buffer contents will need to be revisited when the
+library is re-done to properly support Unicode.  The present
+arrangement is the least-worst kludge we could come up with at present.
+</para>
+
+
+</sect2>
+
+<sect2 id="sec-bulk-transfers">
+<title>Bulk transfers</title>
+<indexterm><primary>bulk transfers</primary></indexterm>
+
+<programlisting>
+  hGetBuf       :: Handle -> Addr -> Int -> IO Int
+  hPutBuf       :: Handle -> Addr -> Int -> IO ()
+</programlisting>
+<indexterm><primary><literal>hGetBuf</literal></primary></indexterm>
+<indexterm><primary><literal>hPutBuf</literal></primary></indexterm>
+
+<para>These functions read and write chunks of data to/from a handle.
+They will return only when either the full buffer has been transfered,
+or the end of file is reached (in the case of
+<literal>hGetBuf</literal>.</para>
+
+<programlisting>
+  hGetBufBA     :: Handle -> MutableByteArray RealWorld a -> Int -> IO Int
+  hPutBufBA     :: Handle -> MutableByteArray RealWorld a -> Int -> IO ()
+</programlisting>
+<indexterm><primary><literal>hGetBufBA</literal></primary></indexterm>
+<indexterm><primary><literal>hPutBufBA</literal></primary></indexterm>
+
+<para>These functions mirror the previous two functions, but operate
+on <literal>MutableByteArray</literal>s instead of
+<literal>Addr</literal>s.  This may be more convenient and/or faster,
+depending on the circumstances.</para>
+</sect2>
+
+<sect2>
+<title>Terminal control</title>
+<indexterm><primary>terminal control</primary></indexterm>
+
+<programlisting>
+  hIsTerminalDevice :: Handle -&#62; IO Bool
+  hSetEcho          :: Handle -&#62; Bool -&#62; IO ()
+  hGetEcho          :: Handle -&#62; IO Bool
+</programlisting>
+<indexterm><primary><literal>hIsTerminalDevice</literal></primary></indexterm>
+<indexterm><primary><literal>hSetEcho</literal></primary></indexterm>
+<indexterm><primary><literal>hGetEcho</literal></primary></indexterm>
+
+</sect2>
+
+<sect2>
+<title>Redirecting handles</title>
+
+<programlisting>
+  withHandleFor :: Handle -&#62; Handle -&#62; IO a -&#62; IO a
+  withStdout    :: Handle -&#62; IO a -&#62; IO a
+  withStdin     :: Handle -&#62; IO a -&#62; IO a
+  withStderr    :: Handle -&#62; IO a -&#62; IO a
+</programlisting>
+<indexterm><primary><literal>withHandleFor</literal></primary></indexterm>
+<indexterm><primary><literal>withStdout</literal></primary></indexterm>
+<indexterm><primary><literal>withStdin</literal></primary></indexterm>
+<indexterm><primary><literal>withStderr</literal></primary></indexterm>
+
+</sect2>
+
+<sect2 id="trace">
+<title>Trace</title>
+
+<programlisting>
+trace :: String -&#62; a -&#62; a
+</programlisting>
+<indexterm><primary><literal>trace</literal></primary></indexterm>
+
+<para>
+When called, <function>trace</function> prints the string in its first
+argument to standard error, before returning the second argument as
+its result.  The <function>trace</function> function is not
+referentially transparent, and should only be used for debugging, or
+for monitoring execution. Some implementations of
+<function>trace</function> may decorate the string that's output to
+indicate that you're tracing.
+</para>
+
+<para>
+<literal>trace</literal> is implemented using
+<literal>unsafePerformIO</literal>.
+</para>
+
+<!--
+  You should also be warned that, unless you understand some of the
+  details about the way that Haskell programs are executed, results
+  obtained using <tt/trace/ can be rather confusing.  For example, the
+  messages may not appear in the order that you expect.  Even ignoring the
+  output that they produce, adding calls to <tt/trace/ can change the
+  semantics of your program.  Consider this a warning!
+  -->
+
+</sect2>
+
+  <sect2>
+    <title>Extra <literal>IOError</literal> Predicates</title>
+    <indexterm><primary><literal>IOError</literal></primary>
+    </indexterm>
+    
+    <para>The <literal>IO</literal> module provides several predicates
+    over the <literal>IOError</literal> type, such as
+    <literal>isEOFError</literal>,
+    <literal>isDoesNotExistError</literal>, and so on.  Here we define
+    an extended set of these predicates, taking into account more
+    types of error:</para>
+
+<programlisting>
+  isHardwareFault	   :: IOError -> Bool
+  isInappropriateType	   :: IOError -> Bool
+  isInterrupted		   :: IOError -> Bool
+  isInvalidArgument	   :: IOError -> Bool
+  isOtherError		   :: IOError -> Bool
+  isProtocolError	   :: IOError -> Bool
+  isResourceVanished	   :: IOError -> Bool
+  isSystemError		   :: IOError -> Bool
+  isTimeExpired		   :: IOError -> Bool
+  isUnsatisfiedConstraints :: IOError -> Bool
+  isUnsupportedOperation   :: IOError -> Bool
+  isDynIOError             :: IOError -> Bool
+</programlisting>
+
+  </sect2>
+
+<sect2>
+<title>Miscellany</title>
+
+<programlisting>
+  unsafePtrEq            :: a -&#62; a -&#62; Bool
+  slurpFile              :: FilePath -&#62; IO (Addr, Int)
+  hConnectTo             :: Handle -&#62; Handle -&#62; IO ()
+  performGC              :: IO ()
+  freeHaskellFunctionPtr :: Addr -&#62; IO ()
+
+  getDynIOError          :: IOError -> Maybe Dynamic.Dynamic
+</programlisting>
+<indexterm><primary><literal>mkWeakIORef</literal></primary></indexterm>
+<indexterm><primary><literal>unsafePtrEq</literal></primary></indexterm>
+<indexterm><primary><literal>slurpFile</literal></primary></indexterm>
+<indexterm><primary><literal>hConnectTo</literal></primary></indexterm>
+<indexterm><primary><literal>performGC</literal></primary></indexterm>
+<indexterm><primary><literal>freeHaskellFunctionPtr</literal></primary></indexterm>
+<indexterm><primary><literal>getDynIOError</literal></primary></indexterm>
+
+<para>
+<function>performGC</function> triggers an immediate garbage collection
+</para>
+
+<para>
+<function>unsafePtrEq</function> compares two values for pointer equality without
+evaluating them.  The results are not referentially transparent and
+may vary significantly from one compiler to another or in the face of
+semantics-preserving program changes.  However, pointer equality is useful
+in creating a number of referentially transparent constructs such as this
+simplified memoisation function:
+
+<programlisting>
+&#62; cache :: (a -&#62; b) -&#62; (a -&#62; b)
+&#62; cache f = \x -&#62; unsafePerformIO (check x)
+&#62;  where
+&#62;   ref = unsafePerformIO (newIORef (error "cache", error "cache"))
+&#62;   check x = readIORef ref &#62;&#62;= \ (x',a) -&#62;
+&#62;          if x `unsafePtrEq` x' then
+&#62;            return a
+&#62;          else
+&#62;            let a = f x in
+&#62;            writeIORef ref (x, a) &#62;&#62;
+&#62;            return a
+</programlisting>
+
+
+</para>
+
+<para>
+<function>getDynIOError</function> takes an <literal>IOError</literal>
+as argument. If it is a dynamic IO error, it returns <literal>Just
+d</literal>, where <literal>d</literal> is the dynamic value. Of 
+(some) use by library providers to provide their own
+<literal>IOError</literal> types.
+</para>
+
+</sect2>
+
+</sect1>
+
+<!-- Emacs stuff:
+     ;;; Local Variables: ***
+     ;;; mode:.xml ***
+     ;;;.xml-parent-document: ("../../doc/hslibs.xml" "book" "chapter" "sect1") ***
+     ;;; End: ***
+ -->

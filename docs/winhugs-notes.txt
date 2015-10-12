@@ -1,0 +1,14 @@
+Hugs 98 for Windows
+===================
+
+Winhugs saves its configuration in Windows registry under the key
+
+  HKEY_CURRENT_USER\Software\Haskell\Hugs\Winhugs <version>
+
+Most of the options can be configured through the options dialog. 
+
+Documentation for Haskell and hugs can be accessed from the Help menu. 
+
+Please report bugs to hugs-bugs@haskell.org.
+
+

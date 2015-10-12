@@ -1,0 +1,67 @@
+\modName{GraphicsColor}
+
+\begin{verbatim}
+> data Color 
+>   = Black
+>   | Blue
+>   | Green 
+>   | Cyan
+>   | Red 
+>   | Magenta
+>   | Yellow
+>   | White
+>  deriving (Eq, Ord, Bounded, Enum, Ix, Show, Read)
+> colorList  :: [(Color, RGB)]
+> colorTable :: Array Color RGB
+> withColor  :: Color -> Graphic -> Graphic -- SOE, p51
+\end{verbatim}
+
+\modName{GraphicsEvent}
+
+\begin{verbatim}
+> data Event 
+>   = Key       { char :: Char, isDown :: Bool }
+>   | Button    { pt :: Point, isLeft, isDown :: Bool }
+>   | MouseMove { pt :: Point }
+>   | Resize
+>   | Closed
+>  deriving Show 
+\end{verbatim}
+
+\modName{GraphicsFont}
+
+\begin{verbatim}
+> createFont :: Point -> Angle -> Bool -> Bool -> String -> IO Font
+> deleteFont :: Font -> IO ()
+\end{verbatim}
+
+\modName{GraphicsUtils}
+
+\begin{verbatim}
+> openWindow        :: Title -> Size -> IO Window
+> clearWindow       :: Window -> IO ()
+> drawInWindow      :: Window -> Graphic -> IO ()
+> getWindowSize     :: Window -> IO Size
+> getLBP            :: Window -> IO Point
+> getRBP            :: Window -> IO Point
+> getButton         :: Window -> Bool -> Bool -> IO Point
+> getKey            :: Window -> IO Char
+> getKeyEx          :: Window -> Bool -> IO Char
+> withFont          :: Font      -> Graphic -> Graphic
+> withTextColor     :: RGB       -> Graphic -> Graphic
+> withTextAlignment :: Alignment -> Graphic -> Graphic
+> withBkColor       :: RGB       -> Graphic -> Graphic
+> withBkMode        :: BkMode    -> Graphic -> Graphic
+> withPen           :: Pen       -> Graphic -> Graphic
+> withRGB           :: RGB       -> Graphic -> Graphic
+> withBrush         :: Brush     -> Graphic -> Graphic
+> mkBrush           :: RGB                 -> (Brush -> Graphic) -> Graphic
+> mkPen             :: Style -> Int -> RGB -> (Pen   -> Graphic) -> Graphic
+> emptyGraphic      :: Graphic
+> overGraphic       :: Graphic -> Graphic -> Graphic
+> overGraphics      :: [Graphic] -> Graphic
+> par               :: IO a -> IO b -> IO (a,b)
+> par_              :: IO a -> IO b -> IO ()
+> parMany           :: [IO ()] -> IO ()
+\end{verbatim}
+

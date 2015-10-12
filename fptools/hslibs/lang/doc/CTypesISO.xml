@@ -1,0 +1,8 @@
+<sect1 id="sec-CTypesISO">
+<title><literal>CTypesISO</literal><indexterm><primary>CTypesISO</primary></indexterm>
+</title>
+
+  <para>This module has been merged into <ulink url="../libraries/base/Foreign.C.Types.html"><literal>Foreign.C.Types</literal></ulink> in the
+  hierarchical libraries.</para>
+
+</sect1>

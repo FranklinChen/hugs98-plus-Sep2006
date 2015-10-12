@@ -1,0 +1,33 @@
+name:		PACKAGE
+version:	VERSION
+license:	BSD3
+maintainer:	libraries@haskell.org
+exposed:	True
+
+exposed-modules:
+	Language.Haskell.Lexer,
+	Language.Haskell.Parser,
+	Language.Haskell.ParseMonad,
+	Language.Haskell.ParseUtils,
+	Language.Haskell.Pretty,
+	Language.Haskell.Syntax
+
+hidden-modules:
+
+import-dirs:	IMPORT_DIR
+library-dirs:	LIB_DIR
+hs-libraries:   "HShaskell-src"
+extra-libraries:
+
+include-dirs:
+includes:		
+depends:	base, haskell98
+		/* The dependency on Haskell 98 is only because
+		   Happy generates a parser that imports Array */
+hugs-options:
+cc-options:
+ld-options:
+framework-dirs:
+frameworks:
+haddock-interfaces:	HADDOCK_IFACE
+haddock-html:		HTML_DIR

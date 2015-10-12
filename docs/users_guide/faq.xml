@@ -1,0 +1,163 @@
+<chapter id="faq">
+<title>Frequently Asked Questions about Hugs</title>
+
+<para>These are some frequently asked questions about Hugs 98,
+and their answers.</para>
+
+<qandaset>
+
+<qandaentry>
+<question><para>What is the correct name for Hugs?</para></question>
+
+<answer>
+<para>We use <quote>Hugs</quote> as a generic name for the interpreters we build.</para>
+
+<para>We use a name like <quote>Hugs 1.3</quote>, <quote>Hugs 1.4</quote>,
+or <quote>Hugs 98</quote> if we want to identify a version of Hugs that is
+based on a specific version of Haskell like <quote>Haskell 1.3</quote>,
+<quote>Haskell 1.4</quote>, or <quote>Haskell 98</quote>.
+So please note that the <quote>1.4</quote> part in a name like
+<quote>Hugs 1.4</quote> refers to the version of Haskell, and not to the
+version of Hugs.</para>
+
+<para>We use release dates to identify specific Hugs releases.
+For example, if you
+report a bug in the most recent release, be sure to mention that you observed
+the problem with the <quote>Hugs 98, Sep 1999</quote> release.</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>What is the relationship between Hugs and Gofer?</para>
+</question>
+
+<answer>
+<para>Hugs is the successor to Gofer, and was originally derived from
+Gofer version 2.30b.  But Hugs incorporates many changes and substantial
+enhancements, and offers much greater compatibility with Haskell.</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question><para>Who is responsible for Hugs?</para></question>
+<answer>
+
+<para>Mark P Jones (currently at OGI) wrote the original version of Hugs
+and wrote much of the code in the current distribution.  Other Haskell
+teams have also contributed to Hugs; the current distribution owes
+much to other groups.  See the latest Hugs news to find out who is
+doing what.</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question><para>How do I report a bug?</para></question>
+
+<answer>
+<para>First, check the list of known deviations and bugs
+(see <xref linkend="haskell98"/>).</para>
+
+<para>Please report bugs either by using the bug tracking system on the
+<ulink url="http://hackage.haskell.org/trac/hugs">Hugs development page</ulink>
+or by sending a report to the
+<ulink url="mailto:hugs-bugs@haskell.org">hugs-bugs@haskell.org</ulink>
+mailing list.
+If you send the bug report to an individual, you run the risk that that person
+is on vacation, is rushing to meet a deadline or just accidentally deletes your
+mail.</para>
+
+<para>Please say which version of Hugs you are using, on which platform,
+and give us enough information to duplicate the problem.
+Like all maintainers, we greatly appreciate short error cases.</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question><para>How do I enter function definitions?</para></question>
+
+<answer>
+<para>The Hugs prompt only accepts expressions for evaluation.
+You can create a file containing a Haskell module, and load that
+(see <xref linkend="module-commands"/> for details).</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>How can I access more than one module at once?</para>
+</question>
+
+<answer>
+<para>Hugs has only one current module at any time,
+but you can edit a module containing several <literal>import</literal>s.</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>Why are non-exported names accessible at the command prompt?</para>
+</question>
+<answer>
+
+<para>When you evaluate an expression in the interpreter, it has to use some
+symbol table for looking up the ids you use. What symbol table does it use?
+The only credible alternatives are:
+<itemizedlist>
+<listitem>
+<para>The export list of the <quote>current module</quote>
+(see <xref linkend="module-commands"/>)</para>
+</listitem>
+<listitem>
+<para>The symbol table of the <quote>current module</quote></para></listitem>
+</itemizedlist>
+Hugs uses the latter (which seems more useful) but you might reasonably
+expect Hugs to use the export list and wonder why Hugs doesn't seem to
+implement abstract data types correctly when you do experiments from the
+command line.</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>What happened to <function>isAlpha</function>, <function>toInt</function>, etc?</para>
+</question>
+
+<answer>
+<para>The <literal>Prelude</literal> now conforms to Haskell 98,
+whereas in older versions it exported some additional names.
+To use character functions like <function>isAlpha</function>,
+you must load or import the <literal>Char</literal> module.
+Non-standard functions like <function>toInt</function> are no longer available.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>Does Hugs implement everything in Haskell 98?</para>
+</question>
+
+<answer>
+<para>Not quite.  Mutually recursive modules are not supported yet,
+and there are a few other minor discrepancies
+(see <xref linkend="bugs-haskell98"/> for details).</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>Can I create executable programs with Hugs or do I always have to run
+programs from the development environment?</para>
+</question>
+
+<answer>
+<para>The distribution includes a stand-alone version of Hugs which will
+<quote>load and go</quote> as well as handle command line arguments
+(see <xref linkend="runhugs"/> for details).</para>
+</answer>
+</qandaentry>
+
+</qandaset>
+
+</chapter>

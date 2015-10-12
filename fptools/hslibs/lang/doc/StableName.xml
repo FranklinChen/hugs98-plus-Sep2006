@@ -1,0 +1,8 @@
+
+<sect1 id="sec-stable-names">
+<title><literal>StableName</literal><indexterm><primary>StableName</primary></indexterm>
+</title>
+
+  <para>This module has moved to <ulink url="../libraries/base/System.Mem.StableName.html"><literal>System.Mem.StableName</literal></ulink> in the
+  hierarchical libraries.</para>
+</sect1>

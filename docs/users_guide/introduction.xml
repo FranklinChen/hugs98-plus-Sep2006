@@ -1,0 +1,208 @@
+<chapter id="introduction">
+<title>Introduction</title>
+
+<para>
+In September 1991, Mark Jones released a functional programming system called
+<firstterm>Gofer</firstterm>, which provided a compact, portable implementation
+of a Haskell-like language.
+The system also included experimental type system extensions,
+many of which later became part of Haskell.
+On Valentine's Day 1995, Mark released
+<firstterm>Hugs</firstterm> (Haskell User's Gofer System),
+a derivative of Gofer with greater Haskell compliance.
+Hugs versions are named after the version of Haskell they support;
+Hugs 98 was released in January 1999.
+Mark gave up the maintainership of Hugs in January 2000.
+</para>
+
+<para>
+Hugs 98 still aims to be a fairly lightweight, portable implementation,
+and now adheres closely to Haskell 98.
+It also supports several extensions shared with other Haskell implementations:
+<itemizedlist>
+
+<listitem>
+<para>
+Hugs supports standardized extensions (addenda) to Haskell 98,
+for interfacing to foreign languages and structuring the module space.
+</para>
+</listitem>
+
+<listitem>
+<para>
+With the appropriate options (see <xref linkend="options-language"/>),
+it is also possible to turn on a number of language extensions,
+most of which are also supported by the
+<ulink url="http://www.haskell.org/ghc/">Glasgow Haskell Compiler</ulink> (GHC),
+though some are specific to Hugs.
+</para>
+</listitem>
+
+<listitem>
+<para>
+Hugs comes with a large collection of libraries,
+also shared with other Haskell implementations,
+and described in <ulink url="http://www.haskell.org/ghc/docs/latest/html/libraries/">separate documentation</ulink>.
+</para>
+</listitem>
+
+</itemizedlist>
+Though these features make Hugs highly compatible with other implementations,
+it is primarily intended as interpreter and programming environment
+for developing Haskell programs.
+If your application involves large programs or speed is critical,
+you may strike Hugs's limitations, and may wish to try a Haskell compiler.
+</para>
+
+<sect1 id="other">
+<title>Other sources of information</title>
+
+<sect2 id="other-documentation">
+<title>Other documentation</title>
+
+<variablelist>
+
+<varlistentry id="user-manual">
+<term><citetitle>The Hugs 98 User Manual</citetitle></term>
+<listitem>
+<para>
+This was the definitive reference for earlier versions of Hugs,
+though parts of it are now out-of-date.
+Much of it remains relevant, particularly Section 7 on Hugs extensions,
+and it should be consulted in several areas that this Guide does not cover well.
+The manual is available in several formats:
+<ulink url="http://cvs.haskell.org/Hugs/pages/hugsman/index.html">HTML</ulink>,
+<ulink url="http://cvs.haskell.org/Hugs/downloads/hugs.pdf">PDF</ulink>,
+<ulink url="http://cvs.haskell.org/Hugs/downloads/hugs.ps.gz">gzipped Postscript</ulink>,
+<ulink url="http://cvs.haskell.org/Hugs/downloads/html.tar.gz">gzipped tar-ed html</ulink>,
+<ulink url="http://cvs.haskell.org/Hugs/downloads/hugs.dvi">dvi</ulink>,
+<ulink url="http://cvs.haskell.org/Hugs/downloads/hugs-hlp.zip">WinHelp(zipped)</ulink> and
+<ulink url="http://www.galois.com/~sof/hugs98.chm">HTMLHelp(win32 help format)</ulink>.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="haskell98-report">
+<term><citetitle>Haskell 98 Language and Libraries: the Revised Report</citetitle></term>
+<listitem>
+<para>
+The definitive reference for the Haskell 98 language and standard libraries,
+published by Cambridge University Press, and also available
+<ulink url="http://www.haskell.org/definition/">online</ulink>.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry id="libraries">
+<term><ulink url="http://www.haskell.org/ghc/docs/latest/html/libraries/">Haskell Hierarchical Libraries</ulink></term>
+<listitem>
+<para>
+A collection of libraries shared by Haskell implementations, including Hugs.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><ulink url="http://www.cs.nott.ac.uk/Department/Staff/mpj/faq.html">comp.lang.functional FAQ</ulink></term>
+<listitem>
+<para>
+General information about functional programming.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>
+More information about Haskell may be found on the
+<ulink url="http://www.haskell.org/">Haskell home page</ulink>
+and the <ulink url="http://www.haskell.org/hugs/">Hugs home page</ulink>.
+</para>
+
+</sect2>
+
+<sect2 id="mailing-lists">
+<title>Mailing lists</title>
+
+<para>
+There are a number of mailing lists where people discuss Hugs and Haskell,
+all with archives of past postings:
+</para>
+
+<variablelist>
+
+<varlistentry>
+<term><ulink url="http://www.haskell.org/mailman/listinfo/hugs-users">hugs-users</ulink></term>
+<listitem>
+<para>
+This is the place for general discussion about using Hugs.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><ulink url="http://www.haskell.org/mailman/listinfo/hugs-bugs">hugs-bugs</ulink></term>
+<listitem>
+<para>
+Use this list for reporting bugs.
+This is more likely to be effective than direct mail to the authors
+or maintainers of Hugs.
+We do read this mailing list &ndash; but so do many other people,
+who might be able to give you more appropriate or timely advice than us!
+Before reporting a bug, check the list of known deviations from Haskell 98
+(see <xref linkend="bugs-haskell98"/>).
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><ulink url="http://www.haskell.org/mailman/listinfo/cvs-hugs">cvs-hugs</ulink></term>
+<listitem>
+<para>
+Discussion of the development of Hugs takes place on this list.
+This list also receives commit messages from the
+<ulink url="http://cvs.haskell.org/cgi-bin/cvsweb.cgi/hugs98/">Hugs CVS repository</ulink>.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><ulink url="http://www.haskell.org/mailman/listinfo/haskell-cafe">haskell-cafe</ulink></term>
+<listitem>
+<para>
+An informal list for chatting about Haskell.
+This is an ideal place for beginners to get help with Haskell,
+but Hugs-specific questions would be better directed at the Hugs lists.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><ulink url="http://www.haskell.org/mailman/listinfo/haskell">haskell</ulink></term>
+<listitem>
+<para>
+A lower-volume list for more technical discussion of Haskell.
+Please do not post beginner questions or Hugs-specific questions to this list.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>
+There are several other Haskell-related mailing lists served by
+<systemitem class="fqdomainname">www.haskell.org</systemitem>.
+See <ulink url="http://www.haskell.org/mailman/listinfo/"><literal>http://www.haskell.org/mailman/listinfo/</literal></ulink>
+for the full list.
+</para>
+
+<para>
+Some Haskell-related discussion also takes place in the Usenet newsgroup
+<ulink url="news:comp.lang.functional"><systemitem class="newsgroup">comp.lang.functional</systemitem></ulink>.
+</para>
+
+</sect2>
+
+</sect1>
+
+</chapter>

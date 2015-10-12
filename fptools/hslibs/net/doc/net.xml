@@ -1,0 +1,12 @@
+<chapter id="sec-net"><title>The <literal>net</literal> package: networking support</title>
+
+<para>
+(Darren Moffat supplied the initial version of this library.)
+</para>
+
+&bsd;
+&socket;
+&socketprim;
+&uri;
+
+</chapter>

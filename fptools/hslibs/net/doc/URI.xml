@@ -1,0 +1,13 @@
+<sect1 id="sec-URI">
+<title><literal>URI</literal>
+</title>
+<indexterm>
+  <primary><literal>URI</literal></primary>
+  <secondary>library</secondary>
+</indexterm>
+
+  <para>This module has moved to <ulink url="../libraries/network/Network.URI.html"><literal>Network.URI</literal></ulink>
+  (package <literal>network</literal>) in the hierarchical
+  libraries.</para>
+</sect1>
+

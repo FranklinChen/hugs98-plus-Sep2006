@@ -1,0 +1,706 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 FINAL//EN">
+<!--Rendered using the Haskell Html Library v2.0-->
+<HTML
+>This defines an example Html page.
+<TABLE BORDER = "0" CELLSPACING = "0" CELLPADDING = "5" BGCOLOR = "#88ffff" WIDTH = "100%"
+  ><TR
+    ><TD
+      ><FONT SIZE = "+1"
+	><TT
+	  ><I
+	    >import&nbsp;Html</I
+	    ></TT
+	  ><BR
+	  ></FONT
+	></TD
+      ></TR
+    ></TABLE
+  ><BR
+  >
+
+<P
+  > We define our page as:</P
+  >
+<TABLE BORDER = "0" CELLSPACING = "0" CELLPADDING = "5" BGCOLOR = "#88ffff" WIDTH = "100%"
+  ><TR
+    ><TD
+      ><FONT SIZE = "+1"
+	><TT
+	  ><I
+	    >htmlPage&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >::&nbsp;[</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >Html</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >]</B
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ><TT
+	  ><I
+	    >htmlPage</I
+	    ></TT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >=&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >header</I
+	    ></TT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >&lt;&lt;&nbsp;</I
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >thetitle&nbsp;</I
+	    ></TT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >&lt;&lt;&nbsp;</I
+	      ></TT
+	    ></FONT
+	  ><FONT COLOR = "green"
+	  ><TT
+	    ><I
+	      >&quot;My&nbsp;Haskell&nbsp;Home&nbsp;Page&quot;</I
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;</TT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >+++&nbsp;</I
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >body&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >!&nbsp;</I
+	      ></TT
+	    ></FONT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >[</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >bgcolor&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "green"
+	  ><TT
+	    ><I
+	      >&quot;#aaff88&quot;</I
+	      ></TT
+	    ></FONT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >]&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >&lt;&lt;&nbsp;</I
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >theBody</I
+	    ></TT
+	  ><BR
+	  ></FONT
+	></TD
+      ></TR
+    ></TABLE
+  ><BR
+  >
+
+The definition of htmlPage reads: First we have a header, which
+contains a title, which contain the text "My Haskell Home Page". After
+this, we have a body, with attribute bgcolor set to #aaff88, and this
+body contains the Html defined by theBody. Don't worry about the type
+of things right now, just try get a feel for what the combinators look
+like.
+<TABLE BORDER = "0" CELLSPACING = "0" CELLPADDING = "5" BGCOLOR = "#88ffff" WIDTH = "100%"
+  ><TR
+    ><TD
+      ><FONT SIZE = "+1"
+	><TT
+	  ><I
+	    >theBody&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >::&nbsp;[</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >Html</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >]</B
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ><TT
+	  ><I
+	    >theBody&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >=</B
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><TT
+	  ><I
+	    >table&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >!&nbsp;</I
+	      ></TT
+	    ></FONT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >[</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >border&nbsp;0</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >]&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >&lt;&lt;&nbsp;</I
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >tableContents</I
+	    ></TT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;</TT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >+++&nbsp;</I
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >br</I
+	    ></TT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;</TT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >+++&nbsp;</I
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >p&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >&lt;&lt;&nbsp;</I
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >message</I
+	    ></TT
+	  ><BR
+	  ><TT
+	  ><I
+	    >message&nbsp;</I
+	    ></TT
+	  ><BR
+	  ><TT
+	  >&nbsp;</TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >=&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><FONT COLOR = "green"
+	  ><TT
+	    ><I
+	      >&quot;Haskell&nbsp;is&nbsp;a&nbsp;general&nbsp;purpose,&nbsp;purely&nbsp;functional&nbsp;programming&nbsp;language.&quot;</I
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ></FONT
+	></TD
+      ></TR
+    ></TABLE
+  ><BR
+  >
+
+<P
+  > This reads: the body is a table (with a border), the contents of
+the table are defined by <FONT SIZE = "+1"
+    ><B
+      ><TT
+	>tableContents</TT
+	></B
+      ></FONT
+    >. This is followed by a
+br (an explicit line break), and a paragraph containing a message.</P
+  >
+
+<P
+  > Now need to define the tableContents. For this we use our special
+table combinators.</P
+  >
+<TABLE BORDER = "0" CELLSPACING = "0" CELLPADDING = "5" BGCOLOR = "#88ffff" WIDTH = "100%"
+  ><TR
+    ><TD
+      ><FONT SIZE = "+1"
+	><TT
+	  ><I
+	    >tableContents&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >::&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >HtmlTable</I
+	    ></TT
+	  ><BR
+	  ><TT
+	  ><I
+	    >tableContents&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >=&nbsp;(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >haskell&nbsp;`above`&nbsp;purely</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >)&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >`beside`&nbsp;lambda</I
+	    ></TT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><FONT COLOR = "red"
+	  ><TT
+	    ><U
+	      ><B
+		>where</B
+		></U
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><TT
+	  ><I
+	    >haskell&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >=&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >td&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >!&nbsp;</I
+	      ></TT
+	    ></FONT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >[</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >align&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "green"
+	  ><TT
+	    ><I
+	      >&quot;center&quot;</I
+	      ></TT
+	    ></FONT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >]</B
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >&lt;&lt;&nbsp;</I
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >font&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >!</I
+	      ></TT
+	    ></FONT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >[</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >size&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "green"
+	  ><TT
+	    ><I
+	      >&quot;7&quot;</I
+	      ></TT
+	    ></FONT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >,</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >face&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "green"
+	  ><TT
+	    ><I
+	      >&quot;Arial&nbsp;Black&quot;</I
+	      ></TT
+	    ></FONT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >]&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >&lt;&lt;&nbsp;</I
+	      ></TT
+	    ></FONT
+	  ><FONT COLOR = "green"
+	  ><TT
+	    ><I
+	      >&quot;Haskell&quot;</I
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><TT
+	  ><I
+	    >purely&nbsp;&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >=&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >td&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >&lt;&lt;&nbsp;</I
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >font&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >!&nbsp;</I
+	      ></TT
+	    ></FONT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >[</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >size&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "green"
+	  ><TT
+	    ><I
+	      >&quot;6&quot;</I
+	      ></TT
+	    ></FONT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >]&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >&lt;&lt;&nbsp;</I
+	      ></TT
+	    ></FONT
+	  ><FONT COLOR = "green"
+	  ><TT
+	    ><I
+	      >&quot;A&nbsp;Purely&nbsp;Functional&nbsp;Language&quot;</I
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ><TT
+	  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TT
+	  ><TT
+	  ><I
+	    >lambda&nbsp;&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >=&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >td&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >&lt;&lt;&nbsp;</I
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >image&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "blue"
+	  ><TT
+	    ><I
+	      >!&nbsp;</I
+	      ></TT
+	    ></FONT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >[</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >src&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "green"
+	  ><TT
+	    ><I
+	      >&quot;lambda.gif&quot;</I
+	      ></TT
+	    ></FONT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >]</B
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ></FONT
+	></TD
+      ></TR
+    ></TABLE
+  ><BR
+  >
+
+<P
+  >
+This produces a table of cells, which nest like this:
+</P
+  >
+<TABLE BORDER = "1"
+  >
+  <TR
+    >
+    <TD
+      >
+	haskell
+    </TD
+      >
+    <TD ROWSPAN = "2"
+      >
+	lambda
+    </TD
+      >
+  </TR
+    >
+  <TR
+    >
+    <TD
+      >
+	purely
+    </TD
+      >
+  </TR
+    >
+</TABLE
+  >
+
+<P
+  >
+Even though the lambda box sits over two rows, the
+semantics of above and beside handle this correctly.
+</P
+  >
+
+Now we can render our HTML page.
+<TABLE BORDER = "0" CELLSPACING = "0" CELLPADDING = "5" BGCOLOR = "#88ffff" WIDTH = "100%"
+  ><TR
+    ><TD
+      ><FONT SIZE = "+1"
+	><TT
+	  ><I
+	    >main&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >=&nbsp;</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >writeFile&nbsp;</I
+	    ></TT
+	  ><FONT COLOR = "green"
+	  ><TT
+	    ><I
+	      >&quot;example.htm&quot;&nbsp;</I
+	      ></TT
+	    ></FONT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >(</B
+	      ></TT
+	    ></FONT
+	  ><TT
+	  ><I
+	    >renderHtml&nbsp;htmlPage</I
+	    ></TT
+	  ><FONT COLOR = "navy"
+	  ><TT
+	    ><B
+	      >)</B
+	      ></TT
+	    ></FONT
+	  ><BR
+	  ></FONT
+	></TD
+      ></TR
+    ></TABLE
+  ><BR
+  >
+</HTML
+>

@@ -1,0 +1,15 @@
+
+<sect1 id="Set">
+  <title><literal>Set</literal></title>
+  <indexterm><primary><literal>Set</literal></primary><secondary>module</secondary></indexterm>
+
+  <para>This module has moved to <ulink url="../libraries/base/Data.Set.html"><literal>Data.Set</literal></ulink> in the
+  hierarchical libraries.</para>
+</sect1>
+
+<!-- Emacs stuff:
+     ;;; Local Variables: ***
+     ;;; mode:.xml ***
+     ;;;.xml-parent-document: ("../../doc/hslibs.xml" "book" "chapter" "sect1") ***
+     ;;; End: ***
+ -->

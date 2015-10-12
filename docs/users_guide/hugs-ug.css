@@ -1,0 +1,54 @@
+BODY {
+	font-family: sans-serif;
+	color: black;
+	background: white
+}
+
+DIV.NAVHEADER, DIV.NAVFOOTER {
+	padding-left: 3px;
+	padding-right: 3px;
+	background: #ddeeff
+}
+DIV.NAVHEADER TD, DIV.NAVFOOTER TD {
+	color: #000099;
+	font-size: 80%
+}
+
+H1, H2, H3, H4, .QUESTION, DIV.NAVHEADER TH {
+	color: #000099
+}
+H1, H2, H3, H4 { font-weight: bold }
+.QUESTION { font-style: italic }
+
+H1.TITLE { font-size: 200% }
+H1 { font-size: 150% }
+H2 { font-size: 130% }
+H3 { font-size: 115% }
+H4 { font-size: 100% }
+
+VAR, .FUNCTION, .SYSTEMITEM {
+	font-family: monospace; font-style: normal
+}
+.COMMAND, .OPTION {
+	font-family: monospace; font-weight: bold
+}
+VAR.REPLACEABLE {
+	font-family: sans-serif; font-style: italic
+}
+
+PRE {
+	font-family: monospace;
+	border-width: 2px;
+	border-style: outset;
+	padding: 0.3em
+}
+
+BLOCKQUOTE.NOTE {
+	border-width: 1px;
+	border-style: solid;
+	margin-right: 0em;
+	padding: 0em 0.3em 0.3em
+}
+
+PRE.SCREEN         { color: #002211; background-color: #F5FDF5 }
+PRE.PROGRAMLISTING { color: #442200; background-color: #FDF5E6 }
