@@ -221,7 +221,7 @@ StgWord64 stg_integerToWord64 (StgInt sa, StgByteArray /* Really: mp_limb_t* */ 
 # if defined(_MSC_VER)
 #  define INLINE extern __inline
 # elif defined(__GNUC__)
-#  define INLINE extern inline
+#  define INLINE static inline
 # else
 #  define INLINE inline
 # endif
@@ -764,7 +764,13 @@ INLINE unsigned int __hscore_get_osver(void) { return _osver; }
 
 /* ToDo: write a feature test that doesn't assume 'environ' to
  *    be in scope at link-time. */
-extern char** environ;
+#ifdef __APPLE__
+#include <crt_externs.h>
+#define environ (*_NSGetEnviron())
+#else
+ extern char **environ;
+#endif
+
 INLINE char **__hscore_environ() { return environ; }
 
 /* lossless conversions between pointers and integral types */
