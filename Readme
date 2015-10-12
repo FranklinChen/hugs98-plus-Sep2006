@@ -1,3 +1,5 @@
+(Note: I am in the process of cleaning up this distribution, taken for now from https://www.haskell.org/hugs/downloads/2006-09/hugs98-plus-Sep2006.tar.gz rather than the abandoned development repo https://github.com/FranklinChen/Hugs)
+
 ------------------------------------------------------------------------------
 __   __ __  __  ____   ___      _________________________________________
 ||   || ||  || ||  || ||__      Hugs 98: Based on the Haskell 98 standard
