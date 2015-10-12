@@ -1,0 +1,7 @@
+language: c
+compiler:
+  - clang
+  - gcc
+script:
+  - ./configure && make
+#  - make check # not yet ready, need the dev test directory
