@@ -223,7 +223,7 @@ StgWord64 stg_integerToWord64 (StgInt sa, StgByteArray /* Really: mp_limb_t* */ 
 # elif defined(__GNUC__)
 #  define INLINE static inline
 # else
-#  define INLINE inline
+#  define INLINE static inline
 # endif
 #endif
 
