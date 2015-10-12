@@ -478,8 +478,7 @@ cmpIntUArray arr1@(UArray l1 u1 _) arr2@(UArray l2 u2 _) =
 
 {-# SPECIALISE 
     showsIArray :: (IArray UArray e, Ix i, Show i, Show e) => 
-		   Int -> UArray i e -> ShowS
-  #-}
+		   Int -> UArray i e -> ShowS #-}
 
 showsIArray :: (IArray a e, Ix i, Show i, Show e) => Int -> a i e -> ShowS
 showsIArray p a =

@@ -404,9 +404,7 @@ runInUnboundThread action = do
 -- ---------------------------------------------------------------------------
 -- More docs
 
-{- $osthreads
-
-      #osthreads# In GHC, threads created by 'forkIO' are lightweight threads, and
+{- $osthreads #osthreads# In GHC, threads created by 'forkIO' are lightweight threads, and
       are managed entirely by the GHC runtime.  Typically Haskell
       threads are an order of magnitude or two more efficient (in
       terms of both time and space) than operating system threads.
