@@ -65,7 +65,7 @@ through_cpp() {
 	cp "$1" $cpp_input
 
 	# gcc-3.3 on MacOS X 10.3 is reported to add #pragma
-	$cpp $cpp_flags $cpp_input | grep -v '^#' | cat -s
+	cpp -traditional-cpp $cpp_flags $cpp_input | grep -v '^#' | cat -s
 }
 
 # internal Hugs modules
@@ -165,7 +165,8 @@ $ffihugs '-i"HsBase.h"' Foreign.Ptr $base_includes \
 
 case $platform in
 Unix)
-	$ffihugs '-i"HsBase.h"' System.Posix.Internals $base_includes
+	$ffihugs '-i"HsBase.h"' System.Posix.Internals $base_includes \
+		$source/base/cbits/dirUtils.c \
 	;;
 Win32)
 	$ffihugs '-i"HsBase.h"' System.Directory $base_includes $base_libs
