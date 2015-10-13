@@ -7,7 +7,7 @@
 # if defined(_MSC_VER)
 #  define INLINE extern __inline
 # else
-#  define INLINE extern inline
+#  define INLINE static inline
 # endif
 #endif
 

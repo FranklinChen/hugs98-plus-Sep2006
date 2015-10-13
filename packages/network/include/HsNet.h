@@ -20,9 +20,9 @@
 # if defined(_MSC_VER)
 #  define INLINE extern __inline
 # elif defined(__GNUC__)
-#  define INLINE extern inline
+#  define INLINE static inline
 # else
-#  define INLINE inline
+#  define INLINE static inline
 # endif
 #endif
 
@@ -89,7 +89,7 @@ extern int   acceptDoProc(void* param);
 #endif
 #endif
 
-#ifdef SO_PEERCRED
+#ifdef HAVE_SYS_UCRED_H
 #include <sys/ucred.h>
 #endif
 

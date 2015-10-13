@@ -11,7 +11,7 @@ AC_C_CONST
 
 dnl ** check for specific header (.h) files that we are interested in
 AC_CHECK_HEADERS([fcntl.h limits.h stdlib.h sys/types.h unistd.h winsock.h])
-AC_CHECK_HEADERS([arpa/inet.h netdb.h netinet/in.h netinet/tcp.h sys/socket.h sys/uio.h sys/un.h])
+AC_CHECK_HEADERS([arpa/inet.h netdb.h netinet/in.h netinet/tcp.h sys/socket.h sys/uio.h sys/un.h sys/ucred.h])
 
 AC_CHECK_FUNCS([readlink symlink])
 

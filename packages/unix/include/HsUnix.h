@@ -84,9 +84,9 @@ extern char **environ;
 
 #ifndef INLINE
 # if defined(__GNUC__)
-#  define INLINE extern inline
+#  define INLINE static inline
 # else
-#  define INLINE inline
+#  define INLINE static inline
 # endif
 #endif
 
