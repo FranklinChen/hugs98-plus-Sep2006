@@ -19,11 +19,14 @@ in the 1990s. Maintenance of it stopped in 2009, three years after the
 final release in 2006.
 
 I have updated the source code of the original 2006 distribution to
-make it build again today, on Mac OS X in particular (I have not
-tested other platforms but would welcome verification or additional
-portability fixes). I did not start with the [development version as of
-2009](https://github.com/FranklinChen/Hugs) because of uncertainty
-about any changes introduced since 2006.
+make it build again today, on Mac OS X in particular.
+
+I am maintaining this repo of Hugs for historical purposes.
+
+I have not tested other platforms but would welcome verification or
+additional portability fixes). I did not start with the
+[development version as of 2009](https://github.com/FranklinChen/Hugs)
+because of uncertainty about any changes introduced since 2006.
 
 I have provided a [Homebrew](http://brew.sh/) formula so that if you
 are on Mac OS X, you can install Hugs as follows:
@@ -43,9 +46,8 @@ successfully.
 
 ## For real life work in Haskell
 
-I am maintaining this repo of Hugs for historic purposes. For real
-life work in Haskell, please use [GHC](https://www.haskell.org/ghc/),
-which comes with
+For real life work in Haskell, please use
+[GHC](https://www.haskell.org/ghc/), which comes with
 
 - a Hugs-inspired interpreter `ghci` that works just like Hugs, except better.
 - an industrial-strength optimizing native compiler `ghc`, which generates code
@@ -56,8 +58,8 @@ comparable to C speed.
 
 I use GHC every day. On Mac OS X, it's very easy to get going with
 using GHC. I recommend using Homebrew to install everything you need
-to get started, including GHC, Cabal, and the great [Stack] tool
-(https://github.com/commercialhaskell/stack).
+to get started, including GHC, Cabal, and the great
+[Stack](https://github.com/commercialhaskell/stack) tool.
 
 ### Installation of GHC
 
