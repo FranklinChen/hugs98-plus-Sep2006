@@ -230,8 +230,6 @@ dnl  warnings caused by the default two-level namespace introduced in version 10
 dnl
 case $HostPlatform in
   *-*-darwin*)
-     CFLAGS="$CFLAGS -no-cpp-precomp"
-     LDFLAGS="$LDFLAGS -flat_namespace"
      ;;
   # As suggested by James B. White III (Trey) <whitejbiii@ornl.gov> (for
   # AIX 4.3.3 & XL C 5.0.2 at least, may need to tweak the pattern match

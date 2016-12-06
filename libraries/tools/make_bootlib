@@ -65,7 +65,7 @@ through_cpp() {
 	cp "$1" $cpp_input
 
 	# gcc-3.3 on MacOS X 10.3 is reported to add #pragma
-	cpp -traditional-cpp -Wno-unicode -Wno-trigraphs -Wno-invalid-pp-token $cpp_flags $cpp_input | grep -v '^#' | cat -s
+	cpp-6 -traditional-cpp -Wno-unicode -Wno-trigraphs -Wno-invalid-pp-token $cpp_flags $cpp_input | grep -v '^#' | cat -s
 }
 
 # internal Hugs modules
