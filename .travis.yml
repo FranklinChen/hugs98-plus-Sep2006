@@ -1,4 +1,9 @@
+sudo: false
 language: objective-c
 script:
   - ./configure && make
 #  - make check # not yet ready, need the dev test directory
+
+branches:
+  except:
+  - macos-lion
