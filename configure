@@ -7293,7 +7293,7 @@ $as_echo "$ac_cv_dll_flags" >&6; }
 
 
 case "$host_os" in
-mingw32|cygwin32)
+darwin|mingw32|cygwin32)
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking if '-shared' builds loadable libraries" >&5
 $as_echo_n "checking if '-shared' builds loadable libraries... " >&6; }
 if ${ac_cv_dll_flags+:} false; then :
@@ -8122,7 +8122,7 @@ $as_echo "$ac_cv_dll_flags" >&6; }
 
 
 cat >>confdefs.h <<_ACEOF
-#define MKDLL_CMD "${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $ac_cv_dll_flags"
+#define MKDLL_CMD "${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -shared $ac_cv_dll_flags"
 _ACEOF
 
 if test "$ac_cv_leading_underscore" = "yes"; then

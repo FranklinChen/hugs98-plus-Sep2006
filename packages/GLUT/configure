@@ -4474,12 +4474,13 @@ done
 
   fp_save_cppflags="$CPPFLAGS"
   CPPFLAGS="$CPPFLAGS $X_CFLAGS"
-  for ac_header in GL/glut.h
+  for ac_header in GL/glut.h glut.h
 do :
-  ac_fn_c_check_header_mongrel "$LINENO" "GL/glut.h" "ac_cv_header_GL_glut_h" "$ac_includes_default"
-if test "x$ac_cv_header_GL_glut_h" = xyes; then :
+  as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
+ac_fn_c_check_header_mongrel "$LINENO" "$ac_header" "$as_ac_Header" "$ac_includes_default"
+if eval test \"x\$"$as_ac_Header"\" = x"yes"; then :
   cat >>confdefs.h <<_ACEOF
-#define HAVE_GL_GLUT_H 1
+#define `$as_echo "HAVE_$ac_header" | $as_tr_cpp` 1
 _ACEOF
 
 fi
@@ -4516,6 +4517,8 @@ else
 #endif
 #if HAVE_GL_GLUT_H
 #include <GL/glut.h>
+#if HAVE_GLUT_H
+#include <glut.h>
 #else
 #include "glut_local.h"
 #endif

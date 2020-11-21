@@ -63,18 +63,24 @@ AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <stdio.h>
 # include <GL/gl.h>
 #elif defined(HAVE_OPENGL_GL_H)
 # include <OpenGL/gl.h>
+#elif defined(HAVE_GL_H)
+# include <gl.h>
 #endif
 
 #if defined(HAVE_AL_AL_H)
 # include <AL/al.h>
 #elif defined(HAVE_OPENAL_AL_H)
 # include <OpenAL/al.h>
+#elif defined(HAVE_AL_H)
+# include <al.h>
 #endif
 
 #if defined(HAVE_AL_ALC_H)
 # include <AL/alc.h>
 #elif defined(HAVE_OPENAL_ALC_H)
 # include <OpenAL/alc.h>
+#elif defined(HAVE_ALC_H)
+# include <alc.h>
 #endif
 
 #if HAVE_SYS_RESOURCE_H
@@ -310,7 +316,7 @@ if test x"$use_quartz_opengl" = xno; then
 
   fp_save_cppflags="$CPPFLAGS"
   CPPFLAGS="$CPPFLAGS $X_CFLAGS"
-  AC_CHECK_HEADERS([GL/glut.h])
+  AC_CHECK_HEADERS([GL/glut.h glut.h])
   CPPFLAGS="$fp_save_cppflags"
 
   # Note 1: On Cygwin with X11, GL/GLU functions use the "normal" calling
@@ -324,6 +330,8 @@ if test x"$use_quartz_opengl" = xno; then
 #endif
 #if HAVE_GL_GLUT_H
 #include <GL/glut.h>
+#if HAVE_GLUT_H
+#include <glut.h>
 #else
 #include "glut_local.h"
 #endif

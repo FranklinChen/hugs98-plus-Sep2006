@@ -3963,8 +3963,8 @@ $as_echo "#define USE_QUARTZ_OPENGL 1" >>confdefs.h
   esac
 fi
 
-GLU_FRAMEWORKS=
-GLUT_FRAMEWORKS=
+GLU_FRAMEWORKS=OpenGL
+GLUT_FRAMEWORKS=GLUT
 if test x"$use_quartz_opengl" = xyes; then
   GLU_FRAMEWORKS=OpenGL
   GLUT_FRAMEWORKS=GLUT
@@ -4441,7 +4441,7 @@ fi
 done
 
 
-for ac_header in GL/gl.h OpenGL/gl.h
+for ac_header in GL/gl.h OpenGL/gl.h gl.h
 do :
   as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
 ac_fn_c_check_header_mongrel "$LINENO" "$ac_header" "$as_ac_Header" "$ac_includes_default"
@@ -4454,7 +4454,7 @@ fi
 
 done
 
-for ac_header in GL/glu.h OpenGL/glu.h
+for ac_header in GL/glu.h OpenGL/glu.h glu.h
 do :
   as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
 ac_fn_c_check_header_mongrel "$LINENO" "$ac_header" "$as_ac_Header" "$ac_includes_default"
@@ -4532,18 +4532,24 @@ else
 # include <GL/gl.h>
 #elif defined(HAVE_OPENGL_GL_H)
 # include <OpenGL/gl.h>
+#elif defined(HAVE_GL_H)
+# include <gl.h>
 #endif
 
 #if defined(HAVE_AL_AL_H)
 # include <AL/al.h>
 #elif defined(HAVE_OPENAL_AL_H)
 # include <OpenAL/al.h>
+#elif defined(HAVE_AL_H)
+# include <al.h>
 #endif
 
 #if defined(HAVE_AL_ALC_H)
 # include <AL/alc.h>
 #elif defined(HAVE_OPENAL_ALC_H)
 # include <OpenAL/alc.h>
+#elif defined(HAVE_ALC_H)
+# include <alc.h>
 #endif
 
 #if HAVE_SYS_RESOURCE_H
@@ -4648,18 +4654,24 @@ else
 # include <GL/gl.h>
 #elif defined(HAVE_OPENGL_GL_H)
 # include <OpenGL/gl.h>
+#elif defined(HAVE_GL_H)
+# include <gl.h>
 #endif
 
 #if defined(HAVE_AL_AL_H)
 # include <AL/al.h>
 #elif defined(HAVE_OPENAL_AL_H)
 # include <OpenAL/al.h>
+#elif defined(HAVE_AL_H)
+# include <al.h>
 #endif
 
 #if defined(HAVE_AL_ALC_H)
 # include <AL/alc.h>
 #elif defined(HAVE_OPENAL_ALC_H)
 # include <OpenAL/alc.h>
+#elif defined(HAVE_ALC_H)
+# include <alc.h>
 #endif
 
 #if HAVE_SYS_RESOURCE_H
@@ -4764,18 +4776,24 @@ else
 # include <GL/gl.h>
 #elif defined(HAVE_OPENGL_GL_H)
 # include <OpenGL/gl.h>
+#elif defined(HAVE_GL_H)
+# include <gl.h>
 #endif
 
 #if defined(HAVE_AL_AL_H)
 # include <AL/al.h>
 #elif defined(HAVE_OPENAL_AL_H)
 # include <OpenAL/al.h>
+#elif defined(HAVE_AL_H)
+# include <al.h>
 #endif
 
 #if defined(HAVE_AL_ALC_H)
 # include <AL/alc.h>
 #elif defined(HAVE_OPENAL_ALC_H)
 # include <OpenAL/alc.h>
+#elif defined(HAVE_ALC_H)
+# include <alc.h>
 #endif
 
 #if HAVE_SYS_RESOURCE_H
@@ -4880,18 +4898,24 @@ else
 # include <GL/gl.h>
 #elif defined(HAVE_OPENGL_GL_H)
 # include <OpenGL/gl.h>
+#elif defined(HAVE_GL_H)
+# include <gl.h>
 #endif
 
 #if defined(HAVE_AL_AL_H)
 # include <AL/al.h>
 #elif defined(HAVE_OPENAL_AL_H)
 # include <OpenAL/al.h>
+#elif defined(HAVE_AL_H)
+# include <al.h>
 #endif
 
 #if defined(HAVE_AL_ALC_H)
 # include <AL/alc.h>
 #elif defined(HAVE_OPENAL_ALC_H)
 # include <OpenAL/alc.h>
+#elif defined(HAVE_ALC_H)
+# include <alc.h>
 #endif
 
 #if HAVE_SYS_RESOURCE_H
@@ -4996,18 +5020,24 @@ else
 # include <GL/gl.h>
 #elif defined(HAVE_OPENGL_GL_H)
 # include <OpenGL/gl.h>
+#elif defined(HAVE_GL_H)
+# include <gl.h>
 #endif
 
 #if defined(HAVE_AL_AL_H)
 # include <AL/al.h>
 #elif defined(HAVE_OPENAL_AL_H)
 # include <OpenAL/al.h>
+#elif defined(HAVE_AL_H)
+# include <al.h>
 #endif
 
 #if defined(HAVE_AL_ALC_H)
 # include <AL/alc.h>
 #elif defined(HAVE_OPENAL_ALC_H)
 # include <OpenAL/alc.h>
+#elif defined(HAVE_ALC_H)
+# include <alc.h>
 #endif
 
 #if HAVE_SYS_RESOURCE_H
@@ -5112,18 +5142,24 @@ else
 # include <GL/gl.h>
 #elif defined(HAVE_OPENGL_GL_H)
 # include <OpenGL/gl.h>
+#elif defined(HAVE_GL_H)
+# include <gl.h>
 #endif
 
 #if defined(HAVE_AL_AL_H)
 # include <AL/al.h>
 #elif defined(HAVE_OPENAL_AL_H)
 # include <OpenAL/al.h>
+#elif defined(HAVE_AL_H)
+# include <al.h>
 #endif
 
 #if defined(HAVE_AL_ALC_H)
 # include <AL/alc.h>
 #elif defined(HAVE_OPENAL_ALC_H)
 # include <OpenAL/alc.h>
+#elif defined(HAVE_ALC_H)
+# include <alc.h>
 #endif
 
 #if HAVE_SYS_RESOURCE_H
@@ -5228,18 +5264,24 @@ else
 # include <GL/gl.h>
 #elif defined(HAVE_OPENGL_GL_H)
 # include <OpenGL/gl.h>
+#elif defined(HAVE_GL_H)
+# include <gl.h>
 #endif
 
 #if defined(HAVE_AL_AL_H)
 # include <AL/al.h>
 #elif defined(HAVE_OPENAL_AL_H)
 # include <OpenAL/al.h>
+#elif defined(HAVE_AL_H)
+# include <al.h>
 #endif
 
 #if defined(HAVE_AL_ALC_H)
 # include <AL/alc.h>
 #elif defined(HAVE_OPENAL_ALC_H)
 # include <OpenAL/alc.h>
+#elif defined(HAVE_ALC_H)
+# include <alc.h>
 #endif
 
 #if HAVE_SYS_RESOURCE_H
@@ -5344,18 +5386,24 @@ else
 # include <GL/gl.h>
 #elif defined(HAVE_OPENGL_GL_H)
 # include <OpenGL/gl.h>
+#elif defined(HAVE_GL_H)
+# include <gl.h>
 #endif
 
 #if defined(HAVE_AL_AL_H)
 # include <AL/al.h>
 #elif defined(HAVE_OPENAL_AL_H)
 # include <OpenAL/al.h>
+#elif defined(HAVE_AL_H)
+# include <al.h>
 #endif
 
 #if defined(HAVE_AL_ALC_H)
 # include <AL/alc.h>
 #elif defined(HAVE_OPENAL_ALC_H)
 # include <OpenAL/alc.h>
+#elif defined(HAVE_ALC_H)
+# include <alc.h>
 #endif
 
 #if HAVE_SYS_RESOURCE_H
@@ -5460,18 +5508,24 @@ else
 # include <GL/gl.h>
 #elif defined(HAVE_OPENGL_GL_H)
 # include <OpenGL/gl.h>
+#elif defined(HAVE_GL_H)
+# include <gl.h>
 #endif
 
 #if defined(HAVE_AL_AL_H)
 # include <AL/al.h>
 #elif defined(HAVE_OPENAL_AL_H)
 # include <OpenAL/al.h>
+#elif defined(HAVE_AL_H)
+# include <al.h>
 #endif
 
 #if defined(HAVE_AL_ALC_H)
 # include <AL/alc.h>
 #elif defined(HAVE_OPENAL_ALC_H)
 # include <OpenAL/alc.h>
+#elif defined(HAVE_ALC_H)
+# include <alc.h>
 #endif
 
 #if HAVE_SYS_RESOURCE_H
@@ -5576,18 +5630,24 @@ else
 # include <GL/gl.h>
 #elif defined(HAVE_OPENGL_GL_H)
 # include <OpenGL/gl.h>
+#elif defined(HAVE_GL_H)
+# include <gl.h>
 #endif
 
 #if defined(HAVE_AL_AL_H)
 # include <AL/al.h>
 #elif defined(HAVE_OPENAL_AL_H)
 # include <OpenAL/al.h>
+#elif defined(HAVE_AL_H)
+# include <al.h>
 #endif
 
 #if defined(HAVE_AL_ALC_H)
 # include <AL/alc.h>
 #elif defined(HAVE_OPENAL_ALC_H)
 # include <OpenAL/alc.h>
+#elif defined(HAVE_ALC_H)
+# include <alc.h>
 #endif
 
 #if HAVE_SYS_RESOURCE_H
@@ -5692,18 +5752,24 @@ else
 # include <GL/gl.h>
 #elif defined(HAVE_OPENGL_GL_H)
 # include <OpenGL/gl.h>
+#elif defined(HAVE_GL_H)
+# include <gl.h>
 #endif
 
 #if defined(HAVE_AL_AL_H)
 # include <AL/al.h>
 #elif defined(HAVE_OPENAL_AL_H)
 # include <OpenAL/al.h>
+#elif defined(HAVE_AL_H)
+# include <al.h>
 #endif
 
 #if defined(HAVE_AL_ALC_H)
 # include <AL/alc.h>
 #elif defined(HAVE_OPENAL_ALC_H)
 # include <OpenAL/alc.h>
+#elif defined(HAVE_ALC_H)
+# include <alc.h>
 #endif
 
 #if HAVE_SYS_RESOURCE_H
@@ -5808,18 +5874,24 @@ else
 # include <GL/gl.h>
 #elif defined(HAVE_OPENGL_GL_H)
 # include <OpenGL/gl.h>
+#elif defined(HAVE_GL_H)
+# include <gl.h>
 #endif
 
 #if defined(HAVE_AL_AL_H)
 # include <AL/al.h>
 #elif defined(HAVE_OPENAL_AL_H)
 # include <OpenAL/al.h>
+#elif defined(HAVE_AL_H)
+# include <al.h>
 #endif
 
 #if defined(HAVE_AL_ALC_H)
 # include <AL/alc.h>
 #elif defined(HAVE_OPENAL_ALC_H)
 # include <OpenAL/alc.h>
+#elif defined(HAVE_ALC_H)
+# include <alc.h>
 #endif
 
 #if HAVE_SYS_RESOURCE_H
@@ -5924,18 +5996,24 @@ else
 # include <GL/gl.h>
 #elif defined(HAVE_OPENGL_GL_H)
 # include <OpenGL/gl.h>
+#elif defined(HAVE_GL_H)
+# include <gl.h>
 #endif
 
 #if defined(HAVE_AL_AL_H)
 # include <AL/al.h>
 #elif defined(HAVE_OPENAL_AL_H)
 # include <OpenAL/al.h>
+#elif defined(HAVE_AL_H)
+# include <al.h>
 #endif
 
 #if defined(HAVE_AL_ALC_H)
 # include <AL/alc.h>
 #elif defined(HAVE_OPENAL_ALC_H)
 # include <OpenAL/alc.h>
+#elif defined(HAVE_ALC_H)
+# include <alc.h>
 #endif
 
 #if HAVE_SYS_RESOURCE_H
@@ -6040,18 +6118,24 @@ else
 # include <GL/gl.h>
 #elif defined(HAVE_OPENGL_GL_H)
 # include <OpenGL/gl.h>
+#elif defined(HAVE_GL_H)
+# include <gl.h>
 #endif
 
 #if defined(HAVE_AL_AL_H)
 # include <AL/al.h>
 #elif defined(HAVE_OPENAL_AL_H)
 # include <OpenAL/al.h>
+#elif defined(HAVE_AL_H)
+# include <al.h>
 #endif
 
 #if defined(HAVE_AL_ALC_H)
 # include <AL/alc.h>
 #elif defined(HAVE_OPENAL_ALC_H)
 # include <OpenAL/alc.h>
+#elif defined(HAVE_ALC_H)
+# include <alc.h>
 #endif
 
 #if HAVE_SYS_RESOURCE_H

@@ -273,6 +273,9 @@
 /* The value of AL_VERSION. */
 #undef CONST_AL_VERSION
 
+/* Define to 1 if you have the <alc.h> header file. */
+#undef HAVE_ALC_H
+
 /* Define to 1 if you have the <AL/alc.h> header file. */
 #undef HAVE_AL_ALC_H
 
@@ -281,6 +284,9 @@
 
 /* Define to 1 if you have the <AL/al.h> header file. */
 #undef HAVE_AL_AL_H
+
+/* Define to 1 if you have the <al.h> header file. */
+#undef HAVE_AL_H
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H

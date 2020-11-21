@@ -72,6 +72,12 @@ packages/unix/System/Posix/Time.hs
 packages/unix/System/Posix/Unistd.hs
 packages/unix/System/Posix/User.hs
 packages/unix/include/HsUnixConfig.h
+packages/X11/Graphics/X11/Types.hs
+packages/X11/Graphics/X11/Xlib/Atom.hs
+packages/X11/Graphics/X11/Xlib/Event.hs
+packages/X11/Graphics/X11/Xlib/Font.hs
+packages/X11/Graphics/X11/Xlib/Misc.hs
+packages/X11/Graphics/X11/Xlib/Types.hs
 src/ffihugs
 src/hugs
 src/runhugs

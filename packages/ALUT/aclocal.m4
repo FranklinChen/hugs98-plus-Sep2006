@@ -77,8 +77,8 @@ AC_DEFUN([FP_CHECK_ALUT],
 ALUT_CFLAGS=
 case $target_os in
 darwin*)
-  ALUT_LIBS=
-  ALUT_FRAMEWORKS=ALUT
+  ALUT_LIBS=-lalut
+  ALUT_FRAMEWORKS=
   ;;
 *)
   AL_LIBS=no

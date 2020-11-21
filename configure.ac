@@ -663,7 +663,7 @@ dnl Try the win32 way
 dnl gcc-mingw, gcc-cygwin don't want to be given -fPIC,
 dnl but this test fouls up gcc-linux on some architectures.
 case "$host_os" in
-mingw32|cygwin32)
+darwin|mingw32|cygwin32)
   HUGS_TRY_DYNLINK([-shared]) ;;
 esac
 
@@ -695,7 +695,7 @@ dnl Try the HPUX flags
 dnl HUGS_TRY_DYNLINK([-Aa +z])             
 
 AC_DEFINE_UNQUOTED(MKDLL_CMD,
-  ["${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS $ac_cv_dll_flags"],
+  ["${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -shared $ac_cv_dll_flags"],
   [C compiler invocation use to build a dynamically loadable library.
    Typical value: "gcc -shared".  Must evaluate to a literal C string.])
 if test "$ac_cv_leading_underscore" = "yes"; then

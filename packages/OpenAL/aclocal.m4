@@ -57,18 +57,24 @@ AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <stdio.h>
 # include <GL/gl.h>
 #elif defined(HAVE_OPENGL_GL_H)
 # include <OpenGL/gl.h>
+#elif defined(HAVE_GL_H)
+# include <gl.h>
 #endif
 
 #if defined(HAVE_AL_AL_H)
 # include <AL/al.h>
 #elif defined(HAVE_OPENAL_AL_H)
 # include <OpenAL/al.h>
+#elif defined(HAVE_AL_H)
+# include <al.h>
 #endif
 
 #if defined(HAVE_AL_ALC_H)
 # include <AL/alc.h>
 #elif defined(HAVE_OPENAL_ALC_H)
 # include <OpenAL/alc.h>
+#elif defined(HAVE_ALC_H)
+# include <alc.h>
 #endif
 
 #if HAVE_SYS_RESOURCE_H
@@ -176,7 +182,7 @@ AC_DEFUN([FP_ARG_OPENAL],
 AC_DEFUN([FP_HEADER_AL],
 [if test -z "$fp_found_al_header"; then
   fp_found_al_header=no
-  AC_CHECK_HEADERS([AL/al.h OpenAL/al.h], [fp_found_al_header=yes; break])
+  AC_CHECK_HEADERS([AL/al.h OpenAL/al.h al.h], [fp_found_al_header=yes; break])
 fi
 ]) # FP_HEADER_AL
 
@@ -188,7 +194,7 @@ fi
 AC_DEFUN([FP_HEADER_ALC],
 [if test -z "$fp_found_alc_header"; then
   fp_found_alc_header=no
-  AC_CHECK_HEADERS([AL/alc.h OpenAL/alc.h], [fp_found_alc_header=yes; break])
+  AC_CHECK_HEADERS([AL/alc.h OpenAL/alc.h alc.h], [fp_found_alc_header=yes; break])
 fi
 ]) # FP_HEADER_ALC
 
@@ -205,6 +211,8 @@ AC_CACHE_CHECK([whether alcCloseDevice returns void],
 #include <AL/alc.h>
 #elif defined(HAVE_OPENAL_ALC_H)
 #include <OpenAL/alc.h>
+#elif defined(HAVE_ALC_H)
+#include <alc.h>
 #endif
 ],
  [[int x = (int)alcCloseDevice(NULL);]])],
@@ -228,6 +236,8 @@ AC_CACHE_CHECK([whether alcMakeContextCurrent returns void],
 #include <AL/alc.h>
 #elif defined(HAVE_OPENAL_ALC_H)
 #include <OpenAL/alc.h>
+#elif defined(HAVE_ALC_H)
+#include <alc.h>
 #endif
 ],
  [[int x = (int)alcMakeContextCurrent(NULL);]])],
@@ -251,6 +261,8 @@ AC_CACHE_CHECK([whether alcProcessContext returns void],
 #include <AL/alc.h>
 #elif defined(HAVE_OPENAL_ALC_H)
 #include <OpenAL/alc.h>
+#elif defined(HAVE_ALC_H)
+#include <alc.h>
 #endif
 ],
  [[int x = (int)alcProcessContext(NULL);]])],
@@ -274,6 +286,8 @@ AC_CACHE_CHECK([whether alcDestroyContext returns void],
 #include <AL/alc.h>
 #elif defined(HAVE_OPENAL_ALC_H)
 #include <OpenAL/alc.h>
+#elif defined(HAVE_ALC_H)
+#include <alc.h>
 #endif
 ],
  [[int x = (int)alcDestroyContext(NULL);]])],

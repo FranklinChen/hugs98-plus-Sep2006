@@ -29,8 +29,8 @@ gl_found_header=no
 glu_found_header=no
 fp_save_cppflags="$CPPFLAGS"
 CPPFLAGS="$CPPFLAGS $X_CFLAGS"
-AC_CHECK_HEADERS([GL/gl.h OpenGL/gl.h], [gl_found_header=yes])
-AC_CHECK_HEADERS([GL/glu.h OpenGL/glu.h], [glu_found_header=yes])
+AC_CHECK_HEADERS([GL/gl.h OpenGL/gl.h gl.h], [gl_found_header=yes])
+AC_CHECK_HEADERS([GL/glu.h OpenGL/glu.h glu.h], [glu_found_header=yes])
 CPPFLAGS="$fp_save_cppflags"
 
 if test x"$gl_found_header" = xno || test x"$glu_found_header" = xno; then

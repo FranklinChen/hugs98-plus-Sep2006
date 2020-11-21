@@ -3190,8 +3190,8 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 ALUT_CFLAGS=
 case $target_os in
 darwin*)
-  ALUT_LIBS=
-  ALUT_FRAMEWORKS=ALUT
+  ALUT_LIBS=-lalut
+  ALUT_FRAMEWORKS=
   ;;
 *)
   AL_LIBS=no
