@@ -48,7 +48,7 @@ $ brew upgrade
 $ brew install readline
 
 # If you want to use X11 and ALUT:
-$ brew install xquartz freealut
+$ brew install libx11 freealut
 $ export LDFLAGS="-L/opt/X11/lib -L/usr/local/opt/freealut/lib"
 $ export CPPFLAGS="-I/opt/X11/include -I/usr/local/opt/freealut/include"
 
