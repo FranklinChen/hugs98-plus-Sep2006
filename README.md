@@ -28,6 +28,8 @@ additional portability fixes). I did not start with the
 [development version as of 2009](https://github.com/FranklinChen/Hugs)
 because of uncertainty about any changes introduced since 2006.
 
+## Easy installation
+
 I have provided a [Homebrew](http://brew.sh/) formula so that if you
 are on Mac OS X, you can install Hugs as follows:
 
@@ -37,12 +39,25 @@ $ brew install FranklinChen/tap/hugs --HEAD
 
 (If you are curious, you can look at my Homebrew tap repo [here](https://github.com/FranklinChen/homebrew-tap).)
 
-## Included packages
+## Alternative: manual installation
 
-The 2006 source distribution of Hugs included a variety of packages,
-and I have attempted to make most of them build. Not everything has
-successfully built. `X11`, `GLUT`, `OpenAL`, `ALUT` did not build
-successfully.
+Or, to install by yourself from this repo:
+
+```console
+$ brew upgrade
+$ brew install readline
+
+# If you want to use X11 and ALUT:
+$ brew install xquartz freealut
+$ export LDFLAGS="-L/opt/X11/lib -L/usr/local/opt/freealut/lib"
+$ export CPPFLAGS="-I/opt/X11/include -I/usr/local/opt/freealut/include"
+
+$ export CFLAGS="-Wno-error=implicit-function-declaration"
+
+$ ./configure
+$ make
+$ make install
+```
 
 ## For real life work in Haskell
 
@@ -54,15 +69,16 @@ For real life work in Haskell, please use
 running hundreds of times faster than interpreted `ghci` and
 comparable to C speed.
 - access to a huge ecosystem of libraries called
-[Hackage](http://hackage.haskell.org/).
+[Hackage](https://hackage.haskell.org/).
 
-I use GHC every day. On Mac OS X, it's very easy to get going with
+On Mac OS X, it's very easy to get going with
 using GHC. I recommend using Homebrew to install everything you need
-to get started, including GHC, Cabal, and the great
-[Stack](https://github.com/commercialhaskell/stack) tool.
+to get started, whether you choose to use GHC and Cabal, or [Stack](https://docs.haskellstack.org/en/stable/README/), which is what I prefer to use.
 
-### Installation of GHC
+### Possible installations of your choice
 
 ```console
-$ brew install ghc cabal-install haskell-stack
+$ brew install ghc
+$ brew install cabal-install
+$ brew install  haskell-stack
 ```

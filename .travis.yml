@@ -1,7 +1,13 @@
-sudo: false
-language: objective-c
+os: osx
+os_image:
+  - xcode12.2
+env:
+  - CFLAGS="-Wno-error=implicit-function-declaration" LDFLAGS="-L/opt/X11/lib -L/usr/local/opt/freealut/lib" CPPFLAGS="-I/opt/X11/include -I/usr/local/opt/freealut/include"
 script:
-  - ./configure && make
+  - brew install libx11
+  - brew install freealut
+  - ./configure
+  - make
 #  - make check # not yet ready, need the dev test directory
 
 branches:
