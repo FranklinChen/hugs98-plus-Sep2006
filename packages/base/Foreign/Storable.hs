@@ -38,6 +38,7 @@ import Control.Monad		( liftM )
 
 #include "MachDeps.h"
 #include "HsBaseConfig.h"
+#include "CTypes.h"
 
 #ifdef __GLASGOW_HASKELL__
 import GHC.Storable
@@ -61,6 +62,10 @@ import Foreign.StablePtr
 import Hugs.Prelude
 import Hugs.Ptr
 import Hugs.Storable
+#endif
+
+#ifndef HTYPE_INT
+#define HTYPE_INT Int32
 #endif
 
 {- |
