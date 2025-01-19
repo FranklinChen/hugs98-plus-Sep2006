@@ -6,28 +6,28 @@
 /* Define to 1 if you have the <fcntl.h> header file. */
 #undef HAVE_FCNTL_H
 
-/* Define to 1 if you have the `getgrent' function. */
+/* Define to 1 if you have the 'getgrent' function. */
 #undef HAVE_GETGRENT
 
-/* Define to 1 if you have the `getgrgid_r' function. */
+/* Define to 1 if you have the 'getgrgid_r' function. */
 #undef HAVE_GETGRGID_R
 
-/* Define to 1 if you have the `getgrnam_r' function. */
+/* Define to 1 if you have the 'getgrnam_r' function. */
 #undef HAVE_GETGRNAM_R
 
-/* Define to 1 if you have the `getpwent' function. */
+/* Define to 1 if you have the 'getpwent' function. */
 #undef HAVE_GETPWENT
 
-/* Define to 1 if you have the `getpwnam' function. */
+/* Define to 1 if you have the 'getpwnam' function. */
 #undef HAVE_GETPWNAM
 
-/* Define to 1 if you have the `getpwnam_r' function. */
+/* Define to 1 if you have the 'getpwnam_r' function. */
 #undef HAVE_GETPWNAM_R
 
-/* Define to 1 if you have the `getpwuid' function. */
+/* Define to 1 if you have the 'getpwuid' function. */
 #undef HAVE_GETPWUID
 
-/* Define to 1 if you have the `getpwuid_r' function. */
+/* Define to 1 if you have the 'getpwuid_r' function. */
 #undef HAVE_GETPWUID_R
 
 /* Define to 1 if you have the <grp.h> header file. */
@@ -36,14 +36,11 @@
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
-/* Define to 1 if you have the `lchown' function. */
+/* Define to 1 if you have the 'lchown' function. */
 #undef HAVE_LCHOWN
 
 /* Define to 1 if you have the <limits.h> header file. */
 #undef HAVE_LIMITS_H
-
-/* Define to 1 if you have the <memory.h> header file. */
-#undef HAVE_MEMORY_H
 
 /* Define to 1 if you have the <pwd.h> header file. */
 #undef HAVE_PWD_H
@@ -69,7 +66,7 @@
 /* Define to 1 if <unistd.h> defines _SC_GETPW_R_SIZE_MAX. */
 #undef HAVE_SC_GETPW_R_SIZE_MAX
 
-/* Define to 1 if you have the `setenv' function. */
+/* Define to 1 if you have the 'setenv' function. */
 #undef HAVE_SETENV
 
 /* Define to 1 if you have the <signal.h> header file. */
@@ -77,6 +74,9 @@
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdio.h> header file. */
+#undef HAVE_STDIO_H
 
 /* Define to 1 if you have the <stdlib.h> header file. */
 #undef HAVE_STDLIB_H
@@ -87,7 +87,7 @@
 /* Define to 1 if you have the <string.h> header file. */
 #undef HAVE_STRING_H
 
-/* Define to 1 if you have the `sysconf' function. */
+/* Define to 1 if you have the 'sysconf' function. */
 #undef HAVE_SYSCONF
 
 /* Define to 1 if you have the <sys/resource.h> header file. */
@@ -120,7 +120,7 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 
-/* Define to 1 if you have the `unsetenv' function. */
+/* Define to 1 if you have the 'unsetenv' function. */
 #undef HAVE_UNSETENV
 
 /* Define to 1 if you have the <utime.h> header file. */
@@ -144,11 +144,13 @@
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION
 
-/* Define to 1 if you have the ANSI C header files. */
+/* Define to 1 if all of the C89 standard headers exist (not just the ones
+   required in a freestanding environment). This macro is provided for
+   backward compatibility; new code need not use it. */
 #undef STDC_HEADERS
 
 /* Define if the system headers declare usleep to return void. */
 #undef USLEEP_RETURNS_VOID
 
-/* Define to empty if `const' does not conform to ANSI C. */
+/* Define to empty if 'const' does not conform to ANSI C. */
 #undef const
