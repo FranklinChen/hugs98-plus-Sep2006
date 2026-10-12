@@ -131,8 +131,9 @@ AC_CACHE_VAL(ac_cv_dll_flags,
 int x = 0;    /* global */
 int y;        /* common */
 static int z; /* static */
-static int test2() { return (test() + x + y + z); }
-int test() { return test2(); }
+int test(void);
+static int test2(void) { return (test() + x + y + z); }
+int test(void) { return test2(); }
 EOF
 
   ac_mkdll='${CC-cc} $1 conftest_dl.c -o conftest_dl.so 1>&AC_FD_CC'
@@ -142,6 +143,7 @@ EOF
 
     cat > conftest.c << EOF
 #include "confdefs.h"
+#include <stdlib.h>
 #if PROTOTYPES       /* To enable use of prototypes whenever possible */
 #define Args(x) x
 #else
@@ -162,7 +164,7 @@ EOF
 #include <stdio.h>
 #include <dlfcn.h>
 
-main()
+int main(void)
 {
     void *instance;
     void *sym;
@@ -183,7 +185,7 @@ main()
 
 #include <dl.h>
 
-main()
+int main(void)
 {
     shl_t instance;
     void* r;
@@ -203,7 +205,7 @@ main()
 #include <stdio.h>
 #include <mach-o/dyld.h>
 
-main()
+int main(void)
 {
     NSObjectFileImage ofile;
     NSModule handle = NULL;
@@ -229,7 +231,7 @@ main()
 
 #include <windows.h>
 
-main()
+int main(void)
 {
     HINSTANCE instance;
     void* sym;
@@ -248,7 +250,7 @@ main()
 
 #else
 
-main()
+int main(void)
 {
   exit(CANTRUN);
 }
