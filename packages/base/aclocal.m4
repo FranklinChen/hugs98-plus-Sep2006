@@ -88,6 +88,7 @@ AC_CACHE_VAL(AC_CV_NAME,
 fp_check_htype_save_cppflags="$CPPFLAGS"
 CPPFLAGS="$CPPFLAGS $X_CFLAGS"
 AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <stdio.h>
+#include <stdlib.h>
 #include <stddef.h>
 
 #if HAVE_SYS_TYPES_H
@@ -158,7 +159,7 @@ AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <stdio.h>
 
 typedef $1 testing;
 
-main() {
+int main(void) {
   FILE *f=fopen("conftestval", "w");
   if (!f) exit(1);
   if (((testing)((int)((testing)1.4))) == ((testing)1.4)) {
@@ -198,10 +199,10 @@ AC_DEFUN([FP_READDIR_EOF_ERRNO],
 [AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <dirent.h>
 #include <stdio.h>
 #include <errno.h>
+#include <sys/stat.h>
+#include <unistd.h>
 int
-main(argc, argv)
-int argc;
-char **argv;
+main(void)
 {
   FILE *f=fopen("conftestval", "w");
 #if defined(__MINGW32__)

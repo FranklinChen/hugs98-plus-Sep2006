@@ -10,6 +10,8 @@
 
 #include <stdlib.h>
 
+#include "HsFFI.h"
+
 #include <X11/X.h>
 #include <X11/X.h>
 #include <X11/Xlib.h>
@@ -25,6 +27,8 @@
  * that comes with Xlib.
  */
 extern int defaultErrorHandler(Display *, XErrorEvent *);
+
+extern HsFunPtr setErrorHandler(HsFunPtr handler);
 
 /* Used in waitForEvent */
 #include <sys/select.h>

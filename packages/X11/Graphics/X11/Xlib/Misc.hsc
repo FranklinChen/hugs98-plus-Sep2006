@@ -461,7 +461,7 @@ setDefaultErrorHandler = do
 
 -- %fun XSetIOErrorHandler :: IOErrorHandler -> IO IOErrorHandler
 
-foreign import ccall unsafe "HsXlib.h XSetErrorHandler"
+foreign import ccall unsafe "HsXlib.h setErrorHandler"
 	xSetErrorHandler   :: ErrorHandler   -> IO ErrorHandler
 
 -- XGetErrorDatabaseText omitted

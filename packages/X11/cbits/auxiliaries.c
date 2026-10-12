@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <X11/X.h>
 #include <X11/Xlib.h>
+#include "HsFFI.h"
 
 int defaultErrorHandler(Display *d, XErrorEvent *ev)
 {
@@ -8,4 +9,9 @@ int defaultErrorHandler(Display *d, XErrorEvent *ev)
     XGetErrorText(d,ev->error_code,buffer,1000);
     printf("Error: %s\n", buffer);
     return 0;
+}
+
+HsFunPtr setErrorHandler(HsFunPtr handler)
+{
+    return (HsFunPtr)XSetErrorHandler((XErrorHandler)handler);
 }

@@ -235,7 +235,7 @@ ppHsc2hs bi lbi
   where pp n = standardPP n (hcDefines (compiler lbi)
                          ++ ["-I" ++ dir | dir <- includeDirs bi]
                          ++ [opt | opt@('-':c:_) <- ccOptions bi, c == 'D' || c == 'I']
-                         ++ ["--cflag=" ++ opt | opt@('-':'U':_) <- ccOptions bi]
+                         ++ ["--cflag=" ++ opt | opt@('-':c:_) <- ccOptions bi, c == 'D' || c == 'U']
                          ++ ["--lflag=-L" ++ dir | dir <- extraLibDirs bi]
                          ++ ["--lflag=-l" ++ lib | lib <- extraLibs bi])
 

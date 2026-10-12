@@ -22,7 +22,7 @@ instance Storable CTimeval where
 		pokeElemOff (castPtr p) 0 s
 		pokeElemOff (castPtr p) 1 mus
 
-foreign import ccall unsafe "time.h gettimeofday" gettimeofday :: Ptr CTimeval -> Ptr () -> IO CInt
+foreign import ccall unsafe "sys/time.h gettimeofday" gettimeofday :: Ptr CTimeval -> Ptr () -> IO CInt
 
 -- | Get the current POSIX time from the system clock.
 getCTimeval :: IO CTimeval
