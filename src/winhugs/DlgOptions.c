@@ -69,7 +69,7 @@ int CALLBACK ListAllFonts(CONST LOGFONT* lpelfe, CONST TEXTMETRIC* lpntme, DWORD
 }
 
 int TwipToPoint(x){return x / 20;}
-int PointToTwip(x){return x * 20;}
+int PointToTwip(int x){return x * 20;}
 
 void CalculateFont(HWND hDlg, CHARFORMAT* cf)
 {

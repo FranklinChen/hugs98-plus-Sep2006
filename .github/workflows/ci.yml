@@ -1,0 +1,133 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unix:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Linux x86_64 GCC 14 (shipped configure)
+            os: ubuntu-24.04
+            cc: gcc-14
+            regenerate: 'no'
+          - name: Linux x86_64 Clang (regenerated configure)
+            os: ubuntu-24.04
+            cc: clang
+            regenerate: 'yes'
+          - name: Linux ARM64 GCC 14
+            os: ubuntu-24.04-arm
+            cc: gcc-14
+            regenerate: 'yes'
+          - name: macOS Intel
+            os: macos-15-intel
+            cc: clang
+            regenerate: 'no'
+          - name: macOS Apple Silicon
+            os: macos-26
+            cc: clang
+            regenerate: 'yes'
+          - name: Linux graphics and audio
+            os: ubuntu-24.04
+            cc: gcc-14
+            regenerate: 'yes'
+            graphics: 'yes'
+    env:
+      CC: ${{ matrix.cc }}
+      REGENERATE_CONFIGURE: ${{ matrix.regenerate }}
+      CI_GRAPHICS: ${{ matrix.graphics }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Install Linux dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-14 clang autoconf make bison libreadline-dev
+          if [ "$CI_GRAPHICS" = yes ]; then
+            sudo apt-get install -y libx11-dev libgl-dev libglu1-mesa-dev freeglut3-dev libopenal-dev libalut-dev
+          fi
+      - name: Install macOS dependencies
+        if: runner.os == 'macOS'
+        run: brew install autoconf readline
+      - name: Build, test, and install
+        run: bash tools/ci/build.sh
+      - name: Save diagnostics
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: logs-${{ matrix.os }}-${{ matrix.cc }}-${{ matrix.graphics || 'core' }}
+          path: |
+            ci-logs/
+            config.log
+            packages/*/config.log
+          retention-days: 14
+
+  debian:
+    name: Debian 13 GCC 14
+    runs-on: ubuntu-24.04
+    container: debian:13
+    timeout-minutes: 40
+    steps:
+      - name: Install build dependencies
+        run: apt-get update && apt-get install -y git ca-certificates build-essential autoconf bison libreadline-dev python3
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Build, test, and install
+        env:
+          REGENERATE_CONFIGURE: 'yes'
+        run: bash tools/ci/build.sh
+      - name: Save diagnostics
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: logs-debian-13
+          path: |
+            ci-logs/
+            config.log
+            packages/*/config.log
+          retention-days: 14
+
+  windows:
+    name: Native Windows and WinHugs (x86)
+    runs-on: windows-2022
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: msys2/setup-msys2@ec48f7c5447b3140e2b088413ae3a55687bccb6e # v2
+        with:
+          msystem: MINGW32
+          update: true
+          install: >-
+            make autoconf bison
+            mingw-w64-i686-gcc mingw-w64-i686-python
+      - name: Build native executables, libraries, and WinHugs
+        shell: msys2 {0}
+        env:
+          REGENERATE_CONFIGURE: 'yes'
+        run: bash tools/ci/build.sh
+      - name: Exercise WinHugs GUI
+        shell: pwsh
+        run: ./tools/ci/winhugs-smoke.ps1
+      - name: Save diagnostics
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: logs-windows-x86
+          path: |
+            ci-logs/
+            config.log
+            packages/*/config.log
+          retention-days: 14

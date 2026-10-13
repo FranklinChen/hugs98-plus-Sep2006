@@ -1,6 +1,6 @@
 # [Hugs](https://www.haskell.org/hugs/), a Haskell98 implementation
 
-[![Build Status](https://travis-ci.org/FranklinChen/hugs98-plus-Sep2006.png)](https://travis-ci.org/FranklinChen/hugs98-plus-Sep2006)
+[![CI](https://github.com/FranklinChen/hugs98-plus-Sep2006/actions/workflows/ci.yml/badge.svg)](https://github.com/FranklinChen/hugs98-plus-Sep2006/actions/workflows/ci.yml)
 
 ```text
 ------------------------------------------------------------------------------
@@ -52,12 +52,40 @@ $ brew install libx11 freealut
 $ export LDFLAGS="-L/opt/X11/lib -L$(brew --prefix)/opt/freealut/lib"
 $ export CPPFLAGS="-I/opt/X11/include -I$(brew --prefix)/opt/freealut/include"
 
-$ export CFLAGS="-Wno-error=implicit-function-declaration -Wno-error=implicit-int"
+$ export CFLAGS="-std=gnu17 -Wno-error=implicit-function-declaration -Wno-error=implicit-int"
 
 $ ./configure
 $ make
 $ make install
 ```
+
+## Continuous integration and Windows development
+
+GitHub Actions is configured for Linux x86_64 (GCC and Clang), Linux ARM64,
+Debian 13, macOS Intel and Apple Silicon, and native Windows x86. Jobs exercise
+both shipped and regenerated configure scripts, interpreter and library smoke
+tests, cpphs fixtures, and installation into a temporary prefix. A Linux job
+also checks X11, OpenGL/GLUT, and OpenAL/ALUT. These jobs become active when the
+workflow is published; configured coverage alone does not establish passing builds.
+
+After installing build dependencies, run `bash tools/ci/build.sh` to reproduce
+the checks. Set `REGENERATE_CONFIGURE=yes` to regenerate the root and base
+configure scripts. Set `CI_GRAPHICS=yes` to require the graphics/audio imports.
+Logs are saved under `ci-logs/`; the installation stays under `ci-install/`.
+The historical `make check` target still requires an external development test
+suite; the new smoke checks do not replace that full language regression suite.
+
+For Windows, use an MSYS2 **MINGW32** shell with `make`, `autoconf`, `bison`,
+`mingw-w64-i686-gcc`, and `mingw-w64-i686-python`. Run the same CI script; it
+also builds `src/winhugs/build/winhugs.exe` with `Makefile.mingw`. From PowerShell,
+run `./tools/ci/winhugs-smoke.ps1` to test loading Prelude and evaluating a GUI
+command. This restores the existing 32-bit Windows architecture; native 64-bit
+WinHugs needs a separate pointer/FFI audit. Historical DOS, classic Mac,
+Symbian, and .NET ports are outside this CI matrix.
+
+The Windows job uses the legacy MINGW32 environment to preserve this ABI.
+MSYS2 is phasing out 32-bit environments, so this is a restoration path, not
+a long-term substitute for a 64-bit port.
 
 ## For real life work in Haskell
 

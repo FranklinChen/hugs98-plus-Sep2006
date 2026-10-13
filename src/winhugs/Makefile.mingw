@@ -1,0 +1,42 @@
+# Native 32-bit WinHugs, using the configuration generated in src/.
+# Run ./configure --disable-gui, then make -C src/winhugs -f Makefile.mingw.
+CC = gcc
+WINDRES = windres
+CFLAGS ?= -std=gnu17 -Wno-error=implicit-function-declaration -Wno-error=implicit-int
+CPPFLAGS += -I.. -DHUGS_FOR_WINDOWS=1 -DNDEBUG=1
+LDLIBS = -lcomctl32 -lcomdlg32 -lshell32 -ladvapi32 -lgdi32 -luser32 -lkernel32
+
+CORE = hugs edit observe builtin char compiler errors evaluator ffi goal input \
+       machdep machine module opts output plugin script static storage strutil subst type version
+GUI = DlgAbout DlgMain DlgOptions Editors General History IORemap Legacy MruFiles Registry RtfWindow StartCode
+OBJECTS = $(addprefix build/,$(addsuffix .o,$(CORE) $(GUI)))
+HEADERS = $(wildcard ../*.h *.h)
+
+.PHONY: all clean check-architecture
+all: build/winhugs.exe
+
+# Keep the conservative collector's C stack visible; do not optimize these objects.
+build/%.o: ../%.c $(HEADERS) | build check-architecture
+	$(CC) $(CPPFLAGS) $(CFLAGS) -O0 -c $< -o $@
+
+build/%.o: %.c $(HEADERS) | build check-architecture
+	$(CC) $(CPPFLAGS) $(CFLAGS) -O0 -c $< -o $@
+
+build/winhugs.rc: winhugs.rc | build
+	sed '/"resource/s,\\\\,/,g' $< >$@
+
+build/winhugs-resource.o: build/winhugs.rc $(wildcard resource/*) resrc1.h resource.h | build
+	$(WINDRES) -I. -O coff $< $@
+
+build/winhugs.exe: $(OBJECTS) build/winhugs-resource.o | check-architecture
+	$(CC) $(LDFLAGS) -mwindows $^ $(LDLIBS) -o $@
+
+build:
+	mkdir -p $@
+
+check-architecture:
+	@case "`$(CC) -dumpmachine`" in i?86-*-mingw32) ;; \
+	  *) echo 'WinHugs currently requires an i686 MinGW compiler.' >&2; exit 1 ;; esac
+
+clean:
+	rm -rf build

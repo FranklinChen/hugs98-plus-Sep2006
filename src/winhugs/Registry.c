@@ -9,7 +9,7 @@
 
 // Taken from Options.c
 // allow the font to be specified sensibly
-int PointToTwip(x);
+int PointToTwip(int x);
 
 LPSTR readRegStrDup(LPSTR Key, LPSTR Default)
 {
