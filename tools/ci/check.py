@@ -53,7 +53,7 @@ def main():
     if sys.platform != "win32":
         modules.append("System.Posix.Files")
     else:
-        modules.append("System.Win32.Types")
+        modules += ["System.Win32.Types", "System.Win32.Time", "System.Win32.SimpleMAPI"]
     if args.graphics:
         modules += ["Graphics.X11.Xlib", "Graphics.HGL", "Graphics.Rendering.OpenGL",
                     "Graphics.UI.GLUT", "Sound.OpenAL", "Sound.ALUT"]

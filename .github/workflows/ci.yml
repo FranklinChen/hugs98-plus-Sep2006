@@ -119,6 +119,8 @@ jobs:
           REGENERATE_CONFIGURE: 'yes'
         run: bash tools/ci/build.sh
       - name: Exercise WinHugs GUI
+        # Still test the GUI when a later bundled-library build fails.
+        if: ${{ !cancelled() && hashFiles('src/winhugs/build/winhugs.exe') != '' }}
         shell: pwsh
         run: ./tools/ci/winhugs-smoke.ps1
       - name: Save diagnostics

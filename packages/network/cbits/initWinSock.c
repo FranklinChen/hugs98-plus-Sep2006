@@ -37,7 +37,7 @@ initWinSock ()
      * non-overlapped sockets, so turn off overlap mode here.
      */
     setsockopt(INVALID_SOCKET, SOL_SOCKET, SO_OPENTYPE,
-	       &optval, sizeof(optval));
+	       (const char *)&optval, sizeof(optval));
 #endif
 
     winsock_inited = 1;
