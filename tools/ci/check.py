@@ -12,7 +12,7 @@ def run(command, env, expected=None):
     result = subprocess.run(command, env=env, text=True, stdout=subprocess.PIPE,
                             stderr=subprocess.STDOUT, timeout=90)
     print(result.stdout, end="", flush=True)
-    if result.returncode or "ERROR" in result.stdout or (expected and expected not in result.stdout):
+    if result.returncode or re.search(r"^ERROR\b", result.stdout, re.MULTILINE) or (expected and expected not in result.stdout):
         raise SystemExit(f"Failed: {command!r} (exit {result.returncode})")
 
 
@@ -77,7 +77,7 @@ def main():
         result = subprocess.run([str(binary / ("hugs" + suffix)), "-98", package_path, module],
                                 input=":quit\n", env=env, text=True,
                                 stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=90)
-        if result.returncode or "ERROR" in result.stdout:
+        if result.returncode or re.search(r"^ERROR\b", result.stdout, re.MULTILINE):
             print(result.stdout)
             raise SystemExit(f"Module failed to load: {module}")
         print(f"Loaded {module}", flush=True)
