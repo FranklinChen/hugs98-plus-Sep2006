@@ -14,6 +14,8 @@
   CreateDialogParamW((inst), (tmpl), (parent), (DLGPROC)(proc), (param))
 #define CreateDialogIndirectParamW(inst, tmpl, parent, proc, param) \
   CreateDialogIndirectParamW((inst), (tmpl), (parent), (DLGPROC)(proc), (param))
+#define SetTimer(wnd, timer, elapse, proc) \
+  SetTimer((wnd), (timer), (elapse), (TIMERPROC)(proc))
 #endif
 
 #ifndef INLINE
