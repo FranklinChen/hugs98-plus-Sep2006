@@ -1,9 +1,11 @@
 #!/bin/sh
 CPPHS=${1:-"../cpphs"}
+# Native Windows writes CRLF; CI can select a line-ending-aware comparison.
+CPPHS_DIFF=${CPPHS_DIFF:-diff}
 FAIL=0
 
 runtest() {
-  if $1 >out 2>/dev/null && diff $2 out >/dev/null
+  if $1 >out 2>/dev/null && $CPPHS_DIFF $2 out >/dev/null
   then echo "passed: " $1
   else FAIL=$?
        echo "FAILED: ($2) " $1

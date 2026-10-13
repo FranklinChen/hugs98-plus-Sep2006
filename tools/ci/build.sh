@@ -28,7 +28,13 @@ esac
 # can otherwise trigger autoreconf and a reconfigure that loses our prefix.
 make -o configure -j2 2>&1 | tee ci-logs/build.log
 python3 tools/ci/check.py --build-log ci-logs/build.log ${CI_GRAPHICS:+--graphics} 2>&1 | tee ci-logs/smoke.log
-(cd cpphs/tests && sh runtests ../../libraries/tools/cpphs) 2>&1 | tee ci-logs/cpphs.log
+# Invoke Hugs directly: native Windows generates only a .bat launcher.
+case "$(uname -s)" in
+  MINGW*) export CPPHS_DIFF='diff --strip-trailing-cr' ;;
+esac
+(cd cpphs/tests && HUGSFLAGS= HUGSDIR=../../hugsdir sh runtests \
+  '../../src/runhugs -98 -P../../libraries/bootlib ../../hugsdir/programs/cpphs/Main.hs') \
+  2>&1 | tee ci-logs/cpphs.log
 if grep -q 'FAILED:' ci-logs/cpphs.log; then
   echo 'cpphs reported a failed fixture.' >&2
   exit 1
