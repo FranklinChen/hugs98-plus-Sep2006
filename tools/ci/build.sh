@@ -24,12 +24,14 @@ make -C src -j2 2>&1 | tee ci-logs/interpreter-build.log
 case "$(uname -s)" in
   MINGW*) make -C src/winhugs -f Makefile.mingw 2>&1 | tee ci-logs/winhugs-build.log ;;
 esac
-make -j2 2>&1 | tee ci-logs/build.log
+# Keep the selected shipped/regenerated configure script. Checkout timestamps
+# can otherwise trigger autoreconf and a reconfigure that loses our prefix.
+make -o configure -j2 2>&1 | tee ci-logs/build.log
 python3 tools/ci/check.py --build-log ci-logs/build.log ${CI_GRAPHICS:+--graphics} 2>&1 | tee ci-logs/smoke.log
 (cd cpphs/tests && sh runtests ../../libraries/tools/cpphs) 2>&1 | tee ci-logs/cpphs.log
 if grep -q 'FAILED:' ci-logs/cpphs.log; then
   echo 'cpphs reported a failed fixture.' >&2
   exit 1
 fi
-make install 2>&1 | tee ci-logs/install.log
+make -o configure install 2>&1 | tee ci-logs/install.log
 python3 tools/ci/check.py --installed "$PWD/ci-install" ${CI_GRAPHICS:+--graphics} 2>&1 | tee ci-logs/installed-smoke.log
