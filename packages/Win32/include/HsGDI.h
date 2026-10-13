@@ -16,6 +16,11 @@ INLINE BYTE getRValue(COLORREF color) { return GetRValue(color); }
 INLINE BYTE getGValue(COLORREF color) { return GetGValue(color); }
 INLINE BYTE getBValue(COLORREF color) { return GetBValue(color); }
 
+/* For regions, SelectObject returns a region code through its handle type. */
+INLINE int prim_SelectRgn(HDC dc, HRGN region) {
+  return (int)(INT_PTR)SelectObject(dc, region);
+}
+
 INLINE COLORREF pALETTERGB(BYTE r, BYTE g, BYTE b) {
   return PALETTERGB(r, g, b);
 }

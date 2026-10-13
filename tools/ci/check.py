@@ -48,6 +48,9 @@ def main():
     package_path = "-P{Hugs}/packages/*"
     run([str(binary / ("runhugs" + suffix)), "-98", package_path, str(root / "tools/ci/smoke.hs")],
         env, "HUGS_CI_OK")
+    if sys.platform == "win32":
+        run([str(binary / "runhugs.exe"), "-98", package_path, str(root / "tools/ci/win32-smoke.hs")],
+            env, "WIN32_CI_OK")
     modules = ["Data.List", "Data.Map", "Foreign.C.Types", "System.Directory",
                "Network.Socket", "Data.Time.Clock.POSIX", "Test.HUnit", "Test.QuickCheck",
                "Text.ParserCombinators.Parsec", "Control.Monad.State", "Data.Graph.Inductive",

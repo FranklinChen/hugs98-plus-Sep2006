@@ -248,7 +248,7 @@ selectRgn :: HDC -> HRGN -> IO RegionType
 selectRgn dc rgn =
   withForeignPtr rgn $ \ p_rgn ->
   failIf (== gDI_ERROR) "SelectRgn" $ c_SelectRgn dc p_rgn
-foreign import stdcall unsafe "windows.h SelectObject"
+foreign import ccall unsafe "HsGDI.h prim_SelectRgn"
   c_SelectRgn :: HDC -> PRGN -> IO RegionType
 
 selectClipRgn :: HDC -> Maybe HRGN -> IO RegionType
