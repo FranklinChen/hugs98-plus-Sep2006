@@ -15,6 +15,11 @@ HEADERS = $(wildcard ../*.h *.h)
 .PHONY: all clean check-architecture
 all: build/winhugs.exe
 
+# MinGW's CRT supplies a main wrapper that calls WinMain. Do not replace it
+# with the interpreter entry point, which needs the GUI initialized first.
+build/hugs.o build/StartCode.o: CPPFLAGS += -Dmain=HugsMain
+$(OBJECTS): Makefile.mingw
+
 # Keep the conservative collector's C stack visible; do not optimize these objects.
 build/%.o: ../%.c $(HEADERS) | build check-architecture
 	$(CC) $(CPPFLAGS) $(CFLAGS) -O0 -c $< -o $@
