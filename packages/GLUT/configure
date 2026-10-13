@@ -4988,7 +4988,7 @@ else case e in #(
 #endif
 #if HAVE_GL_GLUT_H
 #include <GL/glut.h>
-#if HAVE_GLUT_H
+#elif HAVE_GLUT_H
 #include <glut.h>
 #else
 #include "glut_local.h"
@@ -5033,7 +5033,7 @@ fi
 
 
 
-if test "$GLUT_LIBS" = no; then
+if test x"$no_GLUT" = xyes; then
   { printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: no GLUT library found, so this package will not be built" >&5
 printf "%s\n" "$as_me: WARNING: no GLUT library found, so this package will not be built" >&2;}
 else

@@ -20,7 +20,7 @@ if test x"$enable_glut" = xyes; then
 # Check for GLUT include paths and libraries
 FP_CHECK_GLUT
 
-if test "$GLUT_LIBS" = no; then
+if test x"$no_GLUT" = xyes; then
   AC_MSG_WARN([no GLUT library found, so this package will not be built])
 else
 

@@ -330,7 +330,7 @@ if test x"$use_quartz_opengl" = xno; then
 #endif
 #if HAVE_GL_GLUT_H
 #include <GL/glut.h>
-#if HAVE_GLUT_H
+#elif HAVE_GLUT_H
 #include <glut.h>
 #else
 #include "glut_local.h"
