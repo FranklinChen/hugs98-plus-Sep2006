@@ -43,7 +43,10 @@ def main():
         directory = hugsdir / "packages" / package
         if not directory.is_dir() or not any(directory.rglob("*.hs")):
             raise SystemExit(f"Required package was not built: {package}")
-    run([str(binary / ("runhugs" + suffix)), "-98", str(root / "tools/ci/smoke.hs")],
+    # Override the complete search path so a user's/system installation cannot
+    # satisfy imports that are broken or missing in the tree under test.
+    package_path = "-P{Hugs}/packages/*"
+    run([str(binary / ("runhugs" + suffix)), "-98", package_path, str(root / "tools/ci/smoke.hs")],
         env, "HUGS_CI_OK")
     modules = ["Data.List", "Data.Map", "Foreign.C.Types", "System.Directory",
                "Network.Socket", "Data.Time.Clock.POSIX", "Test.HUnit", "Test.QuickCheck",
@@ -59,7 +62,7 @@ def main():
                     "Graphics.UI.GLUT", "Sound.OpenAL", "Sound.ALUT"]
     for module in modules:
         # A load failure can leave interactive hugs with a successful exit status.
-        result = subprocess.run([str(binary / ("hugs" + suffix)), "-98", module],
+        result = subprocess.run([str(binary / ("hugs" + suffix)), "-98", package_path, module],
                                 input=":quit\n", env=env, text=True,
                                 stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=90)
         if result.returncode or "ERROR" in result.stdout:
