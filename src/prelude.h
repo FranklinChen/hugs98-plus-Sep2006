@@ -16,6 +16,13 @@
 
 #include "config.h"
 #include "options.h"
+
+/* WinHugs uses its rich edit control and its own command history. */
+#if HUGS_FOR_WINDOWS
+# undef USE_READLINE
+# define USE_READLINE 0
+#endif
+
 #include <stdio.h>
 
 #if HAVE_STDLIB_H

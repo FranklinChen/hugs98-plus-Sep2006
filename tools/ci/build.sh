@@ -14,7 +14,7 @@ if [[ ${REGENERATE_CONFIGURE:-no} == yes ]]; then
   autoconf -f 2>&1 | tee ci-logs/autoconf.log
   (cd packages/base && autoconf -f) 2>&1 | tee ci-logs/base-autoconf.log
 fi
-configure_args=(--disable-gui "--prefix=$PWD/ci-install")
+configure_args=(--without-gui "--prefix=$PWD/ci-install")
 # The bundled 2005 config.guess predates Linux AArch64. config.sub accepts it.
 if [[ $(uname -s) == Linux && $(uname -m) == aarch64 ]]; then
   configure_args+=(--build=aarch64-unknown-linux-gnu)

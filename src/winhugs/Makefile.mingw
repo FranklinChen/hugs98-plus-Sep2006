@@ -1,5 +1,5 @@
 # Native 32-bit WinHugs, using the configuration generated in src/.
-# Run ./configure --disable-gui, then make -C src/winhugs -f Makefile.mingw.
+# Run ./configure --without-gui, then make -C src/winhugs -f Makefile.mingw.
 CC = gcc
 WINDRES = windres
 CFLAGS ?= -std=gnu17 -Wno-error=implicit-function-declaration -Wno-error=implicit-int
