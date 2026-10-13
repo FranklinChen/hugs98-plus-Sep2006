@@ -16,6 +16,7 @@ char    stdstrbuff[MAX_STDSTR];
 // beacuse i need to use it
 // otherwise you call yourself
 #undef fputc
+#undef fwrite
 
 void WinHugsPutText(FILE* f, char* Buffer, BOOL Char)
 {
@@ -89,6 +90,23 @@ int WinHugsPutC(FILE* f, int c)
     Buf[1] = 0;
     WinHugsPutText(f, Buf, TRUE);
     return c;
+}
+
+/* Encoded characters and hPutBuf use fwrite instead of putc. Route those
+ * bytes through the same GUI output path, retaining fwrite for real files. */
+size_t WinHugsFWrite(const void* buffer, size_t size, size_t count, FILE* f)
+{
+    const unsigned char* bytes = buffer;
+    size_t item, byte;
+
+    if (f != stdout && f != stderr && f != stdstr)
+	return fwrite(buffer, size, count, f);
+    if (size == 0)
+	return 0;
+    for (item = 0; item < count; item++)
+	for (byte = 0; byte < size; byte++)
+	    WinHugsPutC(f, *bytes++);
+    return count;
 }
 
 /////////////////////////////////////////////////////////////////////

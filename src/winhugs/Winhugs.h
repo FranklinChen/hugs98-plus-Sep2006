@@ -52,6 +52,7 @@ extern void	WinHugsPutS(FILE* f, char* Buffer);
 extern int	WinHugsPrintf(const char* format, ...);
 extern int	WinHugsFPrintf(FILE* f, const char* format, ...);
 extern int	WinHugsPutC(FILE* f, int c);
+extern size_t   WinHugsFWrite(const void* buffer, size_t size, size_t count, FILE* f);
 extern int	WinHugsGetC(FILE* f);
 extern void	WinHugsHyperlink(const char* msg);
 extern void	WinHugsFilename(const char* FileName, int LineNo);
@@ -70,6 +71,7 @@ extern void	WinHugsFilename(const char* FileName, int LineNo);
 #define putchar(ch)     WinHugsPutC(stdout, ch)
 #define putc(ch,file)   WinHugsPutC(file, ch)
 #define fputc(ch,file)  WinHugsPutC(file, ch)
+#define fwrite         WinHugsFWrite
 
 // standard input
 #define getc(file)      WinHugsGetC(file)
