@@ -3,6 +3,19 @@
 
 #include <windows.h>
 
+/* Hugs uses an erased function-pointer type for FFI arguments. */
+#ifdef __HUGS__
+#define ENABLE_MACRO_INTERFACE 1
+#define DialogBoxParamW(inst, tmpl, parent, proc, param) \
+  DialogBoxParamW((inst), (tmpl), (parent), (DLGPROC)(proc), (param))
+#define DialogBoxIndirectParamW(inst, tmpl, parent, proc, param) \
+  DialogBoxIndirectParamW((inst), (tmpl), (parent), (DLGPROC)(proc), (param))
+#define CreateDialogParamW(inst, tmpl, parent, proc, param) \
+  CreateDialogParamW((inst), (tmpl), (parent), (DLGPROC)(proc), (param))
+#define CreateDialogIndirectParamW(inst, tmpl, parent, proc, param) \
+  CreateDialogIndirectParamW((inst), (tmpl), (parent), (DLGPROC)(proc), (param))
+#endif
+
 #ifndef INLINE
 # if defined(_MSC_VER)
 #  define INLINE extern __inline

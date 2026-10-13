@@ -22,6 +22,17 @@
 #include <windows.h>
 #include <GL/glu.h>
 
+#ifdef __HUGS__
+/* HsFunPtr is cdecl; the Windows GLU callback slots use CALLBACK (stdcall). */
+#define ENABLE_MACRO_INTERFACE 1
+#define gluNurbsCallback(obj, which, proc) \
+  gluNurbsCallback((obj), (which), (void (CALLBACK *)(void))(proc))
+#define gluQuadricCallback(obj, which, proc) \
+  gluQuadricCallback((obj), (which), (void (CALLBACK *)(void))(proc))
+#define gluTessCallback(obj, which, proc) \
+  gluTessCallback((obj), (which), (void (CALLBACK *)(void))(proc))
+#endif
+
 #elif defined(USE_QUARTZ_OPENGL)
 
 #include <OpenGL/glu.h>
