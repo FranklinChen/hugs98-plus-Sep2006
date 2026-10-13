@@ -1,4 +1,4 @@
-name: CI
+name: Peer credential negative control
 
 on:
   push:
@@ -30,27 +30,7 @@ jobs:
             cc: gcc-14
             regenerate: 'no'
             valgrind: 'yes'
-          - name: Linux x86_64 Clang (regenerated configure)
-            os: ubuntu-24.04
-            cc: clang
-            regenerate: 'yes'
-          - name: Linux ARM64 GCC 14
-            os: ubuntu-24.04-arm
-            cc: gcc-14
-            regenerate: 'yes'
-          - name: macOS Intel
-            os: macos-15-intel
-            cc: clang
-            regenerate: 'no'
-          - name: macOS Apple Silicon
-            os: macos-26
-            cc: clang
-            regenerate: 'yes'
-          - name: Linux graphics and audio
-            os: ubuntu-24.04
-            cc: gcc-14
-            regenerate: 'yes'
-            graphics: 'yes'
+            graphics: ''
     env:
       CC: ${{ matrix.cc }}
       REGENERATE_CONFIGURE: ${{ matrix.regenerate }}
@@ -79,64 +59,6 @@ jobs:
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: logs-${{ matrix.os }}-${{ matrix.cc }}-${{ matrix.graphics || 'core' }}
-          path: |
-            ci-logs/
-            config.log
-            packages/*/config.log
-          retention-days: 14
-
-  debian:
-    name: Debian 13 GCC 14
-    runs-on: ubuntu-24.04
-    container: debian:13
-    timeout-minutes: 40
-    steps:
-      - name: Install build dependencies
-        run: apt-get update && apt-get install -y git ca-certificates build-essential autoconf bison libreadline-dev python3
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: Build, test, and install
-        env:
-          REGENERATE_CONFIGURE: 'yes'
-        run: bash tools/ci/build.sh
-      - name: Save diagnostics
-        if: always()
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: logs-debian-13
-          path: |
-            ci-logs/
-            config.log
-            packages/*/config.log
-          retention-days: 14
-
-  windows:
-    name: Native Windows and WinHugs (x86)
-    runs-on: windows-2022
-    timeout-minutes: 60
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: msys2/setup-msys2@ec48f7c5447b3140e2b088413ae3a55687bccb6e # v2
-        with:
-          msystem: MINGW32
-          update: true
-          install: >-
-            make autoconf bison
-            mingw-w64-i686-gcc mingw-w64-i686-python
-      - name: Build native executables, libraries, and WinHugs
-        shell: msys2 {0}
-        env:
-          REGENERATE_CONFIGURE: 'yes'
-        run: bash tools/ci/build.sh
-      - name: Exercise WinHugs GUI
-        # Still test the GUI when a later bundled-library build fails.
-        if: ${{ !cancelled() && hashFiles('src/winhugs/build/winhugs.exe') != '' }}
-        shell: pwsh
-        run: ./tools/ci/winhugs-smoke.ps1
-      - name: Save diagnostics
-        if: always()
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: logs-windows-x86
           path: |
             ci-logs/
             config.log

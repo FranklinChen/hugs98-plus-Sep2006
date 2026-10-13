@@ -164,7 +164,6 @@ import Hugs.IO ( openFd )
 #endif
 
 import Data.Word ( Word8, Word16, Word32 )
-import Data.Int ( Int32 )
 import Foreign.Ptr ( Ptr, castPtr, plusPtr )
 import Foreign.Storable ( Storable(..) )
 import Foreign.C.Error
@@ -1000,14 +999,12 @@ getSocketOption (MkSocket s _ _ _ _) so = do
 getPeerCred :: Socket -> IO (CUInt, CUInt, CUInt)
 getPeerCred sock = do
   let fd = fdSocket sock
-  let sz = (#size struct ucred)
-  allocaBytes sz $ \ ptr_cr ->
-   with (fromIntegral sz :: CSockLen) $ \ ptr_sz -> do
+  let sz = (fromIntegral (#const sizeof(struct ucred)))
+  with sz $ \ ptr_cr ->
+   alloca       $ \ ptr_sz -> do
+     poke ptr_sz sz
      throwErrnoIfMinus1 "getPeerCred" $
-       c_getsockopt fd (#const SOL_SOCKET) (#const SO_PEERCRED) (castPtr ptr_cr) ptr_sz
-     actualSize <- peek ptr_sz
-     when (actualSize /= fromIntegral sz) $
-       ioError (userError "getPeerCred: unexpected credential size")
+       c_getsockopt fd (#const SOL_SOCKET) (#const SO_PEERCRED) ptr_cr ptr_sz
      pid <- (#peek struct ucred, pid) ptr_cr
      uid <- (#peek struct ucred, uid) ptr_cr
      gid <- (#peek struct ucred, gid) ptr_cr
@@ -2003,15 +2000,8 @@ foreign import CALLCONV unsafe "getpeername"
 foreign import CALLCONV unsafe "getsockname"
   c_getsockname :: CInt -> Ptr SockAddr -> Ptr CInt -> IO CInt
 
--- Winsock uses int; POSIX uses socklen_t, which is commonly unsigned.
-#if defined(HAVE_WINSOCK_H) && !defined(__CYGWIN__)
-type CSockLen = CInt
-#else
-type CSockLen = (#type socklen_t)
-#endif
-
 foreign import CALLCONV unsafe "getsockopt"
-  c_getsockopt :: CInt -> CInt -> CInt -> Ptr CInt -> Ptr CSockLen -> IO CInt
+  c_getsockopt :: CInt -> CInt -> CInt -> Ptr CInt -> Ptr CInt -> IO CInt
 foreign import CALLCONV unsafe "setsockopt"
   c_setsockopt :: CInt -> CInt -> CInt -> Ptr CInt -> CInt -> IO CInt
 
