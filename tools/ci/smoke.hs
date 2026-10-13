@@ -8,6 +8,9 @@ import Foreign.Storable (sizeOf)
 import System.Directory (doesFileExist, doesDirectoryExist, removeFile)
 import Data.Time.Clock.POSIX (getPOSIXTime)
 import System.IO (openFile, IOMode(ReadMode), hClose, hGetContents, hIsClosed)
+import Network.Socket (socket, sClose, Family(AF_INET), SocketType(Stream),
+                       SocketOption(Type, ReuseAddr), getSocketOption,
+                       setSocketOption, packSocketType)
 
 assert :: String -> Bool -> IO ()
 assert label ok = unless ok (fail label)
@@ -29,6 +32,12 @@ main = do
     assert "CIntMax mapping" (sizeOf (undefined :: CIntMax) >= sizeOf (undefined :: CInt))
     now <- getPOSIXTime
     assert "gettimeofday" (now > 0)
+    bracket (socket AF_INET Stream 0) sClose $ \sock -> do
+        socketType <- getSocketOption sock Type
+        assert "getsockopt socket type" (socketType == fromIntegral (packSocketType Stream))
+        setSocketOption sock ReuseAddr 1
+        reuse <- getSocketOption sock ReuseAddr
+        assert "socket option round trip" (reuse /= 0)
     writeFile "ci-smoke.tmp" "Hugs file IO\n"
     exists <- doesFileExist "ci-smoke.tmp"
     assert "regular-file mode" exists

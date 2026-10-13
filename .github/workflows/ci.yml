@@ -8,6 +8,10 @@ on:
 permissions:
   contents: read
 
+# Regress issue #1: inherited STRIP must receive an executable filename.
+env:
+  STRIP: strip
+
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -25,6 +29,7 @@ jobs:
             os: ubuntu-24.04
             cc: gcc-14
             regenerate: 'no'
+            valgrind: 'yes'
           - name: Linux x86_64 Clang (regenerated configure)
             os: ubuntu-24.04
             cc: clang
@@ -50,6 +55,7 @@ jobs:
       CC: ${{ matrix.cc }}
       REGENERATE_CONFIGURE: ${{ matrix.regenerate }}
       CI_GRAPHICS: ${{ matrix.graphics }}
+      CI_VALGRIND: ${{ matrix.valgrind }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Install Linux dependencies
@@ -57,6 +63,9 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y gcc-14 clang autoconf make bison libreadline-dev
+          if [ "$CI_VALGRIND" = yes ]; then
+            sudo apt-get install -y valgrind
+          fi
           if [ "$CI_GRAPHICS" = yes ]; then
             sudo apt-get install -y libx11-dev libxmu-dev libxi-dev libgl-dev libglu1-mesa-dev freeglut3-dev libopenal-dev libalut-dev
           fi

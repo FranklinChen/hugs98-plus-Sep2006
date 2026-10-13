@@ -850,16 +850,17 @@ dnl
 dnl--------------------------------------------------------------------
 
 HUGS_FOR_WINDOWS=no
+HUGS_RESOURCE_COMMAND=""
 if test "x$with_gui" = xyes; then
   if test "x$host_os" = "xmingw32"; then
     LDFLAGS="$LDFLAGS -W"
     WOBJECTS="win-text.obj"
-    STRIP="brc32 hugs32.rc hugs.exe -w32"
+    HUGS_RESOURCE_COMMAND="brc32 hugs32.rc hugs.exe -w32"
     RC_FILES="hugs32.rc"
     HUGS_FOR_WINDOWS=yes
   elif test "x$host" = "xdos"; then
     WOBJECTS="win-text.obj"
-    STRIP="brc hugs16.rc hugs.exe"
+    HUGS_RESOURCE_COMMAND="brc hugs16.rc hugs.exe"
     RC_FILES="hugs16.rc"
     HUGS_FOR_WINDOWS=yes
   else
@@ -876,6 +877,7 @@ fi
 AC_SUBST_DEF(WOBJECTS,"")
 AC_SUBST_DEF(RC_FILES,"")
 AC_SUBST_DEF(STRIP,"")
+AC_SUBST(HUGS_RESOURCE_COMMAND)
 
 dnl--------------------------------------------------------------------
 dnl

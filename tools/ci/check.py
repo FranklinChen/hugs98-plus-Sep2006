@@ -51,6 +51,15 @@ def main():
     if sys.platform == "win32":
         run([str(binary / "runhugs.exe"), "-98", package_path, str(root / "tools/ci/win32-smoke.hs")],
             env, "WIN32_CI_OK")
+    if sys.platform.startswith("linux"):
+        command = [str(binary / "runhugs"), "-98", package_path,
+                   str(root / "tools/ci/peercred-smoke.hs")]
+        if env.get("CI_VALGRIND") == "yes":
+            # Hugs conservatively scans uninitialized stack words during GC;
+            # retain address checks while excluding undefined-value reports.
+            command = ["valgrind", "--error-exitcode=99", "--leak-check=no",
+                       "--undef-value-errors=no"] + command
+        run(command, env, "PEERCRED_CI_OK")
     modules = ["Data.List", "Data.Map", "Foreign.C.Types", "System.Directory",
                "Network.Socket", "Data.Time.Clock.POSIX", "Test.HUnit", "Test.QuickCheck",
                "Text.ParserCombinators.Parsec", "Control.Monad.State", "Data.Graph.Inductive",

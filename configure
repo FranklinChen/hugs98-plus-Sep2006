@@ -629,6 +629,7 @@ ac_includes_default="\
 ac_header_c_list=
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
+HUGS_RESOURCE_COMMAND
 STRIP
 RC_FILES
 WOBJECTS
@@ -9150,16 +9151,17 @@ _ACEOF
 
 
 HUGS_FOR_WINDOWS=no
+HUGS_RESOURCE_COMMAND=""
 if test "x$with_gui" = xyes; then
   if test "x$host_os" = "xmingw32"; then
     LDFLAGS="$LDFLAGS -W"
     WOBJECTS="win-text.obj"
-    STRIP="brc32 hugs32.rc hugs.exe -w32"
+    HUGS_RESOURCE_COMMAND="brc32 hugs32.rc hugs.exe -w32"
     RC_FILES="hugs32.rc"
     HUGS_FOR_WINDOWS=yes
   elif test "x$host" = "xdos"; then
     WOBJECTS="win-text.obj"
-    STRIP="brc hugs16.rc hugs.exe"
+    HUGS_RESOURCE_COMMAND="brc hugs16.rc hugs.exe"
     RC_FILES="hugs16.rc"
     HUGS_FOR_WINDOWS=yes
   else
@@ -9184,6 +9186,7 @@ RC_FILES=${RC_FILES=""}
 
 
 STRIP=${STRIP=""}
+
 
 
 
