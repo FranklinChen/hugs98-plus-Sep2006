@@ -1,14 +1,23 @@
 module Main where
 
 import Control.Monad (unless)
+import Control.Exception (bracket)
 import Data.List (sort)
 import Foreign.C.Types
 import Foreign.Storable (sizeOf)
 import System.Directory (doesFileExist, doesDirectoryExist, removeFile)
 import Data.Time.Clock.POSIX (getPOSIXTime)
+import System.IO (openFile, IOMode(ReadMode), hClose, hGetContents, hIsClosed)
 
 assert :: String -> Bool -> IO ()
 assert label ok = unless ok (fail label)
+
+checkLazyRead :: FilePath -> String -> IO ()
+checkLazyRead path expected = bracket (openFile path ReadMode) hClose $ \handle -> do
+    value <- hGetContents handle
+    assert "lazy file contents" (value == expected)
+    closed <- hIsClosed handle
+    assert "lazy input closes at EOF" closed
 
 main :: IO ()
 main = do
@@ -27,5 +36,9 @@ main = do
     assert "directory mode" directory
     value <- readFile "ci-smoke.tmp"
     assert "file IO" (value == "Hugs file IO\n")
+    checkLazyRead "ci-smoke.tmp" "Hugs file IO\n"
+    removeFile "ci-smoke.tmp"
+    writeFile "ci-smoke.tmp" ""
+    checkLazyRead "ci-smoke.tmp" ""
     removeFile "ci-smoke.tmp"
     putStrLn "HUGS_CI_OK"

@@ -887,7 +887,15 @@ primFun(primHreader) {			/* read String from a handle 	   */
 	    updapRoot(consChar(c),ap(nameHreader,primArg(1)));
 	    return;
 	}
-	clearerr(handles[h].hfp);
+	/* Release exhausted lazy input immediately, rather than waiting for
+	 * garbage collection (an open file cannot be removed on Windows).
+	 * Preserve the existing policy of retaining standard streams. */
+	if (!IS_STANDARD_HANDLE(h)) {
+	    fclose(handles[h].hfp);
+	    handles[h].hfp = 0;
+	    handles[h].hmode = HCLOSED;
+	} else
+	    clearerr(handles[h].hfp);
     }
     updateRoot(nameNil);
 }
