@@ -39,6 +39,35 @@
 #include <GL/freeglut_ext.h>
 #endif
 
+/* Hugs erases FunPtr argument types to void (*)(void). Restore the GLUT
+ * callback prototypes at the C boundary, as required by modern compilers.
+ * A macro's own name is not expanded recursively in its replacement text.
+ */
+#ifdef __HUGS__
+#define ENABLE_MACRO_INTERFACE 1
+#define glutCreateMenu(cb) glutCreateMenu((void (*)(int))(cb))
+#define glutReshapeFunc(cb) glutReshapeFunc((void (*)(int, int))(cb))
+#define glutKeyboardFunc(cb) glutKeyboardFunc((void (*)(unsigned char, int, int))(cb))
+#define glutKeyboardUpFunc(cb) glutKeyboardUpFunc((void (*)(unsigned char, int, int))(cb))
+#define glutMouseFunc(cb) glutMouseFunc((void (*)(int, int, int, int))(cb))
+#define glutMotionFunc(cb) glutMotionFunc((void (*)(int, int))(cb))
+#define glutPassiveMotionFunc(cb) glutPassiveMotionFunc((void (*)(int, int))(cb))
+#define glutEntryFunc(cb) glutEntryFunc((void (*)(int))(cb))
+#define glutVisibilityFunc(cb) glutVisibilityFunc((void (*)(int))(cb))
+#define glutSpecialFunc(cb) glutSpecialFunc((void (*)(int, int, int))(cb))
+#define glutSpecialUpFunc(cb) glutSpecialUpFunc((void (*)(int, int, int))(cb))
+#define glutSpaceballMotionFunc(cb) glutSpaceballMotionFunc((void (*)(int, int, int))(cb))
+#define glutSpaceballRotateFunc(cb) glutSpaceballRotateFunc((void (*)(int, int, int))(cb))
+#define glutSpaceballButtonFunc(cb) glutSpaceballButtonFunc((void (*)(int, int))(cb))
+#define glutButtonBoxFunc(cb) glutButtonBoxFunc((void (*)(int, int))(cb))
+#define glutDialsFunc(cb) glutDialsFunc((void (*)(int, int))(cb))
+#define glutTabletMotionFunc(cb) glutTabletMotionFunc((void (*)(int, int))(cb))
+#define glutTabletButtonFunc(cb) glutTabletButtonFunc((void (*)(int, int, int, int))(cb))
+#define glutMenuStatusFunc(cb) glutMenuStatusFunc((void (*)(int, int, int))(cb))
+#define glutTimerFunc(ms, cb, value) glutTimerFunc((ms), (void (*)(int))(cb), (value))
+#define glutJoystickFunc(cb, interval) glutJoystickFunc((void (*)(unsigned int, int, int, int))(cb), (interval))
+#endif
+
 extern void* hs_GLUT_marshalBitmapFont(int fontID);
 extern void* hs_GLUT_marshalStrokeFont(int fontID);
 extern void* hs_GLUT_getProcAddress(char *procName);

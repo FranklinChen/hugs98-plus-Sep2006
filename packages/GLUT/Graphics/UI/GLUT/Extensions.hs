@@ -23,6 +23,10 @@ import Foreign.C.String ( CString, withCString )
 import Foreign.Ptr ( FunPtr, nullFunPtr )
 import System.IO.Unsafe ( unsafePerformIO )
 
+#ifdef __HUGS__
+{-# CFILES cbits/HsGLUT.c #-}
+#endif
+
 --------------------------------------------------------------------------------
 
 type Invoker a = FunPtr a -> a

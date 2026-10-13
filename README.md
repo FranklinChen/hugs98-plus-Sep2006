@@ -65,8 +65,9 @@ GitHub Actions is configured for Linux x86_64 (GCC and Clang), Linux ARM64,
 Debian 13, macOS Intel and Apple Silicon, and native Windows x86. Jobs exercise
 both shipped and regenerated configure scripts, interpreter and library smoke
 tests, cpphs fixtures, and installation into a temporary prefix. A Linux job
-also checks X11, OpenGL/GLUT, and OpenAL/ALUT. These jobs become active when the
-workflow is published; configured coverage alone does not establish passing builds.
+also builds and imports X11, OpenGL/GLUT, and OpenAL/ALUT. Consult the linked
+workflow runs for results. Graphics checks do not exercise rendering or Haskell
+callbacks: the legacy FFI callback generator still lacks x86_64 and ARM64 support.
 
 After installing build dependencies, run `bash tools/ci/build.sh` to reproduce
 the checks. Set `REGENERATE_CONFIGURE=yes` to regenerate the root and base
