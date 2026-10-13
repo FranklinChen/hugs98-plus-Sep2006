@@ -132,12 +132,12 @@ void MainInitDialog(HWND hWnd)
     RegistryReadWindowPos(hWnd);
 }
 
-char CommandDelayBuffer[1000];
+static char CommandDelayBuffer[1000];
+static BOOL CommandPending = FALSE;
 
 void FireCommandDelay(LPCSTR Command)
 {
-    strcpy(CommandDelayBuffer, Command);
-    PostMessage(hThisWindow, WM_APP, 0, 0);
+    FireCommand(Command);
 }
 
 void FireCommand(LPCSTR Command);
@@ -179,6 +179,23 @@ void ExecutionFinished()
 
 void FireCommand(LPCSTR Command)
 {
+    /* Commands can longjmp back to the interpreter. Never execute them
+     * inside a Windows callback: return first, then let the message pump
+     * run the command on its own stack. */
+    if (Running || CommandPending)
+	return;
+    lstrcpyn(CommandDelayBuffer, Command, sizeof(CommandDelayBuffer));
+    CommandPending = TRUE;
+    if (!PostMessage(hThisWindow, WM_APP, 0, 0))
+	CommandPending = FALSE;
+}
+
+void RunPendingCommand()
+{
+    LPCSTR Command = CommandDelayBuffer;
+    if (!CommandPending)
+	return;
+    CommandPending = FALSE;
     RtfWindowSetCommand(Command);
     RtfWindowStartOutput();
     AddHistory(Command);
@@ -386,10 +403,6 @@ INT_PTR CALLBACK MainDlgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	case WM_DROPFILES:
 	    MainDropFiles(hWnd, (HDROP) wParam);
-	    break;
-
-	case WM_APP:
-	    FireCommand(CommandDelayBuffer);
 	    break;
 
 	case WM_COMMAND:

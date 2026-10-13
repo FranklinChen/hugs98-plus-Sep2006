@@ -37,6 +37,7 @@ void RtfWindowFlushBuffer();
 // Exported from DlgMain.c
 void FireCommandDelay(LPCTSTR Command);
 void FireCommand(LPCTSTR Command);
+void RunPendingCommand();
 void ExecutionFinished();
 BOOL ShowMainDialog();
 void EnableButtons();

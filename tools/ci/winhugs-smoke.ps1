@@ -64,6 +64,7 @@ $env:HUGSDIR = Join-Path $root 'hugsdir'
 Remove-Item Env:HUGSFLAGS -ErrorAction SilentlyContinue
 $app = Start-Process -FilePath "$root/src/winhugs/build/winhugs.exe" -WorkingDirectory $root -PassThru `
     -ArgumentList '-pCI_READY>', '-P{Hugs}/packages/*'
+$transcript = ''
 function Read-Transcript([IntPtr] $control) {
     return [WinHugsUI]::ReadText($control)
 }
@@ -71,7 +72,7 @@ try {
     $deadline = (Get-Date).AddSeconds(60)
     $control = [IntPtr]::Zero
     do {
-        if ($app.HasExited) { throw 'WinHugs exited before showing its prompt.' }
+        if ($app.HasExited) { throw "WinHugs exited before showing its prompt (exit $($app.ExitCode))." }
         $window = [WinHugsUI]::FindMainWindow($app.Id)
         $control = [WinHugsUI]::GetDlgItem($window, 1006) # ID_RTF
         if ($control -ne [IntPtr]::Zero) {
@@ -84,29 +85,34 @@ try {
     if ($control -eq [IntPtr]::Zero -or $transcript -notmatch 'CI_READY>') {
         throw 'WinHugs did not load Prelude and show a prompt within 60 seconds.'
     }
+    $transcript | Set-Content "$root/ci-logs/winhugs-startup.txt"
     # Append a real command to the rich edit control, then invoke the Run menu.
     [void][WinHugsUI]::SendValue($control, 0x00B1, [IntPtr](-1), [IntPtr](-1)) # EM_SETSEL
     foreach ($character in ('"GUI_CI_OK:" ++ show (6 * 7 :: Int)').ToCharArray()) {
         [void][WinHugsUI]::SendValue($control, 0x0102, [IntPtr][int]$character, [IntPtr]::Zero) # WM_CHAR
     }
+    $transcript = Read-Transcript $control
+    $transcript | Set-Content "$root/ci-logs/winhugs-command.txt"
     [void][WinHugsUI]::SendValue($window, 0x0111, [IntPtr]301, [IntPtr]::Zero) # WM_COMMAND, ID_RUN
     $deadline = (Get-Date).AddSeconds(30)
     do {
-        if ($app.HasExited) { throw 'WinHugs exited during evaluation.' }
+        if ($app.HasExited) { throw "WinHugs exited during evaluation (exit $($app.ExitCode))." }
         $transcript = Read-Transcript $control
         if ($transcript -match 'ERROR') { throw $transcript }
-        if ($transcript -match 'GUI_CI_OK:42') {
+        if ($transcript -match '(?s)GUI_CI_OK:42.*CI_READY>') {
             $transcript | Set-Content "$root/ci-logs/winhugs-transcript.txt"
-            Write-Output 'WinHugs loaded Prelude and evaluated a GUI command.'
+            Write-Output 'WinHugs loaded Prelude, evaluated a GUI command, and returned to its prompt.'
             return
         }
         Start-Sleep -Milliseconds 250
     } while ((Get-Date) -lt $deadline)
     throw "WinHugs did not evaluate the GUI command within 30 seconds.`n$transcript"
 } finally {
-    if ($control -ne [IntPtr]::Zero) {
-        Read-Transcript $control | Set-Content "$root/ci-logs/winhugs-transcript.txt"
+    if (-not $app.HasExited -and $control -ne [IntPtr]::Zero) {
+        $current = Read-Transcript $control
+        if ($current -ne '<window did not respond to WM_GETTEXT>') { $transcript = $current }
     }
+    $transcript | Set-Content "$root/ci-logs/winhugs-transcript.txt"
     [WinHugsUI]::Diagnostics($app.Id) | Set-Content "$root/ci-logs/winhugs-windows.txt"
     if (-not $app.HasExited) {
         [void]$app.CloseMainWindow()
