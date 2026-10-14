@@ -3438,6 +3438,7 @@ fi
 : ${CFLAGS=-g}
 OPTFLAGS="-O2"
 
+: ${ac_cv_prog_cc_c23=no}
 
 
 
@@ -9087,7 +9088,7 @@ elif test "x$host" = "xdos"; then
 else
     BAT=
     hugsdir_deflt='${libdir}/hugs'
-    HUGSPATH=".:{Home}/lib/hugs/packages/*:/usr/local/lib/hugs/packages/*:{Hugs}/packages/*"
+    HUGSPATH=".:{Home}/lib/hugs/packages/*:{Hugs}/packages/*"
     HUGSSUFFIXES=".hs:.lhs"
     MkInstall="src/MkInstal.in"
 fi

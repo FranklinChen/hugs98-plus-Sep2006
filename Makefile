@@ -132,14 +132,25 @@ Defs.mk: Makefile
 
 # configuration
 
+# A plain `make` in an unconfigured tree runs configure with no options. Any
+# later reconfigure goes through config.status --recheck, which re-runs
+# configure with the arguments it was first given, --prefix included.
 src/Makefile: configure
 	$(RM) -r config.cache autom4te.cache
-	LIBS=$(GNULIBS) ./configure $(EXTRA_CONFIGURE_OPTS)
+	if test -f config.status; then \
+		./config.status --recheck && ./config.status; \
+	else \
+		LIBS=$(GNULIBS) ./configure $(EXTRA_CONFIGURE_OPTS); \
+	fi
 
-configure: configure.ac aclocal.m4 $(PACKAGES)
+# The configure scripts are committed. Regenerate them deliberately with
+# `make regenerate` (needs autoconf), never as a side effect of file
+# timestamps, which only reflect the order git happened to write the files.
+.PHONY: regenerate
+regenerate: $(PACKAGES)
 	for dir in packages/*; do if test -f $$dir/configure.ac; \
 		then (cd $$dir; autoreconf); fi; done
-	-autoreconf
+	autoreconf
 
 # fetching library sources and utility programs
 

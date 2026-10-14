@@ -2842,6 +2842,8 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
+: ${ac_cv_prog_cc_c23=no}
+
 # Safety check: Ensure that we are in the correct source directory.
 
 

@@ -1,5 +1,8 @@
 AC_INIT([Haskell base package], [1.0], [libraries@haskell.org], [base])
 
+dnl Keep autoconf 2.73 out of C23, which rejects Hugs's K&R C; see ../../configure.ac.
+: ${ac_cv_prog_cc_c23=no}
+
 # Safety check: Ensure that we are in the correct source directory.
 AC_CONFIG_SRCDIR([include/HsBase.h])
 

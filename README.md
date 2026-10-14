@@ -52,7 +52,7 @@ $ brew install libx11 freealut
 $ export LDFLAGS="-L/opt/X11/lib -L$(brew --prefix)/opt/freealut/lib"
 $ export CPPFLAGS="-I/opt/X11/include -I$(brew --prefix)/opt/freealut/include"
 
-$ export CFLAGS="-std=gnu17 -Wno-error=implicit-function-declaration -Wno-error=implicit-int"
+$ export CFLAGS="-Wno-error=implicit-function-declaration -Wno-error=implicit-int"
 
 $ ./configure
 $ make

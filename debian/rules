@@ -40,8 +40,6 @@ src_file	= src/hugs.c
 build: $(build_stamp)
 $(build_stamp):
 	dh_testdir $(src_file)
-	# touch so that patched configure does not trigger autoreconf
-	touch configure.ac aclocal.m4 && touch configure
 	CFLAGS='-Wall -fPIC' $(MAKE) EXTRA_CONFIGURE_OPTS="$(CONFIG_OPTS)"
 	touch $@
 
@@ -50,9 +48,8 @@ clean:
 	dh_testroot
 	# get updated config.sub and config.guess
 	cp -f /usr/share/misc/config.sub /usr/share/misc/config.guess .
-	# force rerun of autoreconf (for the source distribution)
-	$(RM) configure
-	$(MAKE) configure
+	# regenerate every configure script (for the source distribution)
+	$(MAKE) regenerate
 	dh_clean $(install_stamp)
 	$(RM) $(build_stamp)
 	-$(MAKE) distclean

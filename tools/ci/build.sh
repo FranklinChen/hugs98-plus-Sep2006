@@ -2,7 +2,10 @@
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 mkdir -p ci-logs
-export CFLAGS="${CFLAGS:--std=gnu17 -Wno-error=implicit-function-declaration -Wno-error=implicit-int}"
+# Hugs is pre-ANSI C: keep modern compilers from making these errors. The
+# flags must come from the environment, because each library package is
+# configured and compiled separately and only inherits them from there.
+export CFLAGS="${CFLAGS:--Wno-error=implicit-function-declaration -Wno-error=implicit-int}"
 case "$(uname -s)" in
   Darwin)
     deps_prefix=$(brew --prefix)
@@ -11,8 +14,7 @@ case "$(uname -s)" in
     ;;
 esac
 if [[ ${REGENERATE_CONFIGURE:-no} == yes ]]; then
-  autoconf -f 2>&1 | tee ci-logs/autoconf.log
-  (cd packages/base && autoconf -f) 2>&1 | tee ci-logs/base-autoconf.log
+  make regenerate 2>&1 | tee ci-logs/autoconf.log
 fi
 configure_args=(--without-gui "--prefix=$PWD/ci-install")
 # The bundled 2005 config.guess predates Linux AArch64. config.sub accepts it.
@@ -24,9 +26,7 @@ make -C src -j2 2>&1 | tee ci-logs/interpreter-build.log
 case "$(uname -s)" in
   MINGW*) make -C src/winhugs -f Makefile.mingw 2>&1 | tee ci-logs/winhugs-build.log ;;
 esac
-# Keep the selected shipped/regenerated configure script. Checkout timestamps
-# can otherwise trigger autoreconf and a reconfigure that loses our prefix.
-make -o configure -j2 2>&1 | tee ci-logs/build.log
+make -j2 2>&1 | tee ci-logs/build.log
 python3 tools/ci/check.py --build-log ci-logs/build.log ${CI_GRAPHICS:+--graphics} 2>&1 | tee ci-logs/smoke.log
 # Invoke Hugs directly: native Windows generates only a .bat launcher.
 case "$(uname -s)" in
@@ -39,5 +39,5 @@ if grep -q 'FAILED:' ci-logs/cpphs.log; then
   echo 'cpphs reported a failed fixture.' >&2
   exit 1
 fi
-make -o configure install 2>&1 | tee ci-logs/install.log
+make install 2>&1 | tee ci-logs/install.log
 python3 tools/ci/check.py --installed "$PWD/ci-install" ${CI_GRAPHICS:+--graphics} 2>&1 | tee ci-logs/installed-smoke.log

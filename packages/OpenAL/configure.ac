@@ -8,6 +8,12 @@ AC_CONFIG_SRCDIR([include/HsOpenAL.h.in])
 # contains all kinds of stuff which is needed for using this package.
 AC_CONFIG_HEADERS([include/HsOpenALConfig.h include/HsOpenAL.h])
 
+dnl Keep autoconf 2.73 out of C23, which rejects Hugs's K&R C; see ../../configure.ac.
+: ${ac_cv_prog_cc_c23=no}
+
+# $host_os is used below, so it must be computed.
+AC_CANONICAL_HOST
+
 # Shall we build this package at all?
 FP_ARG_OPENAL
 # We set this to "yes" later when we have found OpenAL libs and headers.
@@ -15,6 +21,17 @@ AL_BUILD_PACKAGE=no
 if test x"$enable_openal" = xyes; then
 
 AC_SUBST([AL_BUILD_PACKAGE])
+
+# On Mac OS X, OpenAL is a framework rather than a library, so put it on the
+# link line before searching: the search then succeeds with "none required".
+AL_FRAMEWORKS=
+case $host_os in
+darwin*)
+  AL_FRAMEWORKS=OpenAL
+  LIBS="$LIBS -framework OpenAL"
+  ;;
+esac
+AC_SUBST([AL_FRAMEWORKS])
 
 # The following test for the OpenAL library is a bit of a hack, but gives nice
 # feedback even for the case when no additional library is needed. (Mac OS X?)
@@ -26,15 +43,6 @@ AC_SUBST([AL_LIBS])
 if test "$AL_LIBS" = no; then
   AC_MSG_WARN([no OpenAL library found, so this package will not be built])
 else
-
-# Ugly...
-AL_FRAMEWORKS=
-case $host_os in
-darwin*)
-  AL_FRAMEWORKS=OpenAL
-  ;;
-esac
-AC_SUBST([AL_FRAMEWORKS])
 
 FP_HEADER_AL
 FP_HEADER_ALC

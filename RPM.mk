@@ -87,7 +87,7 @@ $(PACKAGE).tar.gz:
 	cd $(TARTMP)/hugs98/src; bison -y parser.y; mv y.tab.c parser.c
 # Siggy deren't like these in distros
 	if test "$(MAJOR_RELEASE)" -eq 1; then cd $(TARTMP)/hugs98; rm -rf tests; fi
-	cd $(TARTMP)/hugs98; make configure
+	cd $(TARTMP)/hugs98; make regenerate
 	cd $(TARTMP)/hugs98; $(RM) -r autom4te.cache libraries/autom4te.cache packages/*/autom4te.cache
 	cd $(TARTMP)/hugs98; make debian/control
 	mv $(TARTMP)/hugs98 $(TARTMP)/$(PACKAGE)

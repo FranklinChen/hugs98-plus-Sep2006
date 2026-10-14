@@ -214,6 +214,9 @@ fi
 : ${CFLAGS=-g}
 OPTFLAGS="-O2"
 
+dnl Hugs is K&R C, which C23 rejects. Autoconf 2.73 switches the compiler to
+dnl C23 (-std=gnu23) when it can; opt out of that (a user setting still wins).
+: ${ac_cv_prog_cc_c23=no}
 AC_PROG_CC
 AC_PROG_GCC_TRADITIONAL
 
@@ -784,7 +787,10 @@ elif test "x$host" = "xdos"; then
 else
     BAT=
     hugsdir_deflt='${libdir}/hugs'
-    HUGSPATH=".:{Home}/lib/hugs/packages/*:/usr/local/lib/hugs/packages/*:{Hugs}/packages/*"
+dnl No /usr/local entry: for an install anywhere else it would put an
+dnl unrelated older Hugs there ahead of this one's own {Hugs}/packages,
+dnl and for an install in /usr/local, {Hugs} already is that directory.
+    HUGSPATH=".:{Home}/lib/hugs/packages/*:{Hugs}/packages/*"
     HUGSSUFFIXES=".hs:.lhs"
     MkInstall="src/MkInstal.in"
 fi
